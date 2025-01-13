@@ -1,50 +1,53 @@
-# React + TypeScript + Vite
+# 🌟 E-Shopper Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Добро пожаловать в клиентскую часть платформы **E-Shopper**!
+Этот репозиторий содержит клиентскую часть платформы E-Shopper. Интерфейс разработан с использованием современных технологий, обеспечивая удобство использования и привлекательный дизайн.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Основной функционал
 
-## Expanding the ESLint configuration
+- 🔍 **Поиск товара**: Быстрый поиск товаров по названию.
+- 📂 **Категории товаров**: Удобная навигация по категориям.
+- 📊 **Сортировка**: Возможность сортировать товары по стоимости.
+- 📄 **Страница товара**: Детальная информация о каждом товаре.
+- 🛒 **Корзина покупок**:
+  - Подсчёт общей стоимости.
+  - Добавление, удаление и изменение количества товаров.
+- 🔐 **Аутентификация**: Регистрация и вход для пользователей.
+- 🎨 **Анимации**: Плавные и отзывчивые анимации с использованием Motion.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+---
 
-- Configure the top-level `parserOptions` property like this:
+## 🛠️ Используемые технологии
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- **Фреймворк**: React 19
+- **Язык**: TypeScript
+- **Стилизация**: Tailwind CSS, SCSS
+- **Управление состоянием**: Redux, Redux-thunk
+- **Работа с данными**: TanStack Query
+- **UI-компоненты**: Swiper (для слайдеров)
+- **Анимации**: Motion
+- **Архитектура**: Feature-Sliced Design (FSD)
+- **Дополнительные библиотеки**:
+  - @hookform/resolvers
+  - axios
+  - react-hook-form
+  - react-router-dom
+  - react-toastify
+  - yup
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+---
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## 🏗️ Архитектура проекта
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```plaintext
+e-shopper-frontend/
+├── app/             # Главный вход приложения и общие настройки
+├── assets/          # Статические ресурсы (изображения, шрифты и т.д.)
+├── entities/        # Базовые сущности приложения (например, пользователь, продукт)
+├── features/        # Реализация функциональных возможностей (например, корзина)
+├── pages/           # Страницы приложения
+├── shared/          # Общие модули, компоненты и утилиты
+├── widgets/         # Независимые UI-компоненты с логикой
 ```
