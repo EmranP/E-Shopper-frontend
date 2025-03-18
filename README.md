@@ -25,7 +25,6 @@
 - **Язык**: TypeScript
 - **Стилизация**: Tailwind CSS, SCSS
 - **Управление состоянием**: Redux, Redux-thunk
-- **Работа с данными**: TanStack Query
 - **UI-компоненты**: Swiper (для слайдеров)
 - **Анимации**: Motion
 - **Архитектура**: Feature-Sliced Design (FSD)
