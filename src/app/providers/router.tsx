@@ -28,7 +28,6 @@ const router = createBrowserRouter([
 			</Suspense>
 		),
 		errorElement: <BubbleError />,
-		children: [],
 	},
 	{
 		path: '/auth/login',
