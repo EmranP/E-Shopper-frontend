@@ -1,8 +1,18 @@
-const HomePage = () => {
+import { FC } from 'react'
+import { Header } from '../../widgets/header/ui/Header'
+import { LayoutContent } from '../../widgets/layout/Content'
+import { Layout, LayoutContainer } from '../../widgets/layout/Layout'
+
+const HomePage: FC = () => {
 	return (
-		<div>
-			<h1 className='text-2xl'>Home Page</h1>
-		</div>
+		<Layout>
+			<Header />
+			<LayoutContent>
+				<LayoutContainer>
+					<h1>Example</h1>
+				</LayoutContainer>
+			</LayoutContent>
+		</Layout>
 	)
 }
 
