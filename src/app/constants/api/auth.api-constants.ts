@@ -1,4 +1,4 @@
-const AUTH_API_URL = 'auth'
+const AUTH_API_URL = '/auth'
 
 export const AUTH_API_URL_REGISTRATION = `${AUTH_API_URL}/registration`
 export const AUTH_API_URL_LOGIN = `${AUTH_API_URL}/login`

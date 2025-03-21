@@ -1,15 +1,25 @@
 import { composeWithDevTools } from '@redux-devtools/extension'
-import { applyMiddleware, combineReducers, createStore } from 'redux'
-import { thunk, ThunkMiddleware } from 'redux-thunk'
-import { AppActions } from '../../shared/types/store.types'
+import {
+	applyMiddleware,
+	combineReducers,
+	legacy_createStore as createStore,
+	Reducer,
+} from 'redux'
+import thunk, { ThunkMiddleware } from 'redux-thunk'
+import { authReducer } from '../../features/auth/model/auth.reducer'
+import { AppActions, IRootState } from '../../shared/types/store.types'
 
-export const rootReducer = combineReducers({})
+export const rootReducer: Reducer<IRootState, AppActions> = combineReducers({
+	auth: authReducer,
+})
 
-export const store = createStore(
-	rootReducer,
-	composeWithDevTools(
-		applyMiddleware(thunk as ThunkMiddleware<RootState, AppActions>)
-	)
+const thunkMiddleware: ThunkMiddleware<IRootState, AppActions> = thunk
+
+const configMiddlewareThunk = composeWithDevTools(
+	applyMiddleware(thunkMiddleware)
 )
 
-export type RootState = ReturnType<typeof rootReducer>
+export const store = createStore<IRootState, AppActions, object, object>(
+	rootReducer,
+	configMiddlewareThunk
+)
