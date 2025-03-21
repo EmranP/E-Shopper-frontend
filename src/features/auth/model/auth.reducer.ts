@@ -1,0 +1,68 @@
+import {
+	AUTH_LOGIN_FAILURE,
+	AUTH_LOGIN_REQUEST,
+	AUTH_LOGIN_SUCCESS,
+	AUTH_LOGOUT,
+	AUTH_LOGOUT_FAILURE,
+	AUTH_LOGOUT_REQUEST,
+	AUTH_REFRESH_TOKEN_FAILURE,
+	AUTH_REFRESH_TOKEN_REQUEST,
+	AUTH_REFRESH_TOKEN_SUCCESS,
+	AUTH_REG_FAILURE,
+	AUTH_REG_REQUEST,
+	AUTH_REG_SUCCESS,
+} from '../../../app/constants/actions/auth.constants'
+import { IResponseUserAuthApi } from '../types/type.api'
+import { AuthActionTypes } from '../types/type.model'
+
+export interface IAuthState {
+	user: IResponseUserAuthApi | null
+	access: string | null
+	refresh: string | null
+	isLoading: boolean
+	error: string | null
+}
+
+const initialState: IAuthState = {
+	user: null,
+	access: null,
+	refresh: null,
+	isLoading: false,
+	error: null,
+}
+
+export const authReducer = (
+	state = initialState,
+	action: AuthActionTypes
+): IAuthState => {
+	switch (action.type) {
+		case AUTH_LOGIN_REQUEST:
+		case AUTH_REG_REQUEST:
+		case AUTH_REFRESH_TOKEN_REQUEST:
+		case AUTH_LOGOUT_REQUEST:
+			return { ...state, isLoading: true }
+
+		case AUTH_LOGIN_SUCCESS:
+		case AUTH_REG_SUCCESS:
+		case AUTH_REFRESH_TOKEN_SUCCESS:
+			return {
+				...state,
+				isLoading: false,
+				access: action.payload.access,
+				refresh: action.payload.refresh,
+				user: action.payload.user,
+			}
+
+		case AUTH_LOGIN_FAILURE:
+		case AUTH_REG_FAILURE:
+		case AUTH_REFRESH_TOKEN_FAILURE:
+		case AUTH_LOGOUT_FAILURE:
+			return { ...state, isLoading: false, error: action.payload }
+
+		case AUTH_LOGOUT:
+			return initialState
+
+		default:
+			return state
+	}
+}
