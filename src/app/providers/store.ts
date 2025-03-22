@@ -5,7 +5,7 @@ import {
 	legacy_createStore as createStore,
 	Reducer,
 } from 'redux'
-import thunk, { ThunkMiddleware } from 'redux-thunk'
+import { thunk, ThunkMiddleware } from 'redux-thunk'
 import { authReducer } from '../../features/auth/model/auth.reducer'
 import { AppActions, IRootState } from '../../shared/types/store.types'
 

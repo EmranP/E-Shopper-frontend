@@ -1,69 +1,56 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios'
 import { AUTH_API_URL_REFRESH } from '../../app/constants/api/auth.api-constants'
-import { store } from '../../app/providers/store'
-import { refreshAccessToken } from '../../features/auth/model/auth.async-actions'
 import { IResponseAuthApi } from '../../features/auth/types/type.api'
 
 interface CustomAxiosRequestConfig extends AxiosRequestConfig {
-	_retry?: boolean
+	_isRetry?: boolean
 }
+
+export const BASE_API_URL = import.meta.env.VITE_BASE_API_URL
 
 const $api = axios.create({
 	withCredentials: true,
-	baseURL: import.meta.env.VITE_BASE_API_URL,
+	baseURL: BASE_API_URL,
 	headers: {
 		'Content-Type': 'application/json',
 	},
 })
 
-$api.interceptors.request.use(
-	config => {
-		const state = store.getState()
-		const token = state.auth.access
-
-		if (token) {
-			config.headers.Authorization = `Bearer ${token}`
-		}
-
-		return config
-	},
-	(error: AxiosError) => Promise.reject(error)
-)
+$api.interceptors.request.use(config => {
+	const token = localStorage.getItem('token')
+	if (token) {
+		config.headers = config.headers || {}
+		config.headers.Authorization = `Bearer ${token}`
+	}
+	return config
+})
 
 $api.interceptors.response.use(
-	config => config,
+	response => response,
 	async (error: AxiosError) => {
 		const originalRequest = error.config as CustomAxiosRequestConfig
 		if (
 			error.response?.status === 401 &&
 			originalRequest &&
-			!originalRequest._retry
+			!originalRequest._isRetry
 		) {
-			originalRequest._retry = true
+			originalRequest._isRetry = true
 			try {
 				const response = await axios.get<IResponseAuthApi>(
-					AUTH_API_URL_REFRESH,
+					`${BASE_API_URL}${AUTH_API_URL_REFRESH}`,
 					{
 						withCredentials: true,
 					}
 				)
-
 				const { access } = response.data
-				store.dispatch(refreshAccessToken(access))
-
+				localStorage.setItem('token', access)
 				originalRequest.headers = {
 					...originalRequest.headers,
 					Authorization: `Bearer ${access}`,
 				}
-
 				return $api(originalRequest)
 			} catch (err) {
-				if (err instanceof Error) {
-					console.error('Ошибка при обновлении токена', err)
-				} else {
-					console.error('Что-то пошло не так с refresh token')
-				}
-
+				console.error('Ошибка при обновлении токена:', err)
 				return Promise.reject(error)
 			}
 		}

@@ -1,49 +1,49 @@
+import axios from 'axios'
 import { Dispatch } from 'redux'
 import {
 	AUTH_LOGIN_FAILURE,
-	AUTH_LOGIN_REQUEST,
 	AUTH_LOGIN_SUCCESS,
 	AUTH_LOGOUT,
 	AUTH_LOGOUT_FAILURE,
-	AUTH_LOGOUT_REQUEST,
-	AUTH_REFRESH_TOKEN_FAILURE,
-	AUTH_REFRESH_TOKEN_REQUEST,
 	AUTH_REFRESH_TOKEN_SUCCESS,
 	AUTH_REG_FAILURE,
-	AUTH_REG_REQUEST,
 	AUTH_REG_SUCCESS,
+	AUTH_REQUEST,
 } from '../../../app/constants/actions/auth.constants'
+import { AUTH_API_URL_REFRESH } from '../../../app/constants/api/auth.api-constants'
+import { BASE_API_URL } from '../../../shared/config/axiosInstance'
 import { AppActions, AppThunk } from '../../../shared/types/store.types'
+import { IResponseAuthApi } from '../types/type.api'
 import { authServiceApi } from './auth.service'
+
+// !Todos:
+/* 
+1) Проверить на активацию аккаунта через почту
+2) Сделать защиту страницы (доступ только admin)
+3) Реализовать admin panel: GRUD operations for Products, Orders, users,  
+*/
 
 export const login =
 	(email: string, password: string): AppThunk =>
 	async (dispatch: Dispatch<AppActions>): Promise<void> => {
-		dispatch({ type: AUTH_LOGIN_REQUEST })
+		dispatch({ type: AUTH_REQUEST })
 		try {
 			const resultLogin = await authServiceApi.fetchLogin({ email, password })
 
-			if (!resultLogin) {
-				throw new Error('Error login')
-			}
-
-			dispatch({ type: AUTH_LOGIN_SUCCESS, payload: resultLogin })
+			localStorage.setItem('token', resultLogin.data.access)
+			dispatch({ type: AUTH_LOGIN_SUCCESS, payload: resultLogin.data })
 		} catch (error) {
-			if (error instanceof Error) {
-				dispatch({
-					type: AUTH_LOGIN_FAILURE,
-					payload: error.message || 'Login failed',
-				})
-			} else {
-				console.log('Что-то пошло не так с login')
-			}
+			dispatch({
+				type: AUTH_LOGIN_FAILURE,
+				payload: error instanceof Error ? error.message : 'Login failed',
+			})
 		}
 	}
 
 export const registration =
 	(login: string, email: string, password: string): AppThunk =>
 	async (dispatch: Dispatch<AppActions>): Promise<void> => {
-		dispatch({ type: AUTH_REG_REQUEST })
+		dispatch({ type: AUTH_REQUEST })
 		try {
 			const resultReg = await authServiceApi.fetchReg({
 				login,
@@ -51,74 +51,60 @@ export const registration =
 				password,
 			})
 
-			if (!resultReg) {
-				throw new Error('Error reg')
-			}
-
-			dispatch({ type: AUTH_REG_SUCCESS, payload: resultReg })
+			localStorage.setItem('token', resultReg.data.access)
+			dispatch({ type: AUTH_REG_SUCCESS, payload: resultReg.data })
 		} catch (error) {
-			if (error instanceof Error) {
-				dispatch({
-					type: AUTH_REG_FAILURE,
-					payload: error.message || 'Reg failed',
-				})
-			} else {
-				console.log('Что-то пошле не так с reg')
-			}
+			dispatch({
+				type: AUTH_REG_FAILURE,
+				payload: error instanceof Error ? error.message : 'Reg failed',
+			})
 		}
 	}
 
 export const logout =
 	(): AppThunk =>
 	async (dispatch: Dispatch<AppActions>): Promise<void> => {
-		dispatch({ type: AUTH_LOGOUT_REQUEST })
+		dispatch({ type: AUTH_REQUEST })
 		try {
 			await authServiceApi.fetchLogout()
 
+			localStorage.removeItem('token')
 			dispatch({
 				type: AUTH_LOGOUT,
 			})
 		} catch (error) {
-			if (error instanceof Error) {
-				dispatch({
-					type: AUTH_LOGOUT_FAILURE,
-					payload: error.message || 'Refresh token failed',
-				})
-			} else {
-				console.log('Что-то пошле не так в refresh token')
-			}
+			dispatch({
+				type: AUTH_LOGOUT_FAILURE,
+				payload: error instanceof Error ? error.message : 'Logout failed',
+			})
 		}
 	}
 
-export const refreshToken =
+export const checkAuth =
 	(): AppThunk =>
 	async (dispatch: Dispatch<AppActions>): Promise<void> => {
-		dispatch({ type: AUTH_REFRESH_TOKEN_REQUEST })
+		dispatch({ type: AUTH_REQUEST })
 		try {
-			const refreshData = await authServiceApi.fetchRefreshToken()
-			if (!refreshData) {
-				throw new Error('Ошибка обновления токена: пустой ответ от сервера')
-			}
-			dispatch({ type: AUTH_REFRESH_TOKEN_SUCCESS, payload: refreshData })
-		} catch (error) {
-			if (error instanceof Error) {
-				dispatch({
-					type: AUTH_REFRESH_TOKEN_FAILURE,
-					payload: `Ошибка обновления токена: ${
-						error.message || 'Неизвестная ошибка'
-					}`,
-				})
-			} else {
-				console.error('Неизвестная ошибка при обновлении токена')
-			}
-		}
-	}
+			const response = await axios.get<IResponseAuthApi>(
+				`${BASE_API_URL}${AUTH_API_URL_REFRESH}`,
+				{
+					withCredentials: true,
+				}
+			)
 
-export const refreshAccessToken =
-	(newAccess: string): AppThunk =>
-	async (dispatch: Dispatch<AppActions>): Promise<void> => {
-		dispatch({
-			type: AUTH_REFRESH_TOKEN_SUCCESS,
-			payload: { access: newAccess } as any,
-		})
+			if (response.status === 404) {
+				throw new Error('Request refresh token is not founded')
+			}
+			console.log(response.data)
+			localStorage.setItem('token', response.data.access)
+			dispatch({
+				type: AUTH_REFRESH_TOKEN_SUCCESS,
+				payload: response.data,
+			})
+		} catch (error) {
+			dispatch({
+				type: AUTH_LOGOUT_FAILURE,
+				payload: error instanceof Error ? error.message : 'Logout failed',
+			})
+		}
 	}
