@@ -1,3 +1,4 @@
+// type.api.ts
 import { ROLES } from '../../../app/constants/roles/roles'
 
 export interface IResponseUserAuthApi {

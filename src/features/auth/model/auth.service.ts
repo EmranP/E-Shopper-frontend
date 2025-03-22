@@ -1,7 +1,7 @@
+import { AxiosResponse } from 'axios'
 import {
 	AUTH_API_URL_LOGIN,
 	AUTH_API_URL_LOGOUT,
-	AUTH_API_URL_REFRESH,
 	AUTH_API_URL_REGISTRATION,
 } from '../../../app/constants/api/auth.api-constants'
 import $api from '../../../shared/config/axiosInstance'
@@ -15,7 +15,7 @@ class AuthServiceApi {
 	async fetchLogin({
 		email,
 		password,
-	}: IRequestAuthLogin): Promise<IResponseAuthApi> {
+	}: IRequestAuthLogin): Promise<AxiosResponse<IResponseAuthApi>> {
 		const response = await $api.post<IResponseAuthApi>(AUTH_API_URL_LOGIN, {
 			email,
 			password,
@@ -23,14 +23,14 @@ class AuthServiceApi {
 		if (response.status === 404) {
 			throw new Error('Ошибка: указанный email не найден')
 		}
-		return response.data
+		return response
 	}
 
 	async fetchReg({
 		login,
 		email,
 		password,
-	}: IRequestAuthReg): Promise<IResponseAuthApi> {
+	}: IRequestAuthReg): Promise<AxiosResponse<IResponseAuthApi>> {
 		const response = await $api.post<IResponseAuthApi>(
 			AUTH_API_URL_REGISTRATION,
 			{ login, email, password }
@@ -39,25 +39,16 @@ class AuthServiceApi {
 			throw new Error('Ошибка регистрации: проверьте введённые данные')
 		}
 		console.info('Ответ регистрации:', response.data)
-		return response.data
+		return response
 	}
 
 	async fetchLogout(): Promise<void> {
 		const response = await $api.post(AUTH_API_URL_LOGOUT)
-		console.info('Ответ выхода:', response.data)
 		if (response.status === 404) {
 			throw new Error('Ошибка: URL для выхода не найден')
 		}
+		console.info('Logout success completed:')
 		return
-	}
-
-	async fetchRefreshToken(): Promise<IResponseAuthApi> {
-		const response = await $api.get<IResponseAuthApi>(AUTH_API_URL_REFRESH)
-		if (response.status === 404) {
-			throw new Error('Ошибка: URL для обновления токена не найден')
-		}
-		console.info('Ответ обновления токена:', response.data)
-		return response.data
 	}
 }
 

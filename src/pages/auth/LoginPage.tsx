@@ -1,12 +1,16 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 import { authFormWrapperStyles } from '../../app/constants/styles/auth.constants'
 import { ILoginFormInputs } from '../../features/auth/types/types-ui.interface'
 import { AboutAuth } from '../../features/auth/ui/AboutAuth'
 import { AuthFormWrapper } from '../../features/auth/ui/AuthFormWrapper'
 import { InputAuth } from '../../features/auth/ui/InputAuth'
+import { useAppSelector } from '../../shared/hooks/store.hooks'
+import { useActions } from '../../shared/hooks/useActions'
 import { BackMove } from '../../shared/ui/BackMove'
-import { Button } from '../../shared/ui/Button'
+import { AuthButton } from '../../shared/ui/Buttons'
+import { Title } from '../../shared/ui/Title'
 import { authFormLoginSchema } from '../../shared/utils/authFormSchema.utils'
 import { LayoutAuth } from '../../widgets/layout/LayoutAuth'
 
@@ -19,41 +23,51 @@ const LoginPage = () => {
 	} = useForm<ILoginFormInputs>({
 		resolver: yupResolver(authFormLoginSchema),
 	})
+	const { login } = useActions()
+	const { isAuth } = useAppSelector(state => state.auth)
+	const navigate = useNavigate()
 
 	const onSubmitHandler: SubmitHandler<ILoginFormInputs> = data => {
-		console.log('Submitted Data:', { ...data })
+		login(data.email, data.password)
 		reset()
+		if (isAuth) {
+			navigate('/')
+		}
 	}
 	return (
 		<LayoutAuth>
 			<AboutAuth />
 			<AuthFormWrapper title='Login Authorization'>
-				<form
-					onSubmit={handleSubmit(onSubmitHandler)}
-					className={authFormWrapperStyles}
-				>
-					<InputAuth
-						name={'email'}
-						type='email'
-						placeholder='Enter your e-mail'
-						register={register}
-						errors={errors.email}
-						label={'E-mail'}
-					/>
-					<InputAuth
-						name={'password'}
-						type='password'
-						placeholder='Enter your password'
-						register={register}
-						errors={errors.password}
-						label={'Password'}
-					/>
-					<Button
-						title='Sign in'
-						bgColor='bg-baseTextAndButton'
-						onClick={() => {}}
-					/>
-				</form>
+				{isAuth ? (
+					<Title title='You are already logged in' />
+				) : (
+					<form
+						onSubmit={handleSubmit(onSubmitHandler)}
+						className={authFormWrapperStyles}
+					>
+						<InputAuth
+							name={'email'}
+							type='email'
+							placeholder='Enter your e-mail'
+							register={register}
+							errors={errors.email}
+							label={'E-mail'}
+						/>
+						<InputAuth
+							name={'password'}
+							type='password'
+							placeholder='Enter your password'
+							register={register}
+							errors={errors.password}
+							label={'Password'}
+						/>
+						<AuthButton
+							title='Sign in'
+							bgColor='bg-baseTextAndButton'
+							type='submit'
+						/>
+					</form>
+				)}
 			</AuthFormWrapper>
 			<BackMove color='text-white' />
 		</LayoutAuth>
