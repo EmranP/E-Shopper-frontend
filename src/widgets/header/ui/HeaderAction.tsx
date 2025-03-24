@@ -9,12 +9,22 @@ export const HeaderAction: FC = () => {
 	const { isAuth, user } = useAppSelector(state => state.auth)
 	const { logout } = useActions()
 	return (
-		<div className='flex flex-col gap-y-2'>
+		<div className='flex flex-col items-center gap-y-2'>
 			{isAuth ? (
-				<div className='flex items-center gap-4'>
-					<h1 className='text-center font-semibold text-xl'>{user?.login}</h1>
-					<LogOut cursor={'pointer'} onClick={logout} />
-				</div>
+				<>
+					<div className='flex items-center gap-4'>
+						<h1 className='text-center font-semibold text-xl'>{user?.login}</h1>
+						<LogOut cursor={'pointer'} onClick={logout} />
+					</div>
+					{!user?.isActivated && (
+						<div className='text-lg'>
+							<h1>
+								Please confirm your{' '}
+								<span className='text-specialColor'>email :)</span>
+							</h1>
+						</div>
+					)}
+				</>
 			) : (
 				<div className='flex gap-x-4'>
 					<Link to={'/auth/login'}>

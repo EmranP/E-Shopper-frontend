@@ -18,7 +18,7 @@ export interface IAuthState {
 	refresh: string | null
 	isAuth: boolean
 	isLoading: boolean
-	error: string | null
+	error: string | null | boolean
 }
 
 const initialState: IAuthState = {
@@ -54,7 +54,11 @@ export const authReducer = (
 		case AUTH_REG_FAILURE:
 		case AUTH_REFRESH_TOKEN_FAILURE:
 		case AUTH_LOGOUT_FAILURE:
-			return { ...state, isLoading: false, error: action.payload }
+			return {
+				...state,
+				isLoading: false,
+				error: action.payload,
+			}
 
 		case AUTH_LOGOUT:
 			return initialState

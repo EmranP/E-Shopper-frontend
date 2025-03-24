@@ -1,5 +1,4 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { authFormWrapperStyles } from '../../app/constants/styles/auth.constants'
 import { IRegistrationFormInputs } from '../../features/auth/types/types-ui.interface'
@@ -8,6 +7,8 @@ import { AuthFormWrapper } from '../../features/auth/ui/AuthFormWrapper'
 import { InputAuth } from '../../features/auth/ui/InputAuth'
 import { useAppSelector } from '../../shared/hooks/store.hooks'
 import { useActions } from '../../shared/hooks/useActions'
+import { useShowError } from '../../shared/hooks/useShowError'
+import { BackMove } from '../../shared/ui/BackMove'
 import { AuthButton } from '../../shared/ui/Buttons'
 import { Title } from '../../shared/ui/Title'
 import { authFormRegSchema } from '../../shared/utils/authFormSchema.utils'
@@ -24,24 +25,13 @@ const RegistrationPage = () => {
 	})
 	const { registration } = useActions()
 	const { isAuth, isLoading, error } = useAppSelector(state => state.auth)
-	const [showError, setShowError] = useState(!!error)
+	const { showError } = useShowError(error, 5000)
 
 	const onSubmitHandler: SubmitHandler<IRegistrationFormInputs> = data => {
 		const { login, email, password } = data
 		registration(login, email, password)
 		reset()
 	}
-
-	useEffect(() => {
-		if (error) {
-			setShowError(true)
-			const timer = setTimeout(() => {
-				setShowError(false)
-			}, 5000)
-
-			return () => clearTimeout(timer)
-		}
-	}, [error])
 
 	return (
 		<LayoutAuth>
@@ -98,6 +88,7 @@ const RegistrationPage = () => {
 					</form>
 				)}
 			</AuthFormWrapper>
+			<BackMove color='text-white' />
 		</LayoutAuth>
 	)
 }
