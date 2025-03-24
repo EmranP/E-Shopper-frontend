@@ -14,3 +14,10 @@ export interface IButton extends IAuthButton {
 export interface IBackMove {
 	color: string
 }
+
+export interface IModal {
+	titleSolutions: string
+	onClickSave: () => void
+	onClickClose: () => void
+	onClickCancel: () => void
+}
