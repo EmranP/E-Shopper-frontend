@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { Dispatch } from 'redux'
 import {
 	AUTH_LOGIN_FAILURE,
@@ -16,13 +16,6 @@ import { AppActions, AppThunk } from '../../../shared/types/store.types'
 import { IResponseAuthApi } from '../types/type.api'
 import { authServiceApi } from './auth.service'
 
-// !Todos:
-/* 
-1) Проверить на активацию аккаунта через почту
-2) Сделать защиту страницы (доступ только admin)
-3) Реализовать admin panel: GRUD operations for Products, Orders, users,  
-*/
-
 export const login =
 	(email: string, password: string): AppThunk =>
 	async (dispatch: Dispatch<AppActions>): Promise<void> => {
@@ -33,9 +26,14 @@ export const login =
 			localStorage.setItem('token', resultLogin.data.access)
 			dispatch({ type: AUTH_LOGIN_SUCCESS, payload: resultLogin.data })
 		} catch (error) {
+			const errorMessage: string =
+				error instanceof AxiosError && error.response
+					? error.response.data.message
+					: 'Login failed'
+
 			dispatch({
 				type: AUTH_LOGIN_FAILURE,
-				payload: error instanceof Error ? error.message : 'Login failed',
+				payload: errorMessage,
 			})
 		}
 	}
@@ -54,9 +52,14 @@ export const registration =
 			localStorage.setItem('token', resultReg.data.access)
 			dispatch({ type: AUTH_REG_SUCCESS, payload: resultReg.data })
 		} catch (error) {
+			const errorMessage: string =
+				error instanceof AxiosError && error.response
+					? error.response.data.message
+					: 'Reg failed'
+
 			dispatch({
 				type: AUTH_REG_FAILURE,
-				payload: error instanceof Error ? error.message : 'Reg failed',
+				payload: errorMessage,
 			})
 		}
 	}
@@ -73,9 +76,18 @@ export const logout =
 				type: AUTH_LOGOUT,
 			})
 		} catch (error) {
+			if (error instanceof AxiosError && error.response?.status === 401) {
+				return
+			}
+
+			const errorMessage: string =
+				error instanceof AxiosError && error.response
+					? error.response.data.message
+					: 'Logout failed'
+
 			dispatch({
 				type: AUTH_LOGOUT_FAILURE,
-				payload: error instanceof Error ? error.message : 'Logout failed',
+				payload: errorMessage,
 			})
 		}
 	}
@@ -102,9 +114,17 @@ export const checkAuth =
 				payload: response.data,
 			})
 		} catch (error) {
+			const errorMessage: string =
+				error instanceof AxiosError && error.response
+					? error.response.data.message
+					: 'Auth check failed'
+
 			dispatch({
 				type: AUTH_LOGOUT_FAILURE,
-				payload: error instanceof Error ? error.message : 'Logout failed',
+				payload:
+					error instanceof AxiosError &&
+					error.response?.status !== 401 &&
+					errorMessage,
 			})
 		}
 	}

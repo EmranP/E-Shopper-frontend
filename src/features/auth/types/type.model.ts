@@ -29,7 +29,7 @@ type AuthFailureAction = {
 		| typeof AUTH_REG_FAILURE
 		| typeof AUTH_REFRESH_TOKEN_FAILURE
 		| typeof AUTH_LOGOUT_FAILURE
-	payload: string
+	payload: string | boolean
 }
 
 type LogoutAction = {

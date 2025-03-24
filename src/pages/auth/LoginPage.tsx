@@ -8,6 +8,7 @@ import { AuthFormWrapper } from '../../features/auth/ui/AuthFormWrapper'
 import { InputAuth } from '../../features/auth/ui/InputAuth'
 import { useAppSelector } from '../../shared/hooks/store.hooks'
 import { useActions } from '../../shared/hooks/useActions'
+import { useShowError } from '../../shared/hooks/useShowError'
 import { BackMove } from '../../shared/ui/BackMove'
 import { AuthButton } from '../../shared/ui/Buttons'
 import { Title } from '../../shared/ui/Title'
@@ -24,8 +25,9 @@ const LoginPage = () => {
 		resolver: yupResolver(authFormLoginSchema),
 	})
 	const { login } = useActions()
-	const { isAuth } = useAppSelector(state => state.auth)
+	const { isAuth, error, isLoading } = useAppSelector(state => state.auth)
 	const navigate = useNavigate()
+	const { showError } = useShowError(error, 5000)
 
 	const onSubmitHandler: SubmitHandler<ILoginFormInputs> = data => {
 		login(data.email, data.password)
@@ -34,10 +36,15 @@ const LoginPage = () => {
 			navigate('/')
 		}
 	}
+
 	return (
 		<LayoutAuth>
 			<AboutAuth />
-			<AuthFormWrapper title='Login Authorization'>
+			<AuthFormWrapper
+				title='Login Authorization'
+				error={error}
+				showError={showError}
+			>
 				{isAuth ? (
 					<Title title='You are already logged in' />
 				) : (
@@ -62,7 +69,7 @@ const LoginPage = () => {
 							label={'Password'}
 						/>
 						<AuthButton
-							title='Sign in'
+							title={isLoading ? 'Loading...' : 'Sign up'}
 							bgColor='bg-baseTextAndButton'
 							type='submit'
 						/>

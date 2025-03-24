@@ -28,7 +28,7 @@ export interface IInputAuth<T extends FieldValues> {
 
 export interface IAuthFormWrapper {
 	title: string
-	error: string | null
+	error: string | null | boolean
 	showError: boolean
 	children: ReactNode
 }

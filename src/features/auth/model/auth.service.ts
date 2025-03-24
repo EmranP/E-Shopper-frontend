@@ -23,6 +23,7 @@ class AuthServiceApi {
 		if (response.status === 404) {
 			throw new Error('Ошибка: указанный email не найден')
 		}
+		console.info('Ответ логина:', response.data)
 		return response
 	}
 
