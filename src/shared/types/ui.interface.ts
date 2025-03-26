@@ -1,3 +1,5 @@
+import { ROLES } from '../../app/constants/roles/roles'
+
 export interface ITitle {
 	title: string
 }
@@ -20,4 +22,8 @@ export interface IModal {
 	onClickSave: () => void
 	onClickClose: () => void
 	onClickCancel: () => void
+}
+
+export interface IProtectedRoute {
+	requiredRole: ROLES
 }

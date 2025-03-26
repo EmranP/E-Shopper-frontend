@@ -107,7 +107,6 @@ export const checkAuth =
 			if (response.status === 404) {
 				throw new Error('Request refresh token is not founded')
 			}
-			console.log(response.data)
 			localStorage.setItem('token', response.data.access)
 			dispatch({
 				type: AUTH_REFRESH_TOKEN_SUCCESS,
