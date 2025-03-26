@@ -5,6 +5,7 @@ import { Loader } from '../../shared/ui/Loader'
 import { Header } from '../../widgets/header/ui/Header'
 import { LayoutContent } from '../../widgets/layout/Content'
 import { Layout, LayoutContainer } from '../../widgets/layout/Layout'
+import { Outlet } from 'react-router-dom'
 
 const HomePage: FC = () => {
 	const { isLoading } = useAppSelector(state => state.auth)
@@ -25,6 +26,7 @@ const HomePage: FC = () => {
 			<LayoutContent>
 				<LayoutContainer>
 					<h1>Example</h1>
+					<Outlet />
 				</LayoutContainer>
 			</LayoutContent>
 		</Layout>
