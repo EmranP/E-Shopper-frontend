@@ -15,14 +15,14 @@ export const navigationLink = [
 	},
 	{
 		id: 3,
-		title: 'users orders',
-		path: '/admin/orders',
+		title: 'admin-panel',
+		path: '/admin/panel',
 		isRoles: [ROLES.ADMIN],
 	},
 	{
 		id: 4,
-		title: 'admin-panel',
-		path: '/admin',
+		title: 'users orders',
+		path: '/admin/orders',
 		isRoles: [ROLES.ADMIN],
 	},
 	{

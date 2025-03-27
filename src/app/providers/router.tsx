@@ -1,11 +1,11 @@
-import { FC, lazy, Suspense } from 'react'
+import { FC, lazy } from 'react'
 import { Provider } from 'react-redux'
 import {
 	createBrowserRouter,
 	RouterProvider,
 	useRouteError,
 } from 'react-router-dom'
-import { Loader } from '../../shared/ui/Loader'
+import { WrapperSuspense } from '../../shared/ui/WrapperSuspense'
 import { ROLES } from '../constants/roles/roles'
 import { ProtectedRoute } from './ProtectedRoute'
 import { store } from './store'
@@ -14,6 +14,9 @@ const HomePage = lazy(() => import('../../pages/home/HomePage'))
 const NotFoundPage = lazy(() => import('../../pages/404/NotFoundPage'))
 const LoginPage = lazy(() => import('../../pages/auth/LoginPage'))
 const RegistrationPage = lazy(() => import('../../pages/auth/RegistrationPage'))
+const AdminPanelPage = lazy(
+	() => import('../../pages/admin/admin-panel/AdminPanelPage')
+)
 const OrdersAdminPage = lazy(
 	() => import('../../pages/admin/orders/OrdersAdminPage ')
 )
@@ -41,39 +44,49 @@ const router = createBrowserRouter([
 	{
 		path: '/',
 		element: (
-			<Suspense fallback={<Loader />}>
+			<WrapperSuspense>
 				<HomePage />
-			</Suspense>
+			</WrapperSuspense>
 		),
 		errorElement: <BubbleError />,
 	},
 	{
 		path: '/auth/login',
 		element: (
-			<Suspense fallback={<Loader />}>
+			<WrapperSuspense>
 				<LoginPage />
-			</Suspense>
+			</WrapperSuspense>
 		),
 	},
 	{
 		path: '/auth/registration',
 		element: (
-			<Suspense fallback={<Loader />}>
+			<WrapperSuspense>
 				<RegistrationPage />
-			</Suspense>
+			</WrapperSuspense>
 		),
 	},
 	{
 		path: '/admin',
-		errorElement: <BubbleError />,
 		element: <ProtectedRoute requiredRole={ROLES.ADMIN} />,
+		errorElement: <BubbleError />,
 		children: [
+			{
+				path: 'panel',
+				element: (
+					<WrapperSuspense>
+						<AdminPanelPage />
+					</WrapperSuspense>
+				),
+				errorElement: <BubbleError />,
+				children: [],
+			},
 			{
 				path: 'orders',
 				element: (
-					<Suspense fallback={<Loader />}>
+					<WrapperSuspense>
 						<OrdersAdminPage />
-					</Suspense>
+					</WrapperSuspense>
 				),
 				errorElement: <BubbleError />,
 			},
@@ -82,9 +95,9 @@ const router = createBrowserRouter([
 	{
 		path: '*',
 		element: (
-			<Suspense fallback={<Loader />}>
+			<WrapperSuspense>
 				<NotFoundPage />
-			</Suspense>
+			</WrapperSuspense>
 		),
 	},
 ])

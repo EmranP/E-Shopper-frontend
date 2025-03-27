@@ -1,3 +1,4 @@
+import { ToastPosition } from 'react-toastify'
 import { ROLES } from '../../app/constants/roles/roles'
 
 export interface ITitle {
@@ -26,4 +27,9 @@ export interface IModal {
 
 export interface IProtectedRoute {
 	requiredRole: ROLES
+}
+
+export interface IToastProps {
+	position: ToastPosition | undefined
+	theme: string | 'dark'
 }
