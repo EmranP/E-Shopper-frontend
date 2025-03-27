@@ -1,6 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
 import { authFormWrapperStyles } from '../../app/constants/styles/auth.constants'
 import { ILoginFormInputs } from '../../features/auth/types/types-ui.interface'
 import { AboutAuth } from '../../features/auth/ui/AboutAuth'
@@ -26,15 +25,12 @@ const LoginPage = () => {
 	})
 	const { login } = useActions()
 	const { isAuth, error, isLoading } = useAppSelector(state => state.auth)
-	const navigate = useNavigate()
+
 	const { showError } = useShowError(error, 5000)
 
 	const onSubmitHandler: SubmitHandler<ILoginFormInputs> = data => {
 		login(data.email, data.password)
 		reset()
-		if (isAuth) {
-			navigate('/')
-		}
 	}
 
 	return (

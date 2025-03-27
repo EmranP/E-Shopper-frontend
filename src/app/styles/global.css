@@ -29,11 +29,33 @@ button {
 }
 
 .layout {
-	min-height: 100%;
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
 	width: 100%;
 	overflow: hidden;
 }
 
 .layout-container {
 	@apply max-w-[1400px] mx-auto px-[20px];
+}
+
+.footer span {
+	background: linear-gradient(-45deg, #ffffff, #000000, #ffffff, #ffffff);
+	background-size: 300%;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	animation: animated_text 10s ease-in-out infinite;
+}
+
+@keyframes animated_text {
+	0% {
+		background-position: 0px 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0px 50%;
+	}
 }
