@@ -21,18 +21,12 @@ export const navigationLink = [
 	},
 	{
 		id: 4,
-		title: 'users orders',
-		path: '/admin/orders',
-		isRoles: [ROLES.ADMIN],
-	},
-	{
-		id: 5,
 		title: 'users',
 		path: '/admin/user',
 		isRoles: [ROLES.ADMIN],
 	},
 	{
-		id: 6,
+		id: 5,
 		title: 'carts',
 		path: '/admin/carts',
 		isRoles: [ROLES.ADMIN],

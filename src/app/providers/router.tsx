@@ -5,6 +5,11 @@ import {
 	RouterProvider,
 	useRouteError,
 } from 'react-router-dom'
+import { CartAdminPageContent } from '../../pages/admin/admin-panel/cart/CartAdminPageContent'
+import { CategoriesAdminPageContent } from '../../pages/admin/admin-panel/categories/CategoriesAdminPageContent'
+import { OrdersAdminPageContent } from '../../pages/admin/admin-panel/orders/OrdersAdminPageContent'
+import { ProductsAdminPageContent } from '../../pages/admin/admin-panel/products/ProductsAdminPageContent'
+import { UsersAdminPageContent } from '../../pages/admin/admin-panel/users/UsersAdminPageContent'
 import { WrapperSuspense } from '../../shared/ui/WrapperSuspense'
 import { ROLES } from '../constants/roles/roles'
 import { ProtectedRoute } from './ProtectedRoute'
@@ -16,9 +21,6 @@ const LoginPage = lazy(() => import('../../pages/auth/LoginPage'))
 const RegistrationPage = lazy(() => import('../../pages/auth/RegistrationPage'))
 const AdminPanelPage = lazy(
 	() => import('../../pages/admin/admin-panel/AdminPanelPage')
-)
-const OrdersAdminPage = lazy(
-	() => import('../../pages/admin/orders/OrdersAdminPage ')
 )
 
 const BubbleError: FC = () => {
@@ -73,22 +75,35 @@ const router = createBrowserRouter([
 		children: [
 			{
 				path: 'panel',
-				element: (
-					<WrapperSuspense>
-						<AdminPanelPage />
-					</WrapperSuspense>
-				),
+				element: <AdminPanelPage />,
 				errorElement: <BubbleError />,
-				children: [],
-			},
-			{
-				path: 'orders',
-				element: (
-					<WrapperSuspense>
-						<OrdersAdminPage />
-					</WrapperSuspense>
-				),
-				errorElement: <BubbleError />,
+				children: [
+					{
+						path: 'users',
+						element: <UsersAdminPageContent />,
+						errorElement: <BubbleError />,
+					},
+					{
+						path: 'orders',
+						element: <OrdersAdminPageContent />,
+						errorElement: <BubbleError />,
+					},
+					{
+						path: 'products',
+						element: <ProductsAdminPageContent />,
+						errorElement: <BubbleError />,
+					},
+					{
+						path: 'categories',
+						element: <CategoriesAdminPageContent />,
+						errorElement: <BubbleError />,
+					},
+					{
+						path: 'carts',
+						element: <CartAdminPageContent />,
+						errorElement: <BubbleError />,
+					},
+				],
 			},
 		],
 	},

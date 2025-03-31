@@ -9,7 +9,7 @@ import { thunk, ThunkMiddleware } from 'redux-thunk'
 import { authReducer } from '../../features/auth/model/auth.reducer'
 import { AppActions, IRootState } from '../../shared/types/store.types'
 
-export const rootReducer: Reducer<IRootState, AppActions> = combineReducers({
+export const rootAppReducer: Reducer<IRootState, AppActions> = combineReducers({
 	auth: authReducer,
 })
 
@@ -20,6 +20,6 @@ const configMiddlewareThunk = composeWithDevTools(
 )
 
 export const store = createStore<IRootState, AppActions, object, object>(
-	rootReducer,
+	rootAppReducer,
 	configMiddlewareThunk
 )

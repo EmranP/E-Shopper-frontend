@@ -1,11 +1,9 @@
 import { FC } from 'react'
 
-const OrdersAdminPage: FC = () => {
+export const OrdersAdminPageContent: FC = () => {
 	return (
 		<div>
 			<h1>OrdersAdminPage </h1>
 		</div>
 	)
 }
-
-export default OrdersAdminPage
