@@ -19,9 +19,9 @@ export const LayoutAuth: FC<PropsWithChildren> = ({ children }) => {
 	}, [error, isAuth])
 
 	return (
-		<div className='h-screen flex items-center h-full'>
+		<section className='h-screen flex items-center h-full'>
 			<Toast position='top-right' theme='dark' />
 			{children}
-		</div>
+		</section>
 	)
 }

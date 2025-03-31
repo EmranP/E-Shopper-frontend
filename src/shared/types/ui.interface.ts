@@ -12,6 +12,7 @@ export interface IAuthButton extends ITitle {
 
 export interface IButton extends IAuthButton {
 	onClick: () => void
+	color: string
 }
 
 export interface IBackMove {
@@ -32,4 +33,9 @@ export interface IProtectedRoute {
 export interface IToastProps {
 	position: ToastPosition | undefined
 	theme: string | 'dark'
+}
+
+export interface ILabel {
+	htmlFor: string
+	title: string
 }

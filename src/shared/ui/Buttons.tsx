@@ -9,10 +9,10 @@ export const AuthButton: FC<IAuthButton> = ({ title, bgColor }) => {
 	)
 }
 
-export const Button: FC<IButton> = ({ title, bgColor, onClick }) => {
+export const Button: FC<IButton> = ({ title, color, bgColor, onClick }) => {
 	return (
 		<button
-			className={`px-4 py-2 rounded-lg w-full text-white ${bgColor}`}
+			className={`px-4 py-2 rounded-lg w-full text-${color} ${bgColor}`}
 			onClick={onClick}
 		>
 			{title}
