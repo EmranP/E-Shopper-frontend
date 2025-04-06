@@ -41,12 +41,14 @@ export const Modal: FC<IModal> = ({
 						bgColor={'bg-baseTextAndButton'}
 						type={'button'}
 						title={'Cancel'}
+						color='white'
 					/>
 					<Button
 						onClick={onClickSave}
 						bgColor={'bg-bgActionButton'}
 						type={'button'}
 						title={'Save'}
+						color='white'
 					/>
 				</div>
 			</motion.div>

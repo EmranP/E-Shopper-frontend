@@ -1,5 +1,9 @@
+import { Pencil, Trash } from 'lucide-react'
 import { FC, useState } from 'react'
-import { useToggle } from '../../../shared/hooks/useToggle'
+import { useAppSelector } from '../../../shared/hooks/store.hooks'
+import { useActions } from '../../../shared/hooks/useActions'
+import { useInput } from '../../../shared/hooks/useInput'
+import { useMode } from '../../../shared/hooks/useMode'
 import { Button } from '../../../shared/ui/Buttons'
 import { DynamicForm } from '../../../shared/ui/DynamicForm'
 import { Input } from '../../../shared/ui/Input'
@@ -11,35 +15,65 @@ import {
 	adminFormConfigUser,
 } from '../../../shared/utils/adminFormConfig.utils'
 import { ISelectOptionUser } from '../types/ui.interface'
+import {
+	AdminFormActions,
+	AdminFormChoiceAction,
+	AdminFormFieldEditElement,
+} from './AdminFormActionPanel'
 
 //! Notes for redux: gets values data from redux state
 //!!! Notes: For Post api products field user_id needs use user.id from redux store
+
+//*  Notes: Method Create carts when user success register
+
+// !Todo: if button disable is be set opacity
+export const iconsSize: number = 20
 
 export const AdminFormUsers: FC = () => {
 	const [selectedUser, setSelectedUser] = useState<ISelectOptionUser>(
 		adminFormConfigUser[0]
 	)
+	const { value, onChange } = useInput(0)
+	const { editForAdminUsers } = useActions()
+	const { isAppLoading, error } = useAppSelector(state => state.admin.user)
+
+	const onSubmitUsersHandler = () => {
+		editForAdminUsers(Number(value), selectedUser.roleId)
+	}
 
 	return (
 		<DynamicForm>
 			<Label htmlFor='id' title='ID' />
-			<Input type='number' placeholder='userId' value={''} required={true} />
+			<Input
+				type='number'
+				placeholder='userId'
+				required={true}
+				value={value}
+				onChange={onChange}
+			/>
 			<Label htmlFor='role' title='Roles' />
-			{/* For created api: if selectedUser === 'Admin' ? ROLES.ADMIN : ROLES.USER  */}
 			<Select
 				options={adminFormConfigUser}
 				selected={selectedUser}
 				setSelected={setSelectedUser}
 			/>
-			<div className='w-full'>
+			<div className='w-full mb-5'>
 				<Button
 					type='button'
 					bgColor='bg-baseTextAndButton'
 					color='white'
-					onClick={() => {}}
-					title='edit'
-				/>
+					onClick={onSubmitUsersHandler}
+					title={isAppLoading ? 'Loading...' : 'edit'}
+					disabled={isAppLoading}
+				>
+					<Pencil size={iconsSize} />
+				</Button>
 			</div>
+			{error && (
+				<h2 className='text-red-500 text-center text-lg font-semibold'>
+					{error}
+				</h2>
+			)}
 		</DynamicForm>
 	)
 }
@@ -47,8 +81,9 @@ export const AdminFormUsers: FC = () => {
 export const AdminFormOrders: FC = () => {
 	const [selectedOrders, setSelectedOrders] = useState(adminFormConfigOrders[0])
 
+	const onSubmitOrderHandler = () => {}
 	return (
-		<DynamicForm>
+		<DynamicForm onSubmit={onSubmitOrderHandler}>
 			<Label htmlFor='id' title='Order ID' />
 			<Input type='number' placeholder='orderId' value={''} required={true} />
 			<Label htmlFor='status' title='Status' />
@@ -64,7 +99,9 @@ export const AdminFormOrders: FC = () => {
 					color='white'
 					onClick={() => {}}
 					title='edit'
-				/>
+				>
+					<Pencil size={18} />
+				</Button>
 			</div>
 		</DynamicForm>
 	)
@@ -74,55 +111,30 @@ export const AdminFormProducts: FC = () => {
 	const [selectedProduct, setSelectedProduct] = useState(
 		adminFormConfigOrders[0]
 	)
-	const { toggle, toggleHandler } = useToggle(false)
-	const [isModeEdited, setIsModeEdited] = useState(false)
-	const [isModeCreated, setIsModeCreated] = useState(false)
+	const { mode, changeMode, toggleMode, resetMode } = useMode()
 
-	const choseModeEditedHandler = () => setIsModeEdited(true)
-	const choseModeCreatedHandler = () => setIsModeCreated(true)
-	const resetModes = () => {
-		setIsModeCreated(false)
-		setIsModeEdited(false)
-	}
+	const toggleModeHandler = () => toggleMode()
+	const resetModes = () => resetMode()
 
-	// const toggleEditModeHandler = () => {
-	// 	if (isModeEdited) toggleHandler()
-	// }
-
+	const onSubmitProductHandler = () => {}
 	return (
-		<DynamicForm>
-			{!isModeCreated && !isModeEdited && (
-				<div className='flex justify-between items-center gap-4'>
-					<Button
-						type='button'
-						bgColor='bg-baseTextAndButton'
-						color='white'
-						onClick={choseModeCreatedHandler}
-						title='add mode'
-					/>
-					<Button
-						type='button'
-						bgColor='bg-baseTextAndButton'
-						color='white'
-						onClick={choseModeEditedHandler}
-						title='edit mode'
-					/>
-				</div>
-			)}
-
-			{(isModeEdited || isModeCreated) && (
+		<DynamicForm onSubmit={onSubmitProductHandler}>
+			<AdminFormChoiceAction
+				mode={mode}
+				Button={Button}
+				changeMode={changeMode}
+			/>
+			{mode && (
 				<>
-					{isModeEdited && toggle && (
-						<>
-							<Label htmlFor='id' title='Product ID' />
-							<Input
-								type='number'
-								placeholder='product id'
-								value={''}
-								required={true}
-							/>
-						</>
-					)}
+					<AdminFormFieldEditElement
+						mode={mode}
+						modeAction={'edit'}
+						Label={Label}
+						Input={Input}
+						titleLabel='Product ID'
+						placeholder='product id'
+						value=''
+					/>
 					<Label htmlFor='title' title='Product name' />
 					<Input
 						type='text'
@@ -163,30 +175,15 @@ export const AdminFormProducts: FC = () => {
 						setValue={() => {}}
 						maxLength={200}
 					/>
-					<div className='flex items-center gap-4 my-4'>
-						{isModeEdited && (
-							<Button
-								type='button'
-								bgColor='bg-baseTextAndButton'
-								color='white'
-								onClick={toggleHandler}
-								title='change mode'
-							/>
-						)}
-						<Button
-							type='button'
-							bgColor='bg-baseTextAndButton'
-							color='white'
-							onClick={() => {}}
-							title={!toggle ? 'add product' : 'edit product'}
-						/>
-					</div>
-					<Button
-						type='button'
-						bgColor='bg-baseTextAndButton'
-						color='white'
-						onClick={resetModes}
-						title={'Cancel'}
+					<AdminFormActions
+						mode={mode}
+						titleAdd='add product'
+						titleEdit='edit product'
+						toggleModeHandler={toggleModeHandler}
+						iconsSize={iconsSize}
+						resetModes={resetModes}
+						Button={Button}
+						onClick={() => {}}
 					/>
 				</>
 			)}
@@ -195,9 +192,70 @@ export const AdminFormProducts: FC = () => {
 }
 
 export const AdminFormCategories: FC = () => {
+	const { mode, changeMode, toggleMode, resetMode } = useMode()
+
+	const toggleModeHandler = () => toggleMode()
+	const resetModes = () => resetMode()
+
+	const onSubmitCategoriesHandler = () => {}
 	return (
-		<DynamicForm>
-			<label htmlFor=''></label>
+		<DynamicForm onSubmit={onSubmitCategoriesHandler}>
+			<AdminFormChoiceAction
+				mode={mode}
+				changeMode={changeMode}
+				Button={Button}
+			/>
+			{mode && (
+				<>
+					<AdminFormFieldEditElement
+						mode={mode}
+						modeAction={'edit'}
+						Label={Label}
+						Input={Input}
+						titleLabel='Categories ID'
+						placeholder='categories id'
+						value=''
+					/>
+					<Label htmlFor='title' title='Categories name' />
+					<Input
+						type='text'
+						placeholder='Categories name'
+						value={''}
+						required={true}
+					/>
+					<AdminFormActions
+						mode={mode}
+						toggleModeHandler={toggleModeHandler}
+						iconsSize={iconsSize}
+						resetModes={resetModes}
+						titleAdd='add categories'
+						titleEdit='edit categories'
+						Button={Button}
+						onClick={() => {}}
+					/>
+				</>
+			)}
+		</DynamicForm>
+	)
+}
+
+//! Carts just should be remove element carts
+
+export const AdminFormCarts: FC = () => {
+	const onSubmitCartsHandler = () => {}
+	return (
+		<DynamicForm onSubmit={onSubmitCartsHandler}>
+			<Label htmlFor='id' title='Cart ID' />
+			<Input type='number' placeholder='cart id' value={''} required={true} />
+			<Button
+				type='button'
+				bgColor='bg-baseTextAndButton'
+				color='white'
+				onClick={() => {}}
+				title='remove cart'
+			>
+				<Trash size={iconsSize} />
+			</Button>
 		</DynamicForm>
 	)
 }

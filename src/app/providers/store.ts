@@ -6,11 +6,13 @@ import {
 	Reducer,
 } from 'redux'
 import { thunk, ThunkMiddleware } from 'redux-thunk'
+import { rootAdminReducer } from '../../features/admin/model/admin.store'
 import { authReducer } from '../../features/auth/model/auth.reducer'
 import { AppActions, IRootState } from '../../shared/types/store.types'
 
 export const rootAppReducer: Reducer<IRootState, AppActions> = combineReducers({
 	auth: authReducer,
+	admin: rootAdminReducer,
 })
 
 const thunkMiddleware: ThunkMiddleware<IRootState, AppActions> = thunk

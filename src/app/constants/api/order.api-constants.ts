@@ -1,9 +1,12 @@
+import { BASE_API_URL } from '../../../shared/config/axiosInstance'
+
 // ORDERS
-const ORDER_API_URL = `order`
+export const ORDER_API_URL = `${BASE_API_URL}/order`
 
 export const ORDER_API_URL_ADMIN = `${ORDER_API_URL}/admin`
 export const ORDER_API_URL_ADD = `${ORDER_API_URL}/add`
 export const ORDER_API_URL_EDIT = `${ORDER_API_URL}/edit`
+export const ORDER_API_URL_REMOVE = `${ORDER_API_URL}/remove`
 
 // ORDER-ITEMS
 

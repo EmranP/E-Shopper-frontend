@@ -9,7 +9,7 @@ export const BackMove: FC<IBackMove> = ({ color }) => {
 		<div className='absolute top-5 left-5 '>
 			<div
 				className={`flex ${color} items-center gap-2 cursor-pointer`}
-				onClick={() => navigate(-1)}
+				onClick={() => navigate('/')}
 			>
 				<MoveLeft size={30} />
 				<h1 className='text-2xl'>Back</h1>

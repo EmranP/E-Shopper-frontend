@@ -8,7 +8,7 @@ export const AdminPanelNavigation: FC = () => {
 	const navigate = useNavigate()
 
 	return (
-		<div className='flex gap-10 items-center mb-15'>
+		<div className='flex gap-10 items-center mb-8'>
 			<AdminButtonNavigation
 				locationAdminContent={locationAdminContent}
 				navigate={navigate}
