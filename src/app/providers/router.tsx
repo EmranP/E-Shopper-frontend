@@ -79,7 +79,7 @@ const router = createBrowserRouter([
 				errorElement: <BubbleError />,
 				children: [
 					{
-						path: 'users',
+						path: '',
 						element: <UsersAdminPageContent />,
 						errorElement: <BubbleError />,
 					},

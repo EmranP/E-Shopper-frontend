@@ -6,5 +6,5 @@ export const useToggle = (initialState: boolean = false): IHookToggle => {
 
 	const toggleHandler = () => setToggle(prev => !prev)
 
-	return { toggle, toggleHandler }
+	return { toggle, toggleHandler, setToggle }
 }

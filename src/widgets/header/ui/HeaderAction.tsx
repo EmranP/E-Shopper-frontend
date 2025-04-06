@@ -48,6 +48,7 @@ export const HeaderAction: FC = () => {
 								bgColor='bg-baseTextAndButton'
 								onClick={() => {}}
 								type={'button'}
+								color='white'
 							/>
 						</Link>
 						<Link to={'/auth/registration'}>
@@ -56,6 +57,7 @@ export const HeaderAction: FC = () => {
 								bgColor='bg-bgActionButton'
 								type='button'
 								onClick={() => {}}
+								color='white'
 							/>
 						</Link>
 					</div>

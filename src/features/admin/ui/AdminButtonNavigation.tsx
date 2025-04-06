@@ -19,7 +19,7 @@ export const AdminButtonNavigation: FC<IAdminButtonNavigation> = ({
 			color={
 				locationAdminContent.pathname === to ? 'white' : 'baseTextAndButton'
 			}
-			type={'button'}
+			type='button'
 			title={title}
 		/>
 	)

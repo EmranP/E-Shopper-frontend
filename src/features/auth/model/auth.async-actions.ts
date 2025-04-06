@@ -13,6 +13,7 @@ import {
 import { AUTH_API_URL_REFRESH } from '../../../app/constants/api/auth.api-constants'
 import { BASE_API_URL } from '../../../shared/config/axiosInstance'
 import { AppActions, AppThunk } from '../../../shared/types/store.types'
+import { errorMessageAsyncAction } from '../../../shared/utils/errorMessage.async-action'
 import { IResponseAuthApi } from '../types/type.api'
 import { authServiceApi } from './auth.service'
 
@@ -26,10 +27,7 @@ export const login =
 			localStorage.setItem('token', resultLogin.data.access)
 			dispatch({ type: AUTH_LOGIN_SUCCESS, payload: resultLogin.data })
 		} catch (error) {
-			const errorMessage: string =
-				error instanceof AxiosError && error.response
-					? error.response.data.message
-					: 'Login failed'
+			const errorMessage = errorMessageAsyncAction(error)
 
 			dispatch({
 				type: AUTH_LOGIN_FAILURE,
@@ -52,11 +50,7 @@ export const registration =
 			localStorage.setItem('token', resultReg.data.access)
 			dispatch({ type: AUTH_REG_SUCCESS, payload: resultReg.data })
 		} catch (error) {
-			const errorMessage: string =
-				error instanceof AxiosError && error.response
-					? error.response.data.message
-					: 'Reg failed'
-
+			const errorMessage = errorMessageAsyncAction(error)
 			dispatch({
 				type: AUTH_REG_FAILURE,
 				payload: errorMessage,
@@ -80,10 +74,7 @@ export const logout =
 				return
 			}
 
-			const errorMessage: string =
-				error instanceof AxiosError && error.response
-					? error.response.data.message
-					: 'Logout failed'
+			const errorMessage = errorMessageAsyncAction(error)
 
 			dispatch({
 				type: AUTH_LOGOUT_FAILURE,
@@ -113,11 +104,7 @@ export const checkAuth =
 				payload: response.data,
 			})
 		} catch (error) {
-			const errorMessage: string =
-				error instanceof AxiosError && error.response
-					? error.response.data.message
-					: 'Auth check failed'
-
+			const errorMessage = errorMessageAsyncAction(error)
 			dispatch({
 				type: AUTH_LOGOUT_FAILURE,
 				payload:

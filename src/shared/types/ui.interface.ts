@@ -1,3 +1,4 @@
+import { ButtonHTMLAttributes, ReactNode } from 'react'
 import { ToastPosition } from 'react-toastify'
 import { ROLES } from '../../app/constants/roles/roles'
 
@@ -10,9 +11,11 @@ export interface IAuthButton extends ITitle {
 	type: string
 }
 
-export interface IButton extends IAuthButton {
-	onClick: () => void
+export interface IButton extends ButtonHTMLAttributes<HTMLButtonElement> {
 	color: string
+	children?: ReactNode
+	bgColor: string
+	title: string
 }
 
 export interface IBackMove {
@@ -38,4 +41,8 @@ export interface IToastProps {
 export interface ILabel {
 	htmlFor: string
 	title: string
+}
+
+export interface IDynamicForm {
+	children: ReactNode
 }

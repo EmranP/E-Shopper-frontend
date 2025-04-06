@@ -1,5 +1,7 @@
+import { BASE_API_URL } from '../../../shared/config/axiosInstance'
+
 // CARTS
-const CART_API_URL = 'cart'
+const CART_API_URL = `${BASE_API_URL}/cart`
 
 export const CART_API_URL_ADMIN = `${CART_API_URL}/admin`
 export const CART_API_URL_ADD = `${CART_API_URL}/add`
