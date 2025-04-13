@@ -4,7 +4,7 @@ export interface IProductCard {
 	title: string | null | undefined
 	price: number | string | null | undefined
 	description: string | null | undefined
-	onClick: () => void
+	stock: number
 }
 
 export interface IPagination {

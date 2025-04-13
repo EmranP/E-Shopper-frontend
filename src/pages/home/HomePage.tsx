@@ -13,8 +13,10 @@ import { LayoutContent } from '../../widgets/layout/Content'
 import { Layout } from '../../widgets/layout/Layout'
 
 const HomePage: FC = () => {
-	const { isLoading, user } = useAppSelector(state => state.auth)
-	const { checkAuth } = useActions()
+	const { auth } = useAppSelector(state => state)
+	const { checkAuth, getUserCarts } = useActions()
+
+	const { isLoading, user } = auth
 
 	useEffect(() => {
 		const token = localStorage.getItem('token')
@@ -28,6 +30,11 @@ const HomePage: FC = () => {
 			toast.info(infoAuthMessage)
 		}
 	}, [user?.isActivated])
+
+	useEffect(() => {
+		if (!user?.id) return
+		getUserCarts(user.id)
+	}, [user?.id])
 
 	if (isLoading) return <Loader />
 

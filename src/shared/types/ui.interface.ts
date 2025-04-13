@@ -54,5 +54,5 @@ export interface IErrorMessage {
 export interface ITrashUI {
 	showModalHandler: () => void
 	setIdToDelete: (value: SetStateAction<number | null>) => void
-	data: { id: number | undefined | null }
+	data: { id: number | undefined }
 }

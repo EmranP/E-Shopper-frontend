@@ -34,8 +34,8 @@ export const OrdersAdminPageContent: FC = () => {
 
 	const ordersData = orders as IResponseOrdersApi[] | null
 
-	if (!ordersData || !ordersData.length) {
-		return <ErrorAdminContentPage error={error} />
+	if (!ordersData?.length || error) {
+		return <ErrorAdminContentPage error={'No quantity of goods'} />
 	}
 
 	const removeOrderHandler = (orderId: number) => removeOrdersForAdmin(orderId)

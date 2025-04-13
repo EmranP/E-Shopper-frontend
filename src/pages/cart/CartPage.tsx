@@ -1,16 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { FC, useEffect } from 'react'
+import { CartContent } from '../../features/cart/ui/CartContent'
+import { CartInfo } from '../../features/cart/ui/CartInfo'
+import { CartWrapper } from '../../features/cart/ui/CartWrapper'
 import { useAppSelector } from '../../shared/hooks/store.hooks'
 import { useActions } from '../../shared/hooks/useActions'
-import { LoaderApp } from '../../shared/ui/LoaderApp'
+import { Loader } from '../../shared/ui/Loader'
 import { Footer } from '../../widgets/footer/ui/Footer'
 import { Header } from '../../widgets/header/ui/Header'
 import { LayoutContent } from '../../widgets/layout/Content'
 import { Layout } from '../../widgets/layout/Layout'
 
 export const CartPage: FC = () => {
-	const { isLoading, isAuth } = useAppSelector(state => state.auth)
-	const { checkAuth } = useActions()
+	const { auth } = useAppSelector(state => state)
+	const { checkAuth, getUserCarts } = useActions()
+
+	const { isLoading, user, isAuth } = auth
 
 	useEffect(() => {
 		const token = localStorage.getItem('token')
@@ -19,7 +24,12 @@ export const CartPage: FC = () => {
 		}
 	}, [])
 
-	if (isLoading) return <LoaderApp />
+	useEffect(() => {
+		if (!user?.id) return
+		getUserCarts(user.id)
+	}, [user?.id])
+
+	if (isLoading) return <Loader />
 
 	return (
 		<Layout>
@@ -30,7 +40,10 @@ export const CartPage: FC = () => {
 						You need in auth
 					</h1>
 				) : (
-					<h1>CartPage</h1>
+					<CartWrapper>
+						<CartContent />
+						<CartInfo />
+					</CartWrapper>
 				)}
 			</LayoutContent>
 			<Footer />

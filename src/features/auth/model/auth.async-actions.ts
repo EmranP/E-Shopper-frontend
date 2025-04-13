@@ -13,6 +13,7 @@ import {
 import {
 	CART_ADD_FAILURE,
 	CART_ADD_SUCCESS,
+	CART_GET_SUCCESS,
 } from '../../../app/constants/actions/cart.constatns'
 import { AUTH_API_URL_REFRESH } from '../../../app/constants/api/auth.api-constants'
 import { BASE_API_URL } from '../../../shared/config/axiosInstance'
@@ -31,6 +32,12 @@ export const login =
 
 			localStorage.setItem('token', resultLogin.data.access)
 			dispatch({ type: AUTH_LOGIN_SUCCESS, payload: resultLogin.data })
+
+			if (!resultLogin.data.user.id) return
+
+			const resultAddCart = await cartsServiceApi.getUserCarts()
+
+			dispatch({ type: CART_ADD_SUCCESS, payload: resultAddCart.data })
 		} catch (error) {
 			const errorMessage = errorMessageAsyncAction(error)
 
@@ -58,8 +65,11 @@ export const registration =
 			if (!resultReg.data.user.id) return
 
 			const resultAddCart = await cartsServiceApi.createdUserCarts()
+			const resultGetCart = await cartsServiceApi.getUserCarts()
 
 			dispatch({ type: CART_ADD_SUCCESS, payload: resultAddCart.data })
+
+			dispatch({ type: CART_GET_SUCCESS, payload: resultGetCart.data })
 		} catch (error) {
 			const errorMessage = errorMessageAsyncAction(error)
 			dispatch({

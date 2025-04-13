@@ -1,7 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { motion } from 'motion/react'
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { CartControls } from '../../../features/cart/ui/CartControls '
+import { useAppSelector } from '../../../shared/hooks/store.hooks'
+import { useActions } from '../../../shared/hooks/useActions'
+import { useCartControl } from '../../../shared/hooks/useCartControls'
 import { Button } from '../../../shared/ui/Buttons'
 import { cardVariants } from '../../../shared/utils/animate.utils'
 import { truncateText } from '../../../shared/utils/truncateText.utils'
@@ -13,8 +18,30 @@ export const ProductCard: FC<IProductCard> = ({
 	imageUrl,
 	price,
 	description,
-	onClick,
+	stock,
 }) => {
+	const {
+		quantity,
+		isActiveMinSum,
+		isActiveMaxSum,
+		increaseStock,
+		decreaseStock,
+	} = useCartControl(1, stock)
+	const { addCartItems } = useActions()
+	const { cart } = useAppSelector(state => state.carts)
+	const [processBuy, setProcessBuy] = useState(false)
+
+	const addCartItemsHandler = () => {
+		if (!cart?.id || !id || !price) return
+		setProcessBuy(true)
+
+		addCartItems(cart.id, id, price as number, quantity)
+		toast.success('Product has been success added')
+		setProcessBuy(false)
+	}
+
+	const isOutOfStock = stock === 0
+
 	return (
 		<motion.div
 			variants={cardVariants}
@@ -55,11 +82,22 @@ export const ProductCard: FC<IProductCard> = ({
 				</div>
 			</Link>
 			<div className={'px-4 py-2'}>
+				<div className='mb-4'>
+					<CartControls
+						stock={stock}
+						quantity={quantity}
+						isActiveMaxSum={isActiveMaxSum}
+						isActiveMinSum={isActiveMinSum}
+						increaseStock={increaseStock}
+						decreaseStock={decreaseStock}
+					/>
+				</div>
 				<Button
-					title='Add carts'
+					title={processBuy ? 'Adding cart...' : 'Add cart'}
+					onClick={addCartItemsHandler}
+					disabled={isOutOfStock}
 					color='white'
 					bgColor='bg-bgActionButton'
-					onClick={onClick}
 					type='button'
 					style={{ marginBottom: 20, zIndex: 10, position: 'relative' }}
 				/>

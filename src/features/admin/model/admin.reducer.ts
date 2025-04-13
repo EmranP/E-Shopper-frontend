@@ -35,7 +35,6 @@ import {
 	ADMIN_USERS_REMOVE_FAILURE,
 	ADMIN_USERS_REMOVE_SUCCESS,
 } from '../../../app/constants/actions/admin.constants'
-import { IMappingResponseProductsApi } from '../../../entities/product/types/type.api'
 import { IResponseCategoriesApi } from '../../../entities/сategory/types/type.api'
 import { IResponseUserAuthApi } from '../../auth/types/type.api'
 import { IResponseOrdersApi } from '../../order/types/types.api'
@@ -202,15 +201,15 @@ export const adminProductsReducer = (
 					: [action.payload],
 			}
 		case ADMIN_PRODUCTS_EDIT_SUCCESS: {
-			const payload = action.payload as IMappingResponseProductsApi
-
 			return {
 				...state,
 				isAppLoading: false,
 				error: null,
 				products:
 					state.products?.map(product =>
-						product.id === payload.id ? { ...product, ...payload } : product
+						product.id === action.payload.id
+							? { ...product, ...action.payload }
+							: product
 					) || null,
 			}
 		}

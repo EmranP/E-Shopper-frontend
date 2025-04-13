@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { LogOut, ShoppingCart } from 'lucide-react'
 import { FC } from 'react'
 import { Link } from 'react-router-dom'
@@ -7,7 +8,6 @@ import { useToggle } from '../../../shared/hooks/useToggle'
 import { Button } from '../../../shared/ui/Buttons'
 import { Modal } from '../../../shared/ui/Modal'
 
-// Todo: Add icons carts if user.id === cart.userId
 export const HeaderAction: FC = () => {
 	const { auth, carts } = useAppSelector(state => state)
 	const { isAuth, user } = auth
@@ -22,14 +22,13 @@ export const HeaderAction: FC = () => {
 	}
 
 	const isShowModalHandler = () => toggleShowModal.toggleHandler()
-
 	return (
 		<>
 			<div className='flex flex-col items-center gap-y-2'>
 				{isAuth ? (
 					<>
 						<div className='flex items-center gap-4'>
-							{user && Number(user?.id) === Number(cart?.userId) ? (
+							{user && user?.id === cart?.userId ? (
 								<Link to={'/cart'}>
 									<ShoppingCart size={20} />
 								</Link>

@@ -50,49 +50,51 @@ export const ProductsContent: FC = () => {
 		}
 	}
 	return (
-		<div className='flex-auto'>
-			<div className='flex justify-between gap-5 mb-15'>
-				<h1 className='text-2xl flex-auto'>Products</h1>
-				<Button
-					color={'white'}
-					bgColor={'bg-bgActionButton'}
-					title={sortedByPriceDesc ? 'Reset Sort' : 'Sort by Price ↓'}
-					style={{ width: 150 }}
-					onClick={() => setSortedByPriceDesc(prev => !prev)}
-				/>
-			</div>
-			{isAppLoading ? (
-				<LoaderApp />
-			) : error ? (
-				<ErrorMessage error={error} />
-			) : (
-				<>
-					{search && (
-						<p className='mb-4 text-sm text-gray-500'>
-							Search results for the query: <strong>{search}</strong>
-						</p>
-					)}
-					<div className='products__row space-5 mb-10'>
-						{sortedProducts?.map(productItem => (
-							<ProductCard
-								key={productItem.id}
-								id={productItem.id}
-								title={productItem.name}
-								imageUrl={productItem.imageUrl}
-								price={productItem.price}
-								description={productItem.description}
-								onClick={() => {}} //! add cart-items product dispatch
-							/>
-						))}
-					</div>
-					<Pagination
-						page={page}
-						totalPage={totalPages}
-						prevPageHandler={prevPageHandler}
-						nextPageHandler={nextPageHandler}
+		<>
+			<div className='flex-auto'>
+				<div className='flex justify-between gap-5 mb-15'>
+					<h1 className='text-2xl flex-auto'>Products</h1>
+					<Button
+						color={'white'}
+						bgColor={'bg-bgActionButton'}
+						title={sortedByPriceDesc ? 'Reset Sort' : 'Sort by Price ↓'}
+						style={{ width: 150 }}
+						onClick={() => setSortedByPriceDesc(prev => !prev)}
 					/>
-				</>
-			)}
-		</div>
+				</div>
+				{isAppLoading ? (
+					<LoaderApp />
+				) : !productsSearch.length ? (
+					<ErrorMessage error={'No quantity of goods'} />
+				) : (
+					<>
+						{search && (
+							<p className='mb-6 text-sm text-gray-500'>
+								Search results for the query: <strong>{search}</strong>
+							</p>
+						)}
+						<div className='products__row space-5 mb-10'>
+							{sortedProducts?.map(productItem => (
+								<ProductCard
+									key={productItem.id}
+									id={productItem.id}
+									title={productItem.name}
+									imageUrl={productItem.imageUrl}
+									price={productItem.price}
+									description={productItem.description}
+									stock={productItem.stock}
+								/>
+							))}
+						</div>
+						<Pagination
+							page={page}
+							totalPage={totalPages}
+							prevPageHandler={prevPageHandler}
+							nextPageHandler={nextPageHandler}
+						/>
+					</>
+				)}
+			</div>
+		</>
 	)
 }

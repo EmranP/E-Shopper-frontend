@@ -20,10 +20,10 @@ export const HeaderBody: FC = () => {
 		if (isActivePage) {
 			if (searchValue) {
 				params.set('search', searchValue)
-				// params.set('page', '1')
+				params.set('page', '1')
 			} else {
 				params.delete('search')
-				// params.set('page', '1')
+				params.set('page', '1')
 			}
 
 			navigate({ search: params.toString() })
