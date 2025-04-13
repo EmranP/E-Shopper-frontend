@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { FC, useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -34,7 +35,6 @@ const HomePage: FC = () => {
 		<Layout>
 			<Header />
 			<LayoutContent>
-				<h1>Example</h1>
 				<Outlet />
 			</LayoutContent>
 			<Footer />

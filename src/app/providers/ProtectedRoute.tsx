@@ -22,7 +22,7 @@ export const ProtectedRoute: FC<IProtectedRoute> = ({ requiredRole }) => {
 		return <Navigate to={'/auth/login'} replace />
 	}
 
-	if (user && user.role !== requiredRole) {
+	if (user && !requiredRole.includes(user.role)) {
 		return <Navigate to={'/'} replace />
 	}
 

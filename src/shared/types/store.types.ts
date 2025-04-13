@@ -1,6 +1,6 @@
 import { ThunkAction } from 'redux-thunk'
-import { store } from '../../app/providers/store'
-import { RootStateAdminReducer } from '../../features/admin/model/admin.store'
+import { rootAppReducer, store } from '../../app/providers/store'
+import { ProductsSearchActionTypes } from '../../entities/product/types/type.model'
 import { AdminActionTypes } from '../../features/admin/types/types.model'
 import {
 	IAdminCartsState,
@@ -9,8 +9,8 @@ import {
 	IAdminProductsState,
 	IAdminUsersState,
 } from '../../features/admin/types/types.state'
-import { IAuthState } from '../../features/auth/model/auth.reducer'
 import { AuthActionTypes } from '../../features/auth/types/type.model'
+import { CartActions } from '../../features/cart/types/type.action'
 
 export type IAdminState =
 	| IAdminUsersState
@@ -19,19 +19,24 @@ export type IAdminState =
 	| IAdminCategoriesState
 	| IAdminCartsState
 
-export interface IRootState {
-	auth: IAuthState
-	admin: RootStateAdminReducer
-}
+// export interface IRootState {
+// 	auth: IAuthState | undefined
+// 	admin: RootStateAdminReducer | undefined
+// 	carts: RootStateCartReducer | undefined
+// }
 
-export type RootState = ReturnType<typeof store.getState>
-export type AppActions = AuthActionTypes | AdminActionTypes
+export type RootState = ReturnType<typeof rootAppReducer>
+export type AppActions =
+	| AuthActionTypes
+	| AdminActionTypes
+	| CartActions
+	| ProductsSearchActionTypes
 export type AppDispatch = typeof store.dispatch
 
 // Типизация для Thunk Action
 export type AppThunk<ReturnType = void> = ThunkAction<
 	ReturnType,
 	RootState,
-	undefined,
+	unknown,
 	AppActions
 >

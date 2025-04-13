@@ -1,4 +1,5 @@
-import { Pencil, Trash } from 'lucide-react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Pencil } from 'lucide-react'
 import { FC, useState } from 'react'
 import { useAppSelector } from '../../../shared/hooks/store.hooks'
 import { useActions } from '../../../shared/hooks/useActions'
@@ -6,6 +7,7 @@ import { useInput } from '../../../shared/hooks/useInput'
 import { useMode } from '../../../shared/hooks/useMode'
 import { Button } from '../../../shared/ui/Buttons'
 import { DynamicForm } from '../../../shared/ui/DynamicForm'
+import { ErrorMessage } from '../../../shared/ui/ErrorUi'
 import { Input } from '../../../shared/ui/Input'
 import { Label } from '../../../shared/ui/Label'
 import { Select } from '../../../shared/ui/Select'
@@ -14,7 +16,8 @@ import {
 	adminFormConfigOrders,
 	adminFormConfigUser,
 } from '../../../shared/utils/adminFormConfig.utils'
-import { ISelectOptionUser } from '../types/ui.interface'
+import { mapCategoriesToOptions } from '../../../shared/utils/mapping.utils'
+import { ISelectOption, ISelectOptionUser } from '../types/ui.interface'
 import {
 	AdminFormActions,
 	AdminFormChoiceAction,
@@ -23,14 +26,14 @@ import {
 
 //! Notes for redux: gets values data from redux state
 //!!! Notes: For Post api products field user_id needs use user.id from redux store
+//!!  Notes: Method Create carts when user success register
 
-//*  Notes: Method Create carts when user success register
+// * Todo: Orders
 
-// !Todo: if button disable is be set opacity
 export const iconsSize: number = 20
 
 export const AdminFormUsers: FC = () => {
-	const [selectedUser, setSelectedUser] = useState<ISelectOptionUser>(
+	const [selectedUser, setSelectedUser] = useState<ISelectOptionUser | null>(
 		adminFormConfigUser[0]
 	)
 	const { value, onChange } = useInput(0)
@@ -38,12 +41,14 @@ export const AdminFormUsers: FC = () => {
 	const { isAppLoading, error } = useAppSelector(state => state.admin.user)
 
 	const onSubmitUsersHandler = () => {
-		editForAdminUsers(Number(value), selectedUser.roleId)
+		if (!value || !selectedUser) return
+
+		editForAdminUsers(value, selectedUser.roleId)
 	}
 
 	return (
 		<DynamicForm>
-			<Label htmlFor='id' title='ID' />
+			<Label htmlFor='id' title='User ID' />
 			<Input
 				type='number'
 				placeholder='userId'
@@ -69,23 +74,37 @@ export const AdminFormUsers: FC = () => {
 					<Pencil size={iconsSize} />
 				</Button>
 			</div>
-			{error && (
-				<h2 className='text-red-500 text-center text-lg font-semibold'>
-					{error}
-				</h2>
-			)}
+			{error && <ErrorMessage error={error} />}
 		</DynamicForm>
 	)
 }
 
 export const AdminFormOrders: FC = () => {
-	const [selectedOrders, setSelectedOrders] = useState(adminFormConfigOrders[0])
+	const [selectedOrders, setSelectedOrders] = useState<ISelectOption | null>(
+		adminFormConfigOrders[0]
+	)
+	const { value, onChange } = useInput(0)
+	const { editOrdersForAdmin } = useActions()
+	const { isAppLoading, error } = useAppSelector(state => state.admin.orders)
 
-	const onSubmitOrderHandler = () => {}
+	console.log(selectedOrders)
+
+	const onSubmitOrderHandler = () => {
+		if (!value || !selectedOrders) return
+
+		editOrdersForAdmin(value, selectedOrders.value as string)
+	}
+
 	return (
-		<DynamicForm onSubmit={onSubmitOrderHandler}>
+		<DynamicForm>
 			<Label htmlFor='id' title='Order ID' />
-			<Input type='number' placeholder='orderId' value={''} required={true} />
+			<Input
+				type='number'
+				placeholder='orderId'
+				value={value}
+				onChange={onChange}
+				required={true}
+			/>
 			<Label htmlFor='status' title='Status' />
 			<Select
 				options={adminFormConfigOrders}
@@ -97,28 +116,79 @@ export const AdminFormOrders: FC = () => {
 					type='button'
 					bgColor='bg-baseTextAndButton'
 					color='white'
-					onClick={() => {}}
-					title='edit'
+					onClick={onSubmitOrderHandler}
+					title={isAppLoading ? 'Loading...' : 'edit'}
+					disabled={isAppLoading}
 				>
 					<Pencil size={18} />
 				</Button>
 			</div>
+			{error && <ErrorMessage error={error} />}
 		</DynamicForm>
 	)
 }
 
 export const AdminFormProducts: FC = () => {
-	const [selectedProduct, setSelectedProduct] = useState(
-		adminFormConfigOrders[0]
-	)
+	const inputProductId = useInput(0)
+	const inputProductName = useInput('')
+	const inputProductImageUrl = useInput('')
+	const inputProductPrice = useInput(0)
+	const inputProductStock = useInput(0)
+	const [inputProductDescription, setInputProductDescription] = useState('')
 	const { mode, changeMode, toggleMode, resetMode } = useMode()
+	const { addProduct, editProduct } = useActions()
+	const { admin, auth } = useAppSelector(state => state)
+	// Destruction
+	const { products, categories } = admin
+	const { user } = auth
+	const { isAppLoading, error } = products
+	// Select state
+	const categorySelectOptions = mapCategoriesToOptions(categories.categories)
+	const [selectedCategories, setSelectedCategories] =
+		useState<ISelectOption | null>(
+			categorySelectOptions && categorySelectOptions[0]
+		)
 
 	const toggleModeHandler = () => toggleMode()
 	const resetModes = () => resetMode()
 
-	const onSubmitProductHandler = () => {}
+	const modeSubmitHandler = () => {
+		if (
+			!inputProductName.value ||
+			!inputProductPrice.value ||
+			!inputProductImageUrl.value ||
+			selectedCategories?.value === null ||
+			undefined
+		) {
+			return
+		}
+
+		if (mode === 'create') {
+			addProduct({
+				name: inputProductName.value as string,
+				description: inputProductDescription,
+				price: inputProductPrice.value as number,
+				stock: inputProductStock.value as number,
+				category_id: selectedCategories && (selectedCategories.value as number),
+				image_url: inputProductImageUrl.value as string,
+				userId: user && user.id,
+			})
+		} else if (mode === 'edit' && inputProductId.value) {
+			editProduct({
+				id: inputProductId.value as number,
+				name: inputProductName.value as string,
+				description: inputProductDescription,
+				price: inputProductPrice.value as number,
+				stock: inputProductStock.value as number,
+				category_id: selectedCategories && (selectedCategories.value as number),
+				image_url: inputProductImageUrl.value as string,
+				userId: user && user.id,
+			})
+		} else return
+	}
+
 	return (
-		<DynamicForm onSubmit={onSubmitProductHandler}>
+		<DynamicForm>
 			<AdminFormChoiceAction
 				mode={mode}
 				Button={Button}
@@ -133,47 +203,52 @@ export const AdminFormProducts: FC = () => {
 						Input={Input}
 						titleLabel='Product ID'
 						placeholder='product id'
-						value=''
+						value={inputProductId.value}
+						onChange={inputProductId.onChange}
 					/>
 					<Label htmlFor='title' title='Product name' />
 					<Input
 						type='text'
 						placeholder='product name'
-						value={''}
+						value={inputProductName.value}
+						onChange={inputProductName.onChange}
 						required={true}
 					/>
 					<Label htmlFor='imageUrl' title='Product image url' />
 					<Input
 						type='text'
 						placeholder='product image url'
-						value={''}
+						value={inputProductImageUrl.value}
+						onChange={inputProductImageUrl.onChange}
 						required={true}
 					/>
 					<Label htmlFor='price' title='Product price' />
 					<Input
 						type='number'
 						placeholder='product price'
-						value={''}
+						value={inputProductPrice.value}
+						onChange={inputProductPrice.onChange}
 						required={true}
 					/>
 					<Label htmlFor='stock' title='Product stock' />
 					<Input
 						type='number'
 						placeholder='product stock'
-						value={''}
+						value={inputProductStock.value}
+						onChange={inputProductStock.onChange}
 						required={true}
 					/>
-					<Label htmlFor='categoryId' title='Product category ID' />
+					<Label htmlFor='categoryId' title='Product category' />
 					<Select
-						options={adminFormConfigOrders} // Here need get state from redux store
-						selected={selectedProduct}
-						setSelected={setSelectedProduct}
+						options={categorySelectOptions && categorySelectOptions}
+						selected={selectedCategories}
+						setSelected={setSelectedCategories}
 					/>
 					<TextArea
 						label='Product Description'
-						value={''}
-						setValue={() => {}}
-						maxLength={200}
+						value={inputProductDescription}
+						setValue={setInputProductDescription}
+						maxLength={500}
 					/>
 					<AdminFormActions
 						mode={mode}
@@ -183,23 +258,50 @@ export const AdminFormProducts: FC = () => {
 						iconsSize={iconsSize}
 						resetModes={resetModes}
 						Button={Button}
-						onClick={() => {}}
+						isAppLoading={isAppLoading}
+						onClick={modeSubmitHandler}
 					/>
 				</>
 			)}
+			{error && <ErrorMessage error={error} />}
 		</DynamicForm>
 	)
 }
 
 export const AdminFormCategories: FC = () => {
 	const { mode, changeMode, toggleMode, resetMode } = useMode()
+	const inputCategoryId = useInput(0)
+	const inputCategoryName = useInput('')
+	const { addCategory, editCategory } = useActions()
+	const { isAppLoading, error } = useAppSelector(
+		state => state.admin.categories
+	)
 
 	const toggleModeHandler = () => toggleMode()
 	const resetModes = () => resetMode()
 
-	const onSubmitCategoriesHandler = () => {}
+	const modeSubmitHandler = () => {
+		if (
+			(mode === 'create' && inputCategoryName.value !== '') ||
+			null ||
+			undefined
+		) {
+			addCategory(inputCategoryName.value as string)
+		} else if (
+			(mode === 'edit' && inputCategoryId.value) ||
+			inputCategoryName.value !== '' ||
+			null ||
+			undefined
+		) {
+			editCategory(
+				inputCategoryId.value as number,
+				inputCategoryName.value as string
+			)
+		}
+	}
+
 	return (
-		<DynamicForm onSubmit={onSubmitCategoriesHandler}>
+		<DynamicForm>
 			<AdminFormChoiceAction
 				mode={mode}
 				changeMode={changeMode}
@@ -214,14 +316,14 @@ export const AdminFormCategories: FC = () => {
 						Input={Input}
 						titleLabel='Categories ID'
 						placeholder='categories id'
-						value=''
+						{...inputCategoryId}
 					/>
 					<Label htmlFor='title' title='Categories name' />
 					<Input
 						type='text'
 						placeholder='Categories name'
-						value={''}
 						required={true}
+						{...inputCategoryName}
 					/>
 					<AdminFormActions
 						mode={mode}
@@ -231,10 +333,12 @@ export const AdminFormCategories: FC = () => {
 						titleAdd='add categories'
 						titleEdit='edit categories'
 						Button={Button}
-						onClick={() => {}}
+						isAppLoading={isAppLoading}
+						onClick={modeSubmitHandler}
 					/>
 				</>
 			)}
+			{error && <ErrorMessage error={error} />}
 		</DynamicForm>
 	)
 }
@@ -242,20 +346,9 @@ export const AdminFormCategories: FC = () => {
 //! Carts just should be remove element carts
 
 export const AdminFormCarts: FC = () => {
-	const onSubmitCartsHandler = () => {}
 	return (
-		<DynamicForm onSubmit={onSubmitCartsHandler}>
-			<Label htmlFor='id' title='Cart ID' />
-			<Input type='number' placeholder='cart id' value={''} required={true} />
-			<Button
-				type='button'
-				bgColor='bg-baseTextAndButton'
-				color='white'
-				onClick={() => {}}
-				title='remove cart'
-			>
-				<Trash size={iconsSize} />
-			</Button>
+		<DynamicForm>
+			<h1 className='text-center text-white text-2xl'>Carts users</h1>
 		</DynamicForm>
 	)
 }

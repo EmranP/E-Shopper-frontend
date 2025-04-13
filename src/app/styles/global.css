@@ -16,9 +16,9 @@ body {
 	@apply font-medium text-baseTextAndButton bg-bgLayout;
 }
 
-header {
+/* header {
 	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
+} */
 
 button {
 	cursor: pointer;
@@ -62,4 +62,12 @@ button {
 	100% {
 		background-position: 0px 50%;
 	}
+}
+
+.products__row {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 300px));
+	grid-template-rows: auto;
+	place-content: center;
+	gap: 25px;
 }

@@ -1,7 +1,5 @@
-import { BASE_API_URL } from '../../../shared/config/axiosInstance'
-
 // ORDERS
-export const ORDER_API_URL = `${BASE_API_URL}/order`
+export const ORDER_API_URL = `/order`
 
 export const ORDER_API_URL_ADMIN = `${ORDER_API_URL}/admin`
 export const ORDER_API_URL_ADD = `${ORDER_API_URL}/add`

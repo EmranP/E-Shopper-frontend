@@ -10,6 +10,11 @@ import { CategoriesAdminPageContent } from '../../pages/admin/admin-panel/catego
 import { OrdersAdminPageContent } from '../../pages/admin/admin-panel/orders/OrdersAdminPageContent'
 import { ProductsAdminPageContent } from '../../pages/admin/admin-panel/products/ProductsAdminPageContent'
 import { UsersAdminPageContent } from '../../pages/admin/admin-panel/users/UsersAdminPageContent'
+import { CartPage } from '../../pages/cart/CartPage'
+import { CategoryContent } from '../../pages/home/content/CategoryContent'
+import { MainContent } from '../../pages/home/content/MainContent'
+import { ProductsContent } from '../../pages/home/content/ProductsContent'
+import { CurrentProduct } from '../../pages/product/CurrentProduct'
 import { WrapperSuspense } from '../../shared/ui/WrapperSuspense'
 import { ROLES } from '../constants/roles/roles'
 import { ProtectedRoute } from './ProtectedRoute'
@@ -51,6 +56,34 @@ const router = createBrowserRouter([
 			</WrapperSuspense>
 		),
 		errorElement: <BubbleError />,
+		children: [
+			{
+				path: '',
+				element: <MainContent />,
+				children: [
+					{
+						path: '',
+						element: <ProductsContent />,
+						errorElement: <BubbleError />,
+					},
+					{
+						path: 'category-products/:categoryProductId',
+						element: <CategoryContent />,
+						errorElement: <BubbleError />,
+					},
+				],
+			},
+			{
+				path: 'products/:productId',
+				element: <CurrentProduct />,
+				errorElement: <BubbleError />,
+			},
+			{
+				path: 'category-products/:categoryProductId/products/:productId',
+				element: <CurrentProduct />,
+				errorElement: <BubbleError />,
+			},
+		],
 	},
 	{
 		path: '/auth/login',
@@ -70,7 +103,7 @@ const router = createBrowserRouter([
 	},
 	{
 		path: '/admin',
-		element: <ProtectedRoute requiredRole={ROLES.ADMIN} />,
+		element: <ProtectedRoute requiredRole={[ROLES.ADMIN]} />,
 		errorElement: <BubbleError />,
 		children: [
 			{
@@ -106,6 +139,15 @@ const router = createBrowserRouter([
 				],
 			},
 		],
+	},
+	{
+		path: '/cart',
+		element: (
+			<WrapperSuspense>
+				<CartPage />
+			</WrapperSuspense>
+		),
+		errorElement: <BubbleError />,
 	},
 	{
 		path: '*',

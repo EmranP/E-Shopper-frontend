@@ -3,25 +3,28 @@ import {
 	applyMiddleware,
 	combineReducers,
 	legacy_createStore as createStore,
-	Reducer,
 } from 'redux'
 import { thunk, ThunkMiddleware } from 'redux-thunk'
+import { searchProductReducer } from '../../entities/product/model/product.reducer'
 import { rootAdminReducer } from '../../features/admin/model/admin.store'
 import { authReducer } from '../../features/auth/model/auth.reducer'
-import { AppActions, IRootState } from '../../shared/types/store.types'
+import { cartReducer } from '../../features/cart/model/carts.reducer'
+import { AppActions, RootState } from '../../shared/types/store.types'
 
-export const rootAppReducer: Reducer<IRootState, AppActions> = combineReducers({
+export const rootAppReducer = combineReducers({
 	auth: authReducer,
 	admin: rootAdminReducer,
+	carts: cartReducer,
+	searchProduct: searchProductReducer,
 })
 
-const thunkMiddleware: ThunkMiddleware<IRootState, AppActions> = thunk
+const thunkMiddleware: ThunkMiddleware<RootState, AppActions> = thunk
 
 const configMiddlewareThunk = composeWithDevTools(
 	applyMiddleware(thunkMiddleware)
 )
 
-export const store = createStore<IRootState, AppActions, object, object>(
+export const store = createStore<RootState, AppActions, object, object>(
 	rootAppReducer,
 	configMiddlewareThunk
 )

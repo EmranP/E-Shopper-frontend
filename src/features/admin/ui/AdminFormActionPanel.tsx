@@ -43,6 +43,7 @@ export const AdminFormFieldEditElement: FC<IAdminFormFieldIDElement> = ({
 	titleLabel,
 	placeholder,
 	value,
+	onChange,
 }) => {
 	return (
 		<>
@@ -53,6 +54,7 @@ export const AdminFormFieldEditElement: FC<IAdminFormFieldIDElement> = ({
 						type='number'
 						placeholder={placeholder}
 						value={value}
+						onChange={onChange}
 						required={true}
 					/>
 				</>
@@ -70,6 +72,7 @@ export const AdminFormActions: FC<IAdminFormActions> = ({
 	titleEdit,
 	onClick,
 	Button,
+	isAppLoading,
 }) => {
 	return (
 		<>
@@ -86,7 +89,13 @@ export const AdminFormActions: FC<IAdminFormActions> = ({
 					bgColor='bg-baseTextAndButton'
 					color='white'
 					onClick={onClick}
-					title={mode === 'create' ? titleAdd : titleEdit}
+					title={
+						isAppLoading
+							? 'Loading...'
+							: mode === 'create'
+							? titleAdd
+							: titleEdit
+					}
 				>
 					{mode === 'create' ? (
 						<CirclePlus size={iconsSize} />

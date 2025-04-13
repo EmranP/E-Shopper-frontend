@@ -1,4 +1,4 @@
-import { LogOut } from 'lucide-react'
+import { LogOut, ShoppingCart } from 'lucide-react'
 import { FC } from 'react'
 import { Link } from 'react-router-dom'
 import { useAppSelector } from '../../../shared/hooks/store.hooks'
@@ -7,8 +7,11 @@ import { useToggle } from '../../../shared/hooks/useToggle'
 import { Button } from '../../../shared/ui/Buttons'
 import { Modal } from '../../../shared/ui/Modal'
 
+// Todo: Add icons carts if user.id === cart.userId
 export const HeaderAction: FC = () => {
-	const { isAuth, user } = useAppSelector(state => state.auth)
+	const { auth, carts } = useAppSelector(state => state)
+	const { isAuth, user } = auth
+	const { cart, error } = carts
 	const { logout } = useActions()
 	const toggleLogout = useToggle(false)
 	const toggleShowModal = useToggle(false)
@@ -26,6 +29,15 @@ export const HeaderAction: FC = () => {
 				{isAuth ? (
 					<>
 						<div className='flex items-center gap-4'>
+							{user && Number(user?.id) === Number(cart?.userId) ? (
+								<Link to={'/cart'}>
+									<ShoppingCart size={20} />
+								</Link>
+							) : (
+								<div>
+									<p className='text-red-500 font-semibold text-xl'>{error}</p>
+								</div>
+							)}
 							<h1 className='text-center font-semibold text-xl'>
 								{user?.login}
 							</h1>

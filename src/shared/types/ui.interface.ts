@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, ReactNode } from 'react'
+import { ButtonHTMLAttributes, ReactNode, SetStateAction } from 'react'
 import { ToastPosition } from 'react-toastify'
 import { ROLES } from '../../app/constants/roles/roles'
 
@@ -30,7 +30,7 @@ export interface IModal {
 }
 
 export interface IProtectedRoute {
-	requiredRole: ROLES
+	requiredRole: ROLES[]
 }
 
 export interface IToastProps {
@@ -45,4 +45,14 @@ export interface ILabel {
 
 export interface IDynamicForm {
 	children: ReactNode
+}
+
+export interface IErrorMessage {
+	error: string | null | boolean
+}
+
+export interface ITrashUI {
+	showModalHandler: () => void
+	setIdToDelete: (value: SetStateAction<number | null>) => void
+	data: { id: number | undefined | null }
 }

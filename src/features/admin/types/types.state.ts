@@ -1,4 +1,4 @@
-import { IResponseProductsApi } from '../../../entities/product/types/type.api'
+import { IMappingResponseProductsApi } from '../../../entities/product/types/type.api'
 import { IResponseCategoriesApi } from '../../../entities/сategory/types/type.api'
 import { IAppState } from '../../../shared/types/initState.types'
 import { IResponseUserAuthApi } from '../../auth/types/type.api'
@@ -14,11 +14,13 @@ export interface IAdminOrdersState extends IAppState {
 }
 
 export interface IAdminProductsState extends IAppState {
-	products: IResponseProductsApi[] | null
+	products: IMappingResponseProductsApi[] | null
+	productItem: IMappingResponseProductsApi | null
 }
 
 export interface IAdminCategoriesState extends IAppState {
-	categories: IResponseCategoriesApi[] | string | null
+	categories: IResponseCategoriesApi[] | null
+	categoryItem: IResponseCategoriesApi | null
 }
 
 export interface IAdminCartsState extends IAppState {
