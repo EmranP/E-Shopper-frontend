@@ -18,7 +18,7 @@ export const Modal: FC<IModal> = ({
 				scale: 1,
 				transition: { duration: 0.3, ease: 'easeOut' },
 			}}
-			className='fixed inset-0 flex items-center justify-center bg-black/50'
+			className='fixed inset-0 flex items-center justify-center bg-black/50 z-100'
 		>
 			<motion.div
 				initial={{ opacity: 0, y: 20 }}

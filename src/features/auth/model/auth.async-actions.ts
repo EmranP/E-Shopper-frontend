@@ -10,10 +10,16 @@ import {
 	AUTH_REG_SUCCESS,
 	AUTH_REQUEST,
 } from '../../../app/constants/actions/auth.constants'
+import {
+	CART_ADD_FAILURE,
+	CART_ADD_SUCCESS,
+	CART_GET_SUCCESS,
+} from '../../../app/constants/actions/cart.constatns'
 import { AUTH_API_URL_REFRESH } from '../../../app/constants/api/auth.api-constants'
 import { BASE_API_URL } from '../../../shared/config/axiosInstance'
 import { AppActions, AppThunk } from '../../../shared/types/store.types'
 import { errorMessageAsyncAction } from '../../../shared/utils/errorMessage.async-action'
+import { cartsServiceApi } from '../../cart/service/cart.service'
 import { IResponseAuthApi } from '../types/type.api'
 import { authServiceApi } from './auth.service'
 
@@ -26,6 +32,12 @@ export const login =
 
 			localStorage.setItem('token', resultLogin.data.access)
 			dispatch({ type: AUTH_LOGIN_SUCCESS, payload: resultLogin.data })
+
+			if (!resultLogin.data.user.id) return
+
+			const resultAddCart = await cartsServiceApi.getUserCarts()
+
+			dispatch({ type: CART_ADD_SUCCESS, payload: resultAddCart.data })
 		} catch (error) {
 			const errorMessage = errorMessageAsyncAction(error)
 
@@ -49,12 +61,23 @@ export const registration =
 
 			localStorage.setItem('token', resultReg.data.access)
 			dispatch({ type: AUTH_REG_SUCCESS, payload: resultReg.data })
+
+			if (!resultReg.data.user.id) return
+
+			const resultAddCart = await cartsServiceApi.createdUserCarts()
+			const resultGetCart = await cartsServiceApi.getUserCarts()
+
+			dispatch({ type: CART_ADD_SUCCESS, payload: resultAddCart.data })
+
+			dispatch({ type: CART_GET_SUCCESS, payload: resultGetCart.data })
 		} catch (error) {
 			const errorMessage = errorMessageAsyncAction(error)
 			dispatch({
 				type: AUTH_REG_FAILURE,
 				payload: errorMessage,
 			})
+
+			dispatch({ type: CART_ADD_FAILURE, payload: errorMessage })
 		}
 	}
 

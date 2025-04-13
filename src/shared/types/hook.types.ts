@@ -1,4 +1,5 @@
 import { ChangeEvent, Dispatch, SetStateAction } from 'react'
+import { ICartControls } from '../../features/cart/types/type.ui'
 
 export interface IHookShowError {
 	showError: boolean
@@ -21,3 +22,5 @@ export interface IHookMode {
 	toggleMode: () => void
 	resetMode: () => void
 }
+
+export type IHookCartControl = Omit<ICartControls, 'stock'>

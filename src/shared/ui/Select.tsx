@@ -1,6 +1,7 @@
 import { ChevronDown } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useRef, useState } from 'react'
+import { Link, useMatch } from 'react-router-dom'
 import {
 	CommonSelectTypes,
 	ISelectProps,
@@ -13,7 +14,7 @@ export const Select = <T extends CommonSelectTypes>({
 }: ISelectProps<T>) => {
 	const [isOpen, setIsOpen] = useState<boolean>(false)
 	const selectRef = useRef<HTMLDivElement>(null)
-
+	const isActivePage = !!useMatch('/admin/*')
 	useEffect(() => {
 		const clickOutsideHandler = (event: MouseEvent) => {
 			if (
@@ -33,11 +34,15 @@ export const Select = <T extends CommonSelectTypes>({
 		<div className='relative ' ref={selectRef}>
 			<button
 				type='button'
-				className='w-full flex items-center justify-between px-4 py-2 mb-4 text-baseTextAndButton bg-white rounded-lg shadow-md focus:outline-none'
+				className={`w-full flex items-center ${
+					selected ? 'justify-between' : 'justify-end'
+				} px-4 py-2 mb-4 text-baseTextAndButton bg-white rounded-lg shadow-md focus:outline-none`}
 				onClick={() => setIsOpen(prev => !prev)}
 			>
-				{selected.label}
-				<ChevronDown rotate={isOpen ? '180deg' : '0'} />
+				{selected && selected.label}
+				<ChevronDown
+					className={`duration-200 ${isOpen ? '-rotate-180' : 'rotate-0'}`}
+				/>
 			</button>
 
 			<AnimatePresence>
@@ -49,17 +54,35 @@ export const Select = <T extends CommonSelectTypes>({
 						transition={{ duration: 0.2 }}
 						className='absolute mt-2 w-full bg-white shadow-lg rounded-lg z-10 overflow-hidden'
 					>
-						{options.map(option => (
-							<li
-								key={option.value}
-								className='px-4 py-2 cursor-pointer hover:bg-blue-100 transition'
-								onClick={() => {
-									setSelected(option)
-									setIsOpen(false)
-								}}
-							>
-								{option.label}
-							</li>
+						{options?.map(option => (
+							<>
+								{!isActivePage ? (
+									<Link
+										to={`category-products/${option.value}`}
+										key={option.value}
+									>
+										<li
+											className='px-4 py-2 cursor-pointer hover:bg-blue-100 transition'
+											onClick={() => {
+												setSelected(option)
+												setIsOpen(false)
+											}}
+										>
+											{option.label}
+										</li>
+									</Link>
+								) : (
+									<li
+										className='px-4 py-2 cursor-pointer hover:bg-blue-100 transition'
+										onClick={() => {
+											setSelected(option)
+											setIsOpen(false)
+										}}
+									>
+										{option.label}
+									</li>
+								)}
+							</>
 						))}
 					</motion.ul>
 				)}

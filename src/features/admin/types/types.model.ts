@@ -11,12 +11,16 @@ import {
 	ADMIN_CATEGORIES_GET_SUCCESS,
 	ADMIN_CATEGORIES_REMOVE_FAILURE,
 	ADMIN_CATEGORIES_REMOVE_SUCCESS,
+	ADMIN_CATEGORY_GET_BY_ID_FAILURE,
+	ADMIN_CATEGORY_GET_BY_ID_SUCCESS,
 	ADMIN_ORDERS_EDIT_FAILURE,
 	ADMIN_ORDERS_EDIT_SUCCESS,
 	ADMIN_ORDERS_GET_FAILURE,
 	ADMIN_ORDERS_GET_SUCCESS,
 	ADMIN_ORDERS_REMOVE_FAILURE,
 	ADMIN_ORDERS_REMOVE_SUCCESS,
+	ADMIN_PRODUCT_GET_BY_ID_FAILURE,
+	ADMIN_PRODUCT_GET_BY_ID_SUCCESS,
 	ADMIN_PRODUCTS_ADD_FAILURE,
 	ADMIN_PRODUCTS_ADD_SUCCESS,
 	ADMIN_PRODUCTS_EDIT_FAILURE,
@@ -26,7 +30,6 @@ import {
 	ADMIN_PRODUCTS_REMOVE_FAILURE,
 	ADMIN_PRODUCTS_REMOVE_SUCCESS,
 	ADMIN_REQUEST,
-	ADMIN_REQUEST_END,
 	ADMIN_USERS_EDIT_FAILURE,
 	ADMIN_USERS_EDIT_SUCCESS,
 	ADMIN_USERS_GET_FAILURE,
@@ -34,7 +37,7 @@ import {
 	ADMIN_USERS_REMOVE_FAILURE,
 	ADMIN_USERS_REMOVE_SUCCESS,
 } from '../../../app/constants/actions/admin.constants'
-import { IResponseProductsApi } from '../../../entities/product/types/type.api'
+import { IMappingResponseProductsApi } from '../../../entities/product/types/type.api'
 import { IResponseCategoriesApi } from '../../../entities/сategory/types/type.api'
 import { IResponseUserAuthApi } from '../../auth/types/type.api'
 import { IResponseCartsApi } from '../../cart/types/type.api'
@@ -43,10 +46,6 @@ import { IResponseOrdersApi } from '../../order/types/types.api'
 // Shared Admin actions
 type AdminRequestAction = {
 	type: typeof ADMIN_REQUEST
-}
-
-type AdminRequestActionEnd = {
-	type: typeof ADMIN_REQUEST_END
 }
 
 // Users ====================
@@ -61,6 +60,7 @@ type AdminUsersEditSuccessAction = {
 }
 type AdminUsersRemoveSuccessAction = {
 	type: typeof ADMIN_USERS_REMOVE_SUCCESS
+	payload: number
 }
 // Failure
 type AdminUsersFailureAction = {
@@ -90,6 +90,7 @@ type AdminOrdersEditSuccessAction = {
 }
 type AdminOrdersRemoveSuccessAction = {
 	type: typeof ADMIN_ORDERS_REMOVE_SUCCESS
+	payload: number
 }
 
 // Failure
@@ -112,28 +113,33 @@ type AdminOrdersActionTypes =
 // Success
 type AdminProductsGetSuccessAction = {
 	type: typeof ADMIN_PRODUCTS_GET_SUCCESS
-	payload: IResponseProductsApi[]
+	payload: IMappingResponseProductsApi[]
+}
+type AdminProductGetByIdSuccessAction = {
+	type: typeof ADMIN_PRODUCT_GET_BY_ID_SUCCESS
+	payload: IMappingResponseProductsApi
 }
 
 type AdminProductAddSuccessAction = {
 	type: typeof ADMIN_PRODUCTS_ADD_SUCCESS
-	payload: IResponseProductsApi
+	payload: IMappingResponseProductsApi
 }
-
 type AdminProductEditSuccessAction = {
 	type: typeof ADMIN_PRODUCTS_EDIT_SUCCESS
-	payload: IResponseProductsApi
+	payload: IMappingResponseProductsApi
 }
 type AdminProductRemoveSuccessAction = {
 	type: typeof ADMIN_PRODUCTS_REMOVE_SUCCESS
+	payload: number
 }
 
 // Failure
 type AdminProductsFailureAction = {
 	type:
-		| typeof ADMIN_PRODUCTS_EDIT_FAILURE
-		| typeof ADMIN_PRODUCTS_ADD_FAILURE
 		| typeof ADMIN_PRODUCTS_GET_FAILURE
+		| typeof ADMIN_PRODUCT_GET_BY_ID_FAILURE
+		| typeof ADMIN_PRODUCTS_ADD_FAILURE
+		| typeof ADMIN_PRODUCTS_EDIT_FAILURE
 		| typeof ADMIN_PRODUCTS_REMOVE_FAILURE
 
 	payload: string | boolean
@@ -141,6 +147,7 @@ type AdminProductsFailureAction = {
 
 type AdminProductsActionTypes =
 	| AdminProductsGetSuccessAction
+	| AdminProductGetByIdSuccessAction
 	| AdminProductAddSuccessAction
 	| AdminProductEditSuccessAction
 	| AdminProductRemoveSuccessAction
@@ -154,9 +161,14 @@ type AdminCategoriesGetSuccessAction = {
 	payload: IResponseCategoriesApi[]
 }
 
+type AdminCategoryGetByIdSuccessAction = {
+	type: typeof ADMIN_CATEGORY_GET_BY_ID_SUCCESS
+	payload: IResponseCategoriesApi
+}
+
 type AdminCategoriesAddSuccessAction = {
 	type: typeof ADMIN_CATEGORIES_ADD_SUCCESS
-	payload: string
+	payload: IResponseCategoriesApi
 }
 
 type AdminCategoriesEditSuccessAction = {
@@ -165,12 +177,14 @@ type AdminCategoriesEditSuccessAction = {
 }
 type AdminCategoriesRemoveSuccessAction = {
 	type: typeof ADMIN_CATEGORIES_REMOVE_SUCCESS
+	payload: number
 }
 
 // Failure
 type AdminCategoriesFailureAction = {
 	type:
 		| typeof ADMIN_CATEGORIES_GET_FAILURE
+		| typeof ADMIN_CATEGORY_GET_BY_ID_FAILURE
 		| typeof ADMIN_CATEGORIES_ADD_FAILURE
 		| typeof ADMIN_CATEGORIES_EDIT_FAILURE
 		| typeof ADMIN_CATEGORIES_REMOVE_FAILURE
@@ -180,6 +194,7 @@ type AdminCategoriesFailureAction = {
 
 type AdminCategoriesActionTypes =
 	| AdminCategoriesGetSuccessAction
+	| AdminCategoryGetByIdSuccessAction
 	| AdminCategoriesAddSuccessAction
 	| AdminCategoriesEditSuccessAction
 	| AdminCategoriesRemoveSuccessAction
@@ -211,7 +226,6 @@ type AdminCartsActionTypes =
 // Root ActionTypes =========================
 export type AdminActionTypes =
 	| AdminRequestAction
-	| AdminRequestActionEnd
 	| AdminUsersActionTypes
 	| AdminOrdersActionTypes
 	| AdminProductsActionTypes

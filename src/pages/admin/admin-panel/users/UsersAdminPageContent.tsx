@@ -1,6 +1,5 @@
-import { Trash } from 'lucide-react'
+/* eslint-disable react-hooks/exhaustive-deps */
 import { FC, useEffect, useState } from 'react'
-import { iconsSize } from '../../../../features/admin/ui/AdminForms'
 import {
 	AdminPanelContentBody,
 	AdminPanelContentBodyItems,
@@ -9,14 +8,15 @@ import {
 	AdminPanelContentHeaderTable,
 	AdminPanelContentTable,
 } from '../../../../features/admin/ui/AdminPanelContentHeader'
-import { adminPanelContentHeaderItemsElement } from '../../../../features/admin/util/content-header-items-el.util'
+import { adminPanelContentHeaderUsersItemsElement } from '../../../../features/admin/util/content-header-items-el.util'
 import { IResponseUserAuthApi } from '../../../../features/auth/types/type.api'
 import { useAppSelector } from '../../../../shared/hooks/store.hooks'
 import { useActions } from '../../../../shared/hooks/useActions'
 import { useToggle } from '../../../../shared/hooks/useToggle'
+import { ErrorAdminContentPage } from '../../../../shared/ui/ErrorUi'
 import { LoaderApp } from '../../../../shared/ui/LoaderApp'
 import { Modal } from '../../../../shared/ui/Modal'
-import { Title } from '../../../../shared/ui/Title'
+import { TrashUI } from '../../../../shared/ui/TrashUI'
 
 export const UsersAdminPageContent: FC = () => {
 	const { users, isAppLoading, error } = useAppSelector(
@@ -32,14 +32,10 @@ export const UsersAdminPageContent: FC = () => {
 
 	if (isAppLoading) return <LoaderApp />
 
-	const usersData = users as IResponseUserAuthApi[]
+	const usersData = users as IResponseUserAuthApi[] | null
 
 	if (!usersData || !usersData.length)
-		return (
-			<div className='flex h-full justify-center items-center text-bgDangerButton'>
-				<Title title={error as string} />
-			</div>
-		)
+		return <ErrorAdminContentPage error={error} />
 
 	const removeUserHandler = (userId: number) => {
 		if (!userId) return
@@ -54,17 +50,14 @@ export const UsersAdminPageContent: FC = () => {
 
 		toggleHandler()
 	}
-	const showModalHandler = () => {
-		toggleHandler()
-	}
-
+	const showModalHandler = () => toggleHandler()
 	return (
 		<>
 			<div className='space-y-5'>
-				<AdminPanelContentTable title='Users'>
+				<AdminPanelContentTable title='Users' style='pr-10'>
 					<thead>
 						<tr className='bg-bgCards'>
-							{adminPanelContentHeaderItemsElement.map(item => (
+							{adminPanelContentHeaderUsersItemsElement.map(item => (
 								<AdminPanelContentHeaderTable
 									key={item.id}
 									title={item.title}
@@ -89,16 +82,11 @@ export const UsersAdminPageContent: FC = () => {
 								<AdminPanelContentBodyItems
 									data={new Date(user.updatedAt).toLocaleDateString()}
 								/>
-								<div className='absolute top-3 -right-7'>
-									<Trash
-										size={iconsSize}
-										cursor={'pointer'}
-										onClick={() => {
-											showModalHandler()
-											setUserIdToDelete(user.id)
-										}}
-									/>
-								</div>
+								<TrashUI
+									showModalHandler={showModalHandler}
+									setIdToDelete={setUserIdToDelete}
+									data={user}
+								/>
 							</AdminPanelContentBody>
 						))}
 					</tbody>
@@ -106,7 +94,7 @@ export const UsersAdminPageContent: FC = () => {
 			</div>
 			{toggle && (
 				<Modal
-					titleSolutions={'delete this users'}
+					titleSolutions={'delete this is users'}
 					onClickSave={confirmDeleteHandler}
 					onClickClose={showModalHandler}
 					onClickCancel={showModalHandler}

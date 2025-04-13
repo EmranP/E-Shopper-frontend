@@ -9,6 +9,8 @@ export const AdminPanelContentBody: FC<PropsWithChildren> = ({ children }) => {
 
 export const AdminPanelContentBodyItems: FC<IAdminPanelBody> = ({ data }) => {
 	return (
-		<td className='p-3 border border-bgActionButton text-center'>{data}</td>
+		<td className='p-3 border space-x-2 border-bgActionButton text-center'>
+			{data}
+		</td>
 	)
 }

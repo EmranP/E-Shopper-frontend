@@ -1,34 +1,80 @@
-import axios, { AxiosResponse } from 'axios'
-import { CATEGORIES_API_URL } from '../../../app/constants/api/categories.api-constants'
-import { BASE_API_URL } from '../../../shared/config/axiosInstance'
+import { AxiosResponse } from 'axios'
+import {
+	CATEGORIES_API_URL,
+	CATEGORIES_API_URL_ADD,
+	CATEGORIES_API_URL_EDIT,
+	CATEGORIES_API_URL_REMOVE,
+} from '../../../app/constants/api/categories.api-constants'
+import $api from '../../../shared/config/axiosInstance'
 import { IResponseCategoriesApi } from '../types/type.api'
 
 class CategoryServiceApi {
 	async getAllCategories(): Promise<AxiosResponse<IResponseCategoriesApi[]>> {
-		const response = await axios.get<AxiosResponse<IResponseCategoriesApi[]>>(
-			`${BASE_API_URL}${CATEGORIES_API_URL}/`
+		const response = await $api.get<IResponseCategoriesApi[]>(
+			CATEGORIES_API_URL
 		)
 
 		if (response.status === 404) {
-			throw new Error('Category not found ')
+			throw new Error('Category not founded')
 		}
 
-		return response.data
+		return response
 	}
 
-	async getIdCategories(
+	async getCategoryById(
 		categoryId: number | string
 	): Promise<AxiosResponse<IResponseCategoriesApi>> {
-		const response = await axios.get<AxiosResponse<IResponseCategoriesApi>>(
-			`${BASE_API_URL}${CATEGORIES_API_URL}/${categoryId}`
+		const response = await $api.get(`${CATEGORIES_API_URL}/${categoryId}`)
+
+		if (response.status === 404) throw new Error('Category id not founded')
+
+		return response
+	}
+
+	async addCategory(
+		categoryData: string
+	): Promise<AxiosResponse<IResponseCategoriesApi>> {
+		const response = await $api.post<IResponseCategoriesApi>(
+			`${CATEGORIES_API_URL_ADD}`,
+			{
+				categoryName: categoryData,
+			}
 		)
 
 		if (response.status === 404) {
-			throw new Error('Category not found ')
+			throw new Error('Category is not added')
 		}
 
-		return response.data
+		return response
+	}
+
+	async editCategory(
+		categoryId: string | number,
+		categoryData: string
+	): Promise<AxiosResponse<IResponseCategoriesApi>> {
+		const response = await $api.patch<IResponseCategoriesApi>(
+			`${CATEGORIES_API_URL_EDIT}/${categoryId}`,
+			{ categoryName: categoryData }
+		)
+
+		if (response.status === 404) {
+			throw new Error('Error category edit not found')
+		}
+
+		return response
+	}
+
+	async removeCategory(categoryId: string | number): Promise<void> {
+		const response = await $api.delete<void>(
+			`${CATEGORIES_API_URL_REMOVE}/${categoryId}`
+		)
+
+		if (response.status === 404) {
+			throw new Error('Error category edit not found')
+		}
+
+		return
 	}
 }
 
-export const categoryServiceApi = new CategoryServiceApi()
+export const categoryService = new CategoryServiceApi()

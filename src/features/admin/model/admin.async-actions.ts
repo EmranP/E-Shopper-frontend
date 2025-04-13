@@ -1,5 +1,7 @@
 import { Dispatch } from 'redux'
 import {
+	ADMIN_CARTS_GET_FAILURE,
+	ADMIN_CARTS_GET_SUCCESS,
 	ADMIN_ORDERS_EDIT_FAILURE,
 	ADMIN_ORDERS_EDIT_SUCCESS,
 	ADMIN_ORDERS_GET_FAILURE,
@@ -7,18 +9,22 @@ import {
 	ADMIN_ORDERS_REMOVE_FAILURE,
 	ADMIN_ORDERS_REMOVE_SUCCESS,
 	ADMIN_REQUEST,
-	ADMIN_REQUEST_END,
 	ADMIN_USERS_EDIT_FAILURE,
 	ADMIN_USERS_EDIT_SUCCESS,
 	ADMIN_USERS_GET_FAILURE,
 	ADMIN_USERS_GET_SUCCESS,
 	ADMIN_USERS_REMOVE_FAILURE,
 	ADMIN_USERS_REMOVE_SUCCESS,
+	USER_NOT_WRITE_DATA,
 } from '../../../app/constants/actions/admin.constants'
 import { ROLES } from '../../../app/constants/roles/roles'
 import { AppActions, AppThunk } from '../../../shared/types/store.types'
 import { errorMessageAsyncAction } from '../../../shared/utils/errorMessage.async-action'
-import { adminServiceOrdersApi, adminServiceUsersApi } from './admin.service'
+import {
+	adminServiceCartsApi,
+	adminServiceOrdersApi,
+	adminServiceUsersApi,
+} from './admin.service'
 
 // Users
 export const getAllForAdminUsers =
@@ -42,11 +48,12 @@ export const getAllForAdminUsers =
 export const editForAdminUsers =
 	(userId: number | string, userRole: ROLES): AppThunk =>
 	async (dispatch: Dispatch<AppActions>): Promise<void> => {
-		if (!userId || !userRole) {
+		if (!userId || userRole === null || undefined) {
 			dispatch({
 				type: ADMIN_USERS_EDIT_FAILURE,
-				payload: 'User is not writing data',
+				payload: USER_NOT_WRITE_DATA,
 			})
+			console.log(userId, userRole)
 			return
 		}
 
@@ -81,14 +88,7 @@ export const removeForAdminUsers =
 		try {
 			await adminServiceUsersApi.deleteAdminUser(userId)
 
-			dispatch({ type: ADMIN_USERS_REMOVE_SUCCESS })
-
-			const resultNewUsersData = await adminServiceUsersApi.getAdminUsers()
-
-			dispatch({
-				type: ADMIN_USERS_GET_SUCCESS,
-				payload: resultNewUsersData.data,
-			})
+			dispatch({ type: ADMIN_USERS_REMOVE_SUCCESS, payload: userId as number })
 		} catch (error) {
 			const errorMessage = errorMessageAsyncAction(error)
 
@@ -112,21 +112,22 @@ export const getAllOrdersForAdmin =
 			const errorMessage = errorMessageAsyncAction(error)
 
 			dispatch({ type: ADMIN_ORDERS_GET_FAILURE, payload: errorMessage })
-		} finally {
-			dispatch({ type: ADMIN_REQUEST_END })
 		}
 	}
 
 export const editOrdersForAdmin =
 	(orderId: number | string, orderStatus: string): AppThunk =>
 	async (dispatch: Dispatch<AppActions>): Promise<void> => {
+		if (!orderId) {
+			dispatch({
+				type: ADMIN_ORDERS_EDIT_FAILURE,
+				payload: USER_NOT_WRITE_DATA,
+			})
+			return
+		}
+
 		dispatch({ type: ADMIN_REQUEST })
-
 		try {
-			if (!orderId || !orderStatus) {
-				throw new Error('User not writing data for request :(')
-			}
-
 			const resultEditOrders = await adminServiceOrdersApi.editOrders(
 				orderId,
 				orderStatus
@@ -140,30 +141,52 @@ export const editOrdersForAdmin =
 			const errorMessage = errorMessageAsyncAction(error)
 
 			dispatch({ type: ADMIN_ORDERS_EDIT_FAILURE, payload: errorMessage })
-		} finally {
-			dispatch({ type: ADMIN_REQUEST_END })
 		}
 	}
 
 export const removeOrdersForAdmin =
 	(orderId: number | string): AppThunk =>
 	async (dispatch: Dispatch<AppActions>): Promise<void> => {
+		if (orderId === null || undefined) {
+			dispatch({
+				type: ADMIN_ORDERS_EDIT_FAILURE,
+				payload: USER_NOT_WRITE_DATA,
+			})
+			return
+		}
+
 		dispatch({ type: ADMIN_REQUEST })
 		try {
-			if (!orderId) {
-				throw new Error('User Id not writing!!!')
-			}
-
 			await adminServiceOrdersApi.deleteOrders(orderId)
 
-			dispatch({ type: ADMIN_ORDERS_REMOVE_SUCCESS })
+			dispatch({
+				type: ADMIN_ORDERS_REMOVE_SUCCESS,
+				payload: orderId as number,
+			})
 		} catch (error) {
 			const errorMessage = errorMessageAsyncAction(error)
 
 			dispatch({ type: ADMIN_ORDERS_REMOVE_FAILURE, payload: errorMessage })
-		} finally {
-			dispatch({ type: ADMIN_REQUEST_END })
 		}
 	}
 
-// Products
+// Carts
+export const getAllUserCartsForAdmin =
+	(): AppThunk =>
+	async (dispatch: Dispatch<AppActions>): Promise<void> => {
+		dispatch({ type: ADMIN_REQUEST })
+
+		try {
+			const resultGetUserCartsForAdmin =
+				await adminServiceCartsApi.getAllCarts()
+
+			dispatch({
+				type: ADMIN_CARTS_GET_SUCCESS,
+				payload: resultGetUserCartsForAdmin.data,
+			})
+		} catch (error) {
+			const errorMessage = errorMessageAsyncAction(error)
+
+			dispatch({ type: ADMIN_CARTS_GET_FAILURE, payload: errorMessage })
+		}
+	}

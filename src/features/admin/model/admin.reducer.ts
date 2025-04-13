@@ -1,8 +1,6 @@
 import {
 	ADMIN_CARTS_GET_FAILURE,
 	ADMIN_CARTS_GET_SUCCESS,
-	ADMIN_CARTS_REMOVE_FAILURE,
-	ADMIN_CARTS_REMOVE_SUCCESS,
 	ADMIN_CATEGORIES_ADD_FAILURE,
 	ADMIN_CATEGORIES_ADD_SUCCESS,
 	ADMIN_CATEGORIES_EDIT_FAILURE,
@@ -11,12 +9,16 @@ import {
 	ADMIN_CATEGORIES_GET_SUCCESS,
 	ADMIN_CATEGORIES_REMOVE_FAILURE,
 	ADMIN_CATEGORIES_REMOVE_SUCCESS,
+	ADMIN_CATEGORY_GET_BY_ID_FAILURE,
+	ADMIN_CATEGORY_GET_BY_ID_SUCCESS,
 	ADMIN_ORDERS_EDIT_FAILURE,
 	ADMIN_ORDERS_EDIT_SUCCESS,
 	ADMIN_ORDERS_GET_FAILURE,
 	ADMIN_ORDERS_GET_SUCCESS,
 	ADMIN_ORDERS_REMOVE_FAILURE,
 	ADMIN_ORDERS_REMOVE_SUCCESS,
+	ADMIN_PRODUCT_GET_BY_ID_FAILURE,
+	ADMIN_PRODUCT_GET_BY_ID_SUCCESS,
 	ADMIN_PRODUCTS_ADD_FAILURE,
 	ADMIN_PRODUCTS_ADD_SUCCESS,
 	ADMIN_PRODUCTS_EDIT_FAILURE,
@@ -26,7 +28,6 @@ import {
 	ADMIN_PRODUCTS_REMOVE_FAILURE,
 	ADMIN_PRODUCTS_REMOVE_SUCCESS,
 	ADMIN_REQUEST,
-	ADMIN_REQUEST_END,
 	ADMIN_USERS_EDIT_FAILURE,
 	ADMIN_USERS_EDIT_SUCCESS,
 	ADMIN_USERS_GET_FAILURE,
@@ -34,6 +35,7 @@ import {
 	ADMIN_USERS_REMOVE_FAILURE,
 	ADMIN_USERS_REMOVE_SUCCESS,
 } from '../../../app/constants/actions/admin.constants'
+import { IResponseCategoriesApi } from '../../../entities/сategory/types/type.api'
 import { IResponseUserAuthApi } from '../../auth/types/type.api'
 import { IResponseOrdersApi } from '../../order/types/types.api'
 import { AdminActionTypes } from '../types/types.model'
@@ -70,7 +72,7 @@ export const adminUsersReducer = (
 			}
 		case ADMIN_USERS_EDIT_SUCCESS: {
 			const payload = action.payload as IResponseUserAuthApi
-			console.log(payload)
+
 			return {
 				...state,
 				error: null,
@@ -83,7 +85,12 @@ export const adminUsersReducer = (
 			}
 		}
 		case ADMIN_USERS_REMOVE_SUCCESS:
-			return { ...state }
+			return {
+				...state,
+				isAppLoading: false,
+				error: null,
+				users: state.users?.filter(user => user.id !== action.payload) || null,
+			}
 		// Failure
 		case ADMIN_USERS_GET_FAILURE:
 		case ADMIN_USERS_EDIT_FAILURE:
@@ -109,8 +116,6 @@ export const adminOrdersReducer = (
 		// Shared
 		case ADMIN_REQUEST:
 			return { ...state, isAppLoading: true, error: null }
-		case ADMIN_REQUEST_END:
-			return { ...state, isAppLoading: false, error: null }
 		// Success
 		case ADMIN_ORDERS_GET_SUCCESS:
 			return {
@@ -119,15 +124,30 @@ export const adminOrdersReducer = (
 				isAppLoading: false,
 				error: null,
 			}
-		case ADMIN_ORDERS_EDIT_SUCCESS:
+		case ADMIN_ORDERS_EDIT_SUCCESS: {
+			const payload = action.payload as IResponseOrdersApi
+
 			return {
 				...state,
 				isAppLoading: false,
 				error: null,
-				orders: action.payload as IResponseOrdersApi,
+				orders: state.orders
+					? state.orders?.map(order =>
+							order.id === payload.id
+								? { ...order, status: payload.status }
+								: order
+					  )
+					: state.orders,
 			}
+		}
 		case ADMIN_ORDERS_REMOVE_SUCCESS:
-			return { ...state }
+			return {
+				...state,
+				isAppLoading: false,
+				error: null,
+				orders:
+					state.orders?.filter(order => order.id !== action.payload) || null,
+			}
 		// Failure
 		case ADMIN_ORDERS_GET_FAILURE:
 		case ADMIN_ORDERS_EDIT_FAILURE:
@@ -142,6 +162,7 @@ export const adminOrdersReducer = (
 // Products
 const adminProductsInitialState: IAdminProductsState = {
 	products: null,
+	productItem: null,
 	isAppLoading: false,
 	error: null,
 }
@@ -151,22 +172,61 @@ export const adminProductsReducer = (
 	action: AdminActionTypes
 ): IAdminProductsState => {
 	switch (action.type) {
+		// Shared
+		case ADMIN_REQUEST:
+			return { ...state, isAppLoading: true, error: null }
 		// Success
 		case ADMIN_PRODUCTS_GET_SUCCESS:
-		case ADMIN_PRODUCTS_ADD_SUCCESS:
-		case ADMIN_PRODUCTS_EDIT_SUCCESS:
 			return {
 				...state,
 				products: action.payload,
 				isAppLoading: false,
 				error: null,
 			}
+		case ADMIN_PRODUCT_GET_BY_ID_SUCCESS:
+			return {
+				...state,
+				productItem: action.payload,
+				isAppLoading: false,
+				error: null,
+			}
+
+		case ADMIN_PRODUCTS_ADD_SUCCESS:
+			return {
+				...state,
+				isAppLoading: false,
+				error: null,
+				products: state.products
+					? [...state.products, action.payload]
+					: [action.payload],
+			}
+		case ADMIN_PRODUCTS_EDIT_SUCCESS: {
+			return {
+				...state,
+				isAppLoading: false,
+				error: null,
+				products:
+					state.products?.map(product =>
+						product.id === action.payload.id
+							? { ...product, ...action.payload }
+							: product
+					) || null,
+			}
+		}
 
 		case ADMIN_PRODUCTS_REMOVE_SUCCESS:
-			return { ...state }
+			return {
+				...state,
+				isAppLoading: false,
+				error: null,
+				products:
+					state.products?.filter(product => product.id !== action.payload) ||
+					null,
+			}
 
 		// Failure
 		case ADMIN_PRODUCTS_GET_FAILURE:
+		case ADMIN_PRODUCT_GET_BY_ID_FAILURE:
 		case ADMIN_PRODUCTS_ADD_FAILURE:
 		case ADMIN_PRODUCTS_EDIT_FAILURE:
 		case ADMIN_PRODUCTS_REMOVE_FAILURE:
@@ -179,6 +239,7 @@ export const adminProductsReducer = (
 // Categories
 const adminCategoriesInitialState: IAdminCategoriesState = {
 	categories: null,
+	categoryItem: null,
 	isAppLoading: false,
 	error: null,
 }
@@ -188,22 +249,60 @@ export const adminCategoriesReducer = (
 	action: AdminActionTypes
 ): IAdminCategoriesState => {
 	switch (action.type) {
+		// shared
+		case ADMIN_REQUEST:
+			return { ...state, isAppLoading: true, error: null }
 		// Success
 		case ADMIN_CATEGORIES_GET_SUCCESS:
-		case ADMIN_CATEGORIES_ADD_SUCCESS:
-		case ADMIN_CATEGORIES_EDIT_SUCCESS:
 			return {
 				...state,
 				categories: action.payload,
 				isAppLoading: false,
 				error: null,
 			}
+		case ADMIN_CATEGORY_GET_BY_ID_SUCCESS:
+			return {
+				...state,
+				categoryItem: action.payload,
+				isAppLoading: false,
+				error: null,
+			}
+		case ADMIN_CATEGORIES_ADD_SUCCESS:
+			return {
+				...state,
+				categories: state.categories
+					? [...state.categories, action.payload]
+					: [action.payload],
+				isAppLoading: false,
+				error: null,
+			}
+		case ADMIN_CATEGORIES_EDIT_SUCCESS: {
+			const payload = action.payload as IResponseCategoriesApi
 
+			return {
+				...state,
+				isAppLoading: false,
+				error: null,
+				categories:
+					state.categories?.map(category =>
+						category.id === payload.id ? { ...category, ...payload } : category
+					) || null,
+			}
+		}
 		case ADMIN_CATEGORIES_REMOVE_SUCCESS:
-			return { ...state }
+			return {
+				...state,
+				isAppLoading: false,
+				error: null,
+				categories:
+					state.categories?.filter(
+						category => category.id !== action.payload
+					) || null,
+			}
 
 		// Failure
 		case ADMIN_CATEGORIES_GET_FAILURE:
+		case ADMIN_CATEGORY_GET_BY_ID_FAILURE:
 		case ADMIN_CATEGORIES_ADD_FAILURE:
 		case ADMIN_CATEGORIES_EDIT_FAILURE:
 		case ADMIN_CATEGORIES_REMOVE_FAILURE:
@@ -225,15 +324,11 @@ export const adminCartsReducer = (
 	action: AdminActionTypes
 ): IAdminCartsState => {
 	switch (action.type) {
+		// shared
+		case ADMIN_REQUEST:
+			return { ...state, isAppLoading: true, error: null }
 		// Success
 		case ADMIN_CARTS_GET_SUCCESS:
-			return {
-				...state,
-				carts: action.payload,
-				isAppLoading: false,
-				error: null,
-			}
-		case ADMIN_CARTS_REMOVE_SUCCESS:
 			return {
 				...state,
 				carts: action.payload,
@@ -243,7 +338,6 @@ export const adminCartsReducer = (
 
 		// Failure
 		case ADMIN_CARTS_GET_FAILURE:
-		case ADMIN_CARTS_REMOVE_FAILURE:
 			return { ...state, isAppLoading: false, error: action.payload }
 		default:
 			return state

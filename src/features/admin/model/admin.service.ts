@@ -4,20 +4,13 @@ import {
 	CART_API_URL_REMOVE,
 } from '../../../app/constants/api/cart.api-constants'
 import {
-	CATEGORIES_API_URL_ADD,
-	CATEGORIES_API_URL_EDIT,
-	CATEGORIES_API_URL_REMOVE,
-} from '../../../app/constants/api/categories.api-constants'
-import {
 	ORDER_API_URL_ADMIN,
 	ORDER_API_URL_EDIT,
 	ORDER_API_URL_REMOVE,
 } from '../../../app/constants/api/order.api-constants'
 import { USER_API_URL } from '../../../app/constants/api/user.api-constants'
 import { ROLES } from '../../../app/constants/roles/roles'
-import { IResponseCategoriesApi } from '../../../entities/сategory/types/type.api'
-import $api, { BASE_API_URL } from '../../../shared/config/axiosInstance'
-import { IMessageApi } from '../../../shared/types/api.types'
+import $api from '../../../shared/config/axiosInstance'
 import { IResponseUserAuthApi } from '../../auth/types/type.api'
 import { IResponseCartsApi } from '../../cart/types/type.api'
 import { IResponseOrdersApi } from '../../order/types/types.api'
@@ -94,64 +87,15 @@ class AdminServiceOrdersApi {
 		return response
 	}
 
-	async deleteOrders(
-		orderId: number | string
-	): Promise<AxiosResponse<IMessageApi>> {
-		const response = await $api.delete<IMessageApi>(
-			`${ORDER_API_URL_REMOVE}/${orderId}`
-		)
+	async deleteOrders(orderId: number | string): Promise<void> {
+		const response = await $api.delete(`${ORDER_API_URL_REMOVE}/${orderId}`)
 
 		if (response.status === 404) {
 			throw new Error('not found api dek')
 		}
-
-		return response
 	}
 }
-class AdminServiceCategoriesApi {
-	async addCategory(
-		categoryData: string
-	): Promise<AxiosResponse<IResponseCategoriesApi>> {
-		const response = await $api.post<IResponseCategoriesApi>(
-			`${BASE_API_URL}/${CATEGORIES_API_URL_ADD}`,
-			categoryData
-		)
 
-		if (response.status === 404) {
-			throw new Error('Category is not added')
-		}
-
-		return response
-	}
-
-	async editCategory(
-		categoryId: string | number,
-		categoryData: string
-	): Promise<AxiosResponse<IResponseCategoriesApi>> {
-		const response = await $api.patch<IResponseCategoriesApi>(
-			`${BASE_API_URL}/${CATEGORIES_API_URL_EDIT}/${categoryId}`,
-			categoryData
-		)
-
-		if (response.status === 404) {
-			throw new Error('Error category edit not found')
-		}
-
-		return response
-	}
-
-	async removeCategory(categoryId: string | number): Promise<void> {
-		const response = await $api.delete<void>(
-			`${BASE_API_URL}/${CATEGORIES_API_URL_REMOVE}/${categoryId}`
-		)
-
-		if (response.status === 404) {
-			throw new Error('Error category edit not found')
-		}
-
-		return
-	}
-}
 class AdminServiceCartsApi {
 	async getAllCarts(): Promise<AxiosResponse<IResponseCartsApi[]>> {
 		const response = await $api.get<IResponseOrdersApi[]>(CART_API_URL_ADMIN)
@@ -177,5 +121,4 @@ class AdminServiceCartsApi {
 
 export const adminServiceUsersApi = new AdminServiceUsersApi()
 export const adminServiceOrdersApi = new AdminServiceOrdersApi()
-export const adminServiceCategoriesApi = new AdminServiceCategoriesApi()
 export const adminServiceCartsApi = new AdminServiceCartsApi()

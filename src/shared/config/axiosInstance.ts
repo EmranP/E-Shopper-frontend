@@ -48,6 +48,7 @@ $api.interceptors.response.use(
 					...originalRequest.headers,
 					Authorization: `Bearer ${access}`,
 				}
+
 				return $api(originalRequest)
 			} catch (err) {
 				console.error('Ошибка при обновлении токена:', err)

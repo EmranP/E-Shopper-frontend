@@ -19,27 +19,27 @@ export interface IInput extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 // Admin Form
-export interface ISelectOptionOrders {
+export interface ISelectOption {
 	label: string
-	value: string
+	value: string | number
 }
 
-export interface ISelectOptionUser extends ISelectOptionOrders {
+export interface ISelectOptionUser extends ISelectOption {
 	roleId: ROLES
 }
 
-export type CommonSelectTypes = ISelectOptionUser | ISelectOptionOrders
+export type CommonSelectTypes = ISelectOptionUser | ISelectOption
 
 export interface ISelectProps<T> {
-	options: T[]
-	selected: T
-	setSelected: Dispatch<SetStateAction<T>>
+	options: T[] | null
+	selected: T | null
+	setSelected: Dispatch<SetStateAction<T | null>>
 }
 
 export interface ITextAreaProps
 	extends TextareaHTMLAttributes<HTMLTextAreaElement> {
 	label?: string
-	value: string
+	value: string | number
 	setValue: Dispatch<SetStateAction<string>>
 	maxLength?: number
 }
@@ -65,6 +65,7 @@ export interface IAdminFormActions
 	titleAdd: string
 	titleEdit: string
 	onClick: () => void
+	isAppLoading: boolean
 }
 
 export interface IAdminFormFieldIDElement
@@ -74,7 +75,8 @@ export interface IAdminFormFieldIDElement
 	modeAction: 'edit' | 'create' | null
 	titleLabel: string
 	placeholder: string
-	value: string
+	value: string | number
+	onChange: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
 export interface IAdminPanelHeader {
@@ -84,5 +86,5 @@ export interface IAdminPanelHeader {
 }
 
 export interface IAdminPanelBody {
-	data: string | number
+	data: ReactNode | string | number | null
 }

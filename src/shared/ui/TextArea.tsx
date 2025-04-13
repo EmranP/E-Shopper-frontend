@@ -25,7 +25,7 @@ export const TextArea: FC<ITextAreaProps> = ({
 				{label && <label className='block text-white'>{label}</label>}
 				{maxLength && (
 					<span className='text-right text-sm text-white  mt-1'>
-						{String(value.length)} / {maxLength}
+						{typeof value === 'string' ? String(value.length) : ''} /{maxLength}
 					</span>
 				)}
 			</div>

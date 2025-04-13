@@ -1,4 +1,5 @@
-import { LogOut } from 'lucide-react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import { LogOut, ShoppingCart } from 'lucide-react'
 import { FC } from 'react'
 import { Link } from 'react-router-dom'
 import { useAppSelector } from '../../../shared/hooks/store.hooks'
@@ -8,7 +9,9 @@ import { Button } from '../../../shared/ui/Buttons'
 import { Modal } from '../../../shared/ui/Modal'
 
 export const HeaderAction: FC = () => {
-	const { isAuth, user } = useAppSelector(state => state.auth)
+	const { auth, carts } = useAppSelector(state => state)
+	const { isAuth, user } = auth
+	const { cart, error } = carts
 	const { logout } = useActions()
 	const toggleLogout = useToggle(false)
 	const toggleShowModal = useToggle(false)
@@ -19,13 +22,21 @@ export const HeaderAction: FC = () => {
 	}
 
 	const isShowModalHandler = () => toggleShowModal.toggleHandler()
-
 	return (
 		<>
 			<div className='flex flex-col items-center gap-y-2'>
 				{isAuth ? (
 					<>
 						<div className='flex items-center gap-4'>
+							{user && user?.id === cart?.userId ? (
+								<Link to={'/cart'}>
+									<ShoppingCart size={20} />
+								</Link>
+							) : (
+								<div>
+									<p className='text-red-500 font-semibold text-xl'>{error}</p>
+								</div>
+							)}
 							<h1 className='text-center font-semibold text-xl'>
 								{user?.login}
 							</h1>
