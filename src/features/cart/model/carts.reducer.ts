@@ -1,4 +1,3 @@
-import { ADMIN_REQUEST } from '../../../app/constants/actions/admin.constants'
 import {
 	CART_ADD_FAILURE,
 	CART_ADD_SUCCESS,
@@ -28,7 +27,7 @@ export const cartReducer = (
 	action: AppActions
 ): ICartState => {
 	switch (action.type) {
-		case ADMIN_REQUEST:
+		case CART_REQUEST:
 			return { ...state, isAppLoading: true, error: null }
 		case CART_GET_SUCCESS:
 		case CART_ADD_SUCCESS:

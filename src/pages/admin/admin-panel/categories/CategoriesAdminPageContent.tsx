@@ -9,8 +9,8 @@ import {
 	AdminPanelContentTable,
 } from '../../../../features/admin/ui/AdminPanelContentHeader'
 import { adminPanelContentHeaderCategoryItemsElement } from '../../../../features/admin/util/content-header-items-el.util'
-import { useAppSelector } from '../../../../shared/hooks/store.hooks'
 import { useActions } from '../../../../shared/hooks/useActions'
+import { useAppSelector } from '../../../../shared/hooks/useStoreApp.hooks'
 import { useToggle } from '../../../../shared/hooks/useToggle'
 import { ErrorAdminContentPage } from '../../../../shared/ui/ErrorUi'
 import { LoaderApp } from '../../../../shared/ui/LoaderApp'

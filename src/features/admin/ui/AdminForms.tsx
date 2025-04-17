@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Pencil } from 'lucide-react'
 import { FC, useState } from 'react'
-import { useAppSelector } from '../../../shared/hooks/store.hooks'
 import { useActions } from '../../../shared/hooks/useActions'
 import { useInput } from '../../../shared/hooks/useInput'
 import { useMode } from '../../../shared/hooks/useMode'
+import { useAppSelector } from '../../../shared/hooks/useStoreApp.hooks'
 import { Button } from '../../../shared/ui/Buttons'
 import { DynamicForm } from '../../../shared/ui/DynamicForm'
 import { ErrorMessage } from '../../../shared/ui/ErrorUi'

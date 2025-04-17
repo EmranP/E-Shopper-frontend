@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { FC, useEffect, useState } from 'react'
-import { useAppSelector } from '../../../shared/hooks/store.hooks'
 import { useActions } from '../../../shared/hooks/useActions'
+import { useAppSelector } from '../../../shared/hooks/useStoreApp.hooks'
 import { useToggle } from '../../../shared/hooks/useToggle'
 import { LoaderApp } from '../../../shared/ui/LoaderApp'
 import { Modal } from '../../../shared/ui/Modal'

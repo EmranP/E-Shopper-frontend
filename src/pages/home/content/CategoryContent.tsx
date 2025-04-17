@@ -2,8 +2,8 @@
 import { FC, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { ProductCard } from '../../../entities/product/ui/ProductCard'
-import { useAppSelector } from '../../../shared/hooks/store.hooks'
 import { useActions } from '../../../shared/hooks/useActions'
+import { useAppSelector } from '../../../shared/hooks/useStoreApp.hooks'
 import { Button } from '../../../shared/ui/Buttons'
 import { LoaderApp } from '../../../shared/ui/LoaderApp'
 
@@ -49,17 +49,19 @@ export const CategoryContent: FC = () => {
 				<LoaderApp />
 			) : (
 				<div className='products__row space-5'>
-					{sortedProducts?.map(({ id, name, imageUrl, description, price }) => (
-						<ProductCard
-							key={id}
-							id={id}
-							title={name}
-							price={price}
-							imageUrl={imageUrl}
-							description={description}
-							onClick={() => {}}
-						/>
-					))}
+					{sortedProducts?.map(
+						({ id, name, imageUrl, description, price, stock }) => (
+							<ProductCard
+								key={id}
+								id={id}
+								title={name}
+								price={price}
+								imageUrl={imageUrl}
+								description={description}
+								stock={stock}
+							/>
+						)
+					)}
 				</div>
 			)}
 		</div>

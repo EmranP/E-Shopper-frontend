@@ -1,6 +1,5 @@
 import { redirect } from 'react-router-dom'
 import { Dispatch } from 'redux'
-import { ADMIN_REQUEST } from '../../../app/constants/actions/admin.constants'
 import {
 	CART_GET_FAILURE,
 	CART_GET_SUCCESS,
@@ -29,7 +28,7 @@ export const getUserCarts =
 			return
 		}
 
-		dispatch({ type: ADMIN_REQUEST })
+		dispatch({ type: CART_REQUEST })
 
 		try {
 			const resultGetUserCart = await cartsServiceApi.getUserCarts()

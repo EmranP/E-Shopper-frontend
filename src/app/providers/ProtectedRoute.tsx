@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { FC, useEffect } from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
-import { useAppSelector } from '../../shared/hooks/store.hooks'
 import { useActions } from '../../shared/hooks/useActions'
+import { useAppSelector } from '../../shared/hooks/useStoreApp.hooks'
 import { IProtectedRoute } from '../../shared/types/ui.interface'
 import { Loader } from '../../shared/ui/Loader'
 

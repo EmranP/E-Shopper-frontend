@@ -2,8 +2,8 @@
 import { motion } from 'motion/react'
 import { FC, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { useAppSelector } from '../../shared/hooks/store.hooks'
 import { useActions } from '../../shared/hooks/useActions'
+import { useAppSelector } from '../../shared/hooks/useStoreApp.hooks'
 import { Button } from '../../shared/ui/Buttons'
 import { LoaderApp } from '../../shared/ui/LoaderApp'
 import {

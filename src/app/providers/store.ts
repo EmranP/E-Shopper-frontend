@@ -24,11 +24,6 @@ export const rootAppReducer = combineReducers({
 
 const thunkMiddleware: ThunkMiddleware<RootState, AppActions> = thunk
 
-const configMiddlewareThunk = composeWithDevTools(
-	applyMiddleware(thunkMiddleware)
-)
+const enhancer = composeWithDevTools(applyMiddleware(thunkMiddleware))
 
-export const store = createStore<RootState, AppActions, object, object>(
-	rootAppReducer,
-	configMiddlewareThunk
-)
+export const store = createStore(rootAppReducer, undefined, enhancer)

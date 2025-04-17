@@ -4,7 +4,7 @@ import {
 	errorAuthMessage,
 	successAuthMessage,
 } from '../../app/constants/utils/showToast.constant'
-import { useAppSelector } from '../../shared/hooks/store.hooks'
+import { useAppSelector } from '../../shared/hooks/useStoreApp.hooks'
 import { Toast } from '../../shared/ui/Toast'
 
 export const LayoutAuth: FC<PropsWithChildren> = ({ children }) => {

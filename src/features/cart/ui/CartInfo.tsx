@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import { Button } from '../../../shared/ui/Buttons'
 
+//!! Make Order And big refactoring code
 export const CartInfo: FC = () => {
 	return (
 		<div className='flex-auto'>
