@@ -50,7 +50,6 @@ export const CategoriesAdminPageContent: FC = () => {
 
 		toggleHandler()
 	}
-	console.log(categories)
 	const showModalHandler = () => toggleHandler()
 	return (
 		<>

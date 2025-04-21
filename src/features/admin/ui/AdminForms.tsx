@@ -87,8 +87,6 @@ export const AdminFormOrders: FC = () => {
 	const { editOrdersForAdmin } = useActions()
 	const { isAppLoading, error } = useAppSelector(state => state.admin.orders)
 
-	console.log(selectedOrders)
-
 	const onSubmitOrderHandler = () => {
 		if (!value || !selectedOrders) return
 

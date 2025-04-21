@@ -32,7 +32,6 @@ export const getAllProducts =
 				type: ADMIN_PRODUCTS_GET_SUCCESS,
 				payload: resultGetAllProducts.data,
 			})
-			console.log(resultGetAllProducts.data)
 		} catch (error) {
 			const errorMessage = errorMessageAsyncAction(error)
 

@@ -34,8 +34,11 @@ export const CartItem: FC<CartItemProps> = ({
 						</div>
 					)}
 				</div>
-				<div>
+				<div className='text-center'>
 					<h1>{product?.name}</h1>
+					<h2>
+						<span className='text-specialColor pr-1'>{product?.price}</span>$
+					</h2>
 				</div>
 				<CartControls
 					quantity={quantity}
@@ -50,6 +53,7 @@ export const CartItem: FC<CartItemProps> = ({
 				<Trash
 					size={iconsSize}
 					cursor={'pointer'}
+					color='red'
 					onClick={() => {
 						showModalHandler()
 						setIdToDelete(product?.id as number)

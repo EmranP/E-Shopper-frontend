@@ -18,7 +18,6 @@ export const CartContent: FC = () => {
 	const { cart } = carts
 	const { cartItems: cartItemsData, isAppLoading } = cartItems
 	const { products } = admin.products
-
 	useEffect(() => {
 		if (!cart?.id) return
 
@@ -39,7 +38,6 @@ export const CartContent: FC = () => {
 		})
 		.filter(Boolean)
 
-	console.log(cartItemsWithQuantity)
 	const removeProductHandler = (cartItemsId: number, productId: number) => {
 		if (!productId && !cartItemsId) return
 		removeCartItems(cartItemsId, productId)
@@ -62,7 +60,9 @@ export const CartContent: FC = () => {
 		<>
 			<div className='flex-auto'>
 				{cartItemsWithQuantity?.length === 0 ? (
-					<h1>Cart is empty... 😢</h1>
+					<h1 className='text-center text-2xl h-full py-50 text-specialColor font-semibold'>
+						Cart is empty... 😢
+					</h1>
 				) : (
 					<>
 						{cartItemsWithQuantity?.map(productCart => (

@@ -53,7 +53,6 @@ export const editForAdminUsers =
 				type: ADMIN_USERS_EDIT_FAILURE,
 				payload: USER_NOT_WRITE_DATA,
 			})
-			console.log(userId, userRole)
 			return
 		}
 
