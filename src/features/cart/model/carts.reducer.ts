@@ -95,7 +95,7 @@ export const cartItemsReducer = (
 				error: null,
 				cartItems:
 					state.cartItems?.filter(cartItem => cartItem.id !== action.payload) ||
-					[],
+					null,
 			}
 
 		// Failure

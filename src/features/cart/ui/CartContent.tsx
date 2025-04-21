@@ -39,12 +39,13 @@ export const CartContent: FC = () => {
 		.filter(Boolean)
 
 	const removeProductHandler = (cartItemsId: number, productId: number) => {
-		if (!productId && !cartItemsId) return
+		if (!productId || !cartItemsId) return
 		removeCartItems(cartItemsId, productId)
 	}
 
 	const confirmDeleteHandler = () => {
 		if (productIdToDelete !== null && cart?.id !== null) {
+			console.log(productIdToDelete)
 			removeProductHandler(cart?.id as number, productIdToDelete)
 			setProductIdToDelete(null)
 		}
@@ -59,7 +60,7 @@ export const CartContent: FC = () => {
 	return (
 		<>
 			<div className='flex-auto'>
-				{cartItemsWithQuantity?.length === 0 ? (
+				{!cartItemsWithQuantity?.length ? (
 					<h1 className='text-center text-2xl h-full py-50 text-specialColor font-semibold'>
 						Cart is empty... 😢
 					</h1>

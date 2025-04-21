@@ -156,7 +156,7 @@ export const removeCartItems =
 
 		dispatch({ type: CART_REQUEST })
 		try {
-			await cartItemsServiceApi.deleteCartItems(productId)
+			await cartItemsServiceApi.deleteCartItems(String(productId))
 
 			dispatch({
 				type: CART_ITEMS_REMOVE_SUCCESS,
