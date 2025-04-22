@@ -22,7 +22,7 @@ export const HeaderAction: FC = () => {
 		if (!cart?.id) return
 
 		getCartItems(cart.id)
-	}, [cart])
+	}, [cart, cartItemsData?.length])
 
 	const logoutHandler = () => {
 		logout()
@@ -37,11 +37,13 @@ export const HeaderAction: FC = () => {
 					<>
 						<div className='flex items-center gap-4'>
 							{user && user?.id === cart?.userId ? (
-								<Link to={'/cart'}>
-									<ShoppingCart size={20} />
+								<Link to={'/cart'} className='relative'>
+									<ShoppingCart size={30} />
 									{cartItemsData?.length !== 0 && (
-										<div>
-											<h1>{cartItemsData?.length}</h1>
+										<div className='absolute -top-2 -left-4.5 bg-specialColor rounded-full px-2'>
+											<h1 className='text-white text-[10px]'>
+												{cartItemsData?.length}
+											</h1>
 										</div>
 									)}
 								</Link>
