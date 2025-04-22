@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+
 import { LogOut, ShoppingCart } from 'lucide-react'
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useActions } from '../../../shared/hooks/useActions'
 import { useAppSelector } from '../../../shared/hooks/useStoreApp.hooks'
@@ -9,12 +10,19 @@ import { Button } from '../../../shared/ui/Buttons'
 import { Modal } from '../../../shared/ui/Modal'
 
 export const HeaderAction: FC = () => {
-	const { auth, carts } = useAppSelector(state => state)
+	const { auth, carts, cartItems } = useAppSelector(state => state)
 	const { isAuth, user } = auth
 	const { cart, error } = carts
-	const { logout } = useActions()
+	const { cartItems: cartItemsData } = cartItems
+	const { logout, getCartItems } = useActions()
 	const toggleLogout = useToggle(false)
 	const toggleShowModal = useToggle(false)
+
+	useEffect(() => {
+		if (!cart?.id) return
+
+		getCartItems(cart.id)
+	}, [cart])
 
 	const logoutHandler = () => {
 		logout()
@@ -31,6 +39,11 @@ export const HeaderAction: FC = () => {
 							{user && user?.id === cart?.userId ? (
 								<Link to={'/cart'}>
 									<ShoppingCart size={20} />
+									{cartItemsData?.length !== 0 && (
+										<div>
+											<h1>{cartItemsData?.length}</h1>
+										</div>
+									)}
 								</Link>
 							) : (
 								<div>

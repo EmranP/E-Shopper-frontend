@@ -98,8 +98,6 @@ class CartItemsServiceApi {
 		if (request.status === 404) {
 			throw new Error('Error not founded cartItems')
 		}
-
-		return
 	}
 }
 

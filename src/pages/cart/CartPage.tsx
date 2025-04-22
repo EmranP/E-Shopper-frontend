@@ -37,7 +37,7 @@ export const CartPage: FC = () => {
 			<LayoutContent>
 				{!isAuth ? (
 					<h1 className='text-center text-3xl font-semibold text-orange-500'>
-						You need in auth
+						You need to log in
 					</h1>
 				) : (
 					<CartWrapper>
