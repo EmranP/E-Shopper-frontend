@@ -156,18 +156,12 @@ export const removeCartItems =
 
 		dispatch({ type: CART_REQUEST })
 		try {
-			await cartItemsServiceApi.deleteCartItems(String(productId))
+			await cartItemsServiceApi.deleteCartItems(productId)
 
 			dispatch({
 				type: CART_ITEMS_REMOVE_SUCCESS,
-				payload: productId as number,
+				payload: Number(cartItemsId),
 			})
-
-			const newCartItemsData = await cartItemsServiceApi.getCartItems(
-				cartItemsId
-			)
-
-			dispatch({ type: CART_ITEMS_GET_SUCCESS, payload: newCartItemsData.data })
 		} catch (error) {
 			const errorMessage = errorMessageAsyncAction(error)
 

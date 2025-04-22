@@ -11,6 +11,9 @@ export const CartContent: FC = () => {
 	const { cartItems, carts, admin } = useAppSelector(state => state)
 	const { getCartItems, getAllProducts, removeCartItems } = useActions()
 	const { toggle, toggleHandler } = useToggle()
+	const [cartItemIdToDelete, setCartItemIdToDelete] = useState<number | null>(
+		null
+	)
 	const [productIdToDelete, setProductIdToDelete] = useState<number | null>(
 		null
 	)
@@ -18,60 +21,72 @@ export const CartContent: FC = () => {
 	const { cart } = carts
 	const { cartItems: cartItemsData, isAppLoading } = cartItems
 	const { products } = admin.products
+
 	useEffect(() => {
 		if (!cart?.id) return
 
 		getCartItems(cart.id)
 		getAllProducts()
-	}, [])
+	}, [cart])
+
+	if (isAppLoading) return <LoaderApp />
+
+	if (!products || !cartItemsData)
+		return (
+			<h1 className='text-center text-2xl h-full py-50 text-specialColor font-semibold'>
+				Cart is empty... 😢
+			</h1>
+		)
 
 	const cartItemsWithQuantity = products
-		?.map(product => {
-			const matchingCartItem = cartItemsData?.find(
+		.map(product => {
+			const matchingCartItem = cartItemsData.find(
 				item => item.productId === product.id
 			)
+
 			if (!matchingCartItem) return null
+
 			return {
 				...product,
 				quantity: matchingCartItem.quantity,
+				cartItemId: matchingCartItem.id,
 			}
 		})
 		.filter(Boolean)
 
 	const removeProductHandler = (cartItemsId: number, productId: number) => {
-		if (!productId || !cartItemsId) return
+		if (!cartItemsId || !productId) return
 		removeCartItems(cartItemsId, productId)
 	}
 
 	const confirmDeleteHandler = () => {
-		if (productIdToDelete !== null && cart?.id !== null) {
-			console.log(productIdToDelete)
-			removeProductHandler(cart?.id as number, productIdToDelete)
-			setProductIdToDelete(null)
+		if (cartItemIdToDelete !== null && productIdToDelete !== null) {
+			removeProductHandler(cartItemIdToDelete, productIdToDelete)
+			setCartItemIdToDelete(null)
 		}
 
 		toggleHandler()
 	}
 
-	const showModalHandler = () => toggleHandler()
-
-	if (isAppLoading) return <LoaderApp />
+	const openModalHandler = () => toggleHandler()
+	const closeModalHandler = () => toggleHandler()
 
 	return (
 		<>
 			<div className='flex-auto'>
-				{!cartItemsWithQuantity?.length ? (
+				{!cartItemsWithQuantity.length ? (
 					<h1 className='text-center text-2xl h-full py-50 text-specialColor font-semibold'>
 						Cart is empty... 😢
 					</h1>
 				) : (
 					<>
-						{cartItemsWithQuantity?.map(productCart => (
+						{cartItemsWithQuantity.map(productCart => (
 							<CartItem
 								key={productCart?.id}
 								product={productCart}
-								showModalHandler={showModalHandler}
-								setIdToDelete={setProductIdToDelete}
+								showModalHandler={openModalHandler}
+								setIdToDelete={setCartItemIdToDelete}
+								setProductIdToDelete={setProductIdToDelete}
 							/>
 						))}
 					</>
@@ -79,10 +94,10 @@ export const CartContent: FC = () => {
 			</div>
 			{toggle && (
 				<Modal
-					titleSolutions='delete this is cart-items product'
+					titleSolutions='delete this cart items'
 					onClickSave={confirmDeleteHandler}
-					onClickClose={showModalHandler}
-					onClickCancel={showModalHandler}
+					onClickClose={closeModalHandler}
+					onClickCancel={closeModalHandler}
 				/>
 			)}
 		</>

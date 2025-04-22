@@ -9,6 +9,7 @@ export const CartItem: FC<CartItemProps> = ({
 	product,
 	showModalHandler,
 	setIdToDelete,
+	setProductIdToDelete,
 }) => {
 	const {
 		quantity,
@@ -56,7 +57,8 @@ export const CartItem: FC<CartItemProps> = ({
 					color='red'
 					onClick={() => {
 						showModalHandler()
-						setIdToDelete(product?.id as number)
+						setIdToDelete(Number(product?.cartItemId))
+						setProductIdToDelete(Number(product?.id))
 					}}
 				/>
 			</div>

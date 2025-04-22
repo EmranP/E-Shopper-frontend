@@ -11,10 +11,12 @@ export interface ICartControls {
 
 interface ICartItemProduct extends IMappingResponseProductsApi {
 	quantity: number
+	cartItemId: number
 }
 
 export interface CartItemProps {
 	product: ICartItemProduct | null
 	showModalHandler: () => void
 	setIdToDelete: (id: number) => void
+	setProductIdToDelete: (productId: number) => void
 }
