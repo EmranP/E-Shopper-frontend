@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { FC, useEffect, useState } from 'react'
 import { ISelectOption } from '../../../features/admin/types/ui.interface'
-import { useAppSelector } from '../../../shared/hooks/store.hooks'
 import { useActions } from '../../../shared/hooks/useActions'
+import { useAppSelector } from '../../../shared/hooks/useStoreApp.hooks'
 import { Select } from '../../../shared/ui/Select'
 import { mapCategoriesToOptions } from '../../../shared/utils/mapping.utils'
 

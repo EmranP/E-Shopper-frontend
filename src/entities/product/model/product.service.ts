@@ -24,7 +24,7 @@ class ProductsServiceApi {
 		if (response.status === 404) {
 			throw new Error('Products api not foound')
 		}
-		console.log(response.data)
+
 		return response
 	}
 

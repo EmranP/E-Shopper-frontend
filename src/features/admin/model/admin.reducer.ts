@@ -36,9 +36,9 @@ import {
 	ADMIN_USERS_REMOVE_SUCCESS,
 } from '../../../app/constants/actions/admin.constants'
 import { IResponseCategoriesApi } from '../../../entities/сategory/types/type.api'
+import { AppActions } from '../../../shared/types/store.types'
 import { IResponseUserAuthApi } from '../../auth/types/type.api'
 import { IResponseOrdersApi } from '../../order/types/types.api'
-import { AdminActionTypes } from '../types/types.model'
 import {
 	IAdminCartsState,
 	IAdminCategoriesState,
@@ -56,7 +56,7 @@ const adminUsersInitialState: IAdminUsersState = {
 
 export const adminUsersReducer = (
 	state = adminUsersInitialState,
-	action: AdminActionTypes
+	action: AppActions
 ): IAdminUsersState => {
 	switch (action.type) {
 		// Shared
@@ -110,7 +110,7 @@ const adminOrdersInitialState: IAdminOrdersState = {
 
 export const adminOrdersReducer = (
 	state = adminOrdersInitialState,
-	action: AdminActionTypes
+	action: AppActions
 ): IAdminOrdersState => {
 	switch (action.type) {
 		// Shared
@@ -169,7 +169,7 @@ const adminProductsInitialState: IAdminProductsState = {
 
 export const adminProductsReducer = (
 	state = adminProductsInitialState,
-	action: AdminActionTypes
+	action: AppActions
 ): IAdminProductsState => {
 	switch (action.type) {
 		// Shared
@@ -246,7 +246,7 @@ const adminCategoriesInitialState: IAdminCategoriesState = {
 
 export const adminCategoriesReducer = (
 	state = adminCategoriesInitialState,
-	action: AdminActionTypes
+	action: AppActions
 ): IAdminCategoriesState => {
 	switch (action.type) {
 		// shared
@@ -321,7 +321,7 @@ const adminCartsInitialState: IAdminCartsState = {
 
 export const adminCartsReducer = (
 	state = adminCartsInitialState,
-	action: AdminActionTypes
+	action: AppActions
 ): IAdminCartsState => {
 	switch (action.type) {
 		// shared

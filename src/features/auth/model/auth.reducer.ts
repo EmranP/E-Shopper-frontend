@@ -9,8 +9,8 @@ import {
 	AUTH_REG_SUCCESS,
 	AUTH_REQUEST,
 } from '../../../app/constants/actions/auth.constants'
+import { AppActions } from '../../../shared/types/store.types'
 import { IResponseUserAuthApi } from '../types/type.api'
-import { AuthActionTypes } from '../types/type.model'
 
 export interface IAuthState {
 	user: IResponseUserAuthApi | null
@@ -32,7 +32,7 @@ const initialState: IAuthState = {
 
 export const authReducer = (
 	state = initialState,
-	action: AuthActionTypes
+	action: AppActions
 ): IAuthState => {
 	switch (action.type) {
 		case AUTH_REQUEST:

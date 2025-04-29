@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { NavLink } from 'react-router-dom'
-import { useAppSelector } from '../../../shared/hooks/store.hooks'
+import { useAppSelector } from '../../../shared/hooks/useStoreApp.hooks'
 import { navigationLink } from '../../../shared/utils/navigationData.utils'
 
 export const Navigation: FC = () => {

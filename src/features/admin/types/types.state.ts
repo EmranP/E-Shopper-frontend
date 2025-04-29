@@ -26,3 +26,10 @@ export interface IAdminCategoriesState extends IAppState {
 export interface IAdminCartsState extends IAppState {
 	carts: IResponseCartsApi[] | null
 }
+
+export type IAdminState =
+	| IAdminUsersState
+	| IAdminOrdersState
+	| IAdminProductsState
+	| IAdminCategoriesState
+	| IAdminCartsState

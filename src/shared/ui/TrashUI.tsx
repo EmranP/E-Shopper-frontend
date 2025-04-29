@@ -13,6 +13,7 @@ export const TrashUI: FC<ITrashUI> = ({
 			<Trash
 				size={iconsSize}
 				cursor={'pointer'}
+				color='red'
 				onClick={() => {
 					showModalHandler()
 					setIdToDelete(data.id ? data?.id : null)
