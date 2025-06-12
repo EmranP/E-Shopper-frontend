@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { FC, useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import { toast } from 'react-toastify'
