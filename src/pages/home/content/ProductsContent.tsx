@@ -10,12 +10,13 @@ import { ErrorMessage } from '../../../shared/ui/ErrorUi'
 import { LoaderApp } from '../../../shared/ui/LoaderApp'
 
 export const ProductsContent: FC = () => {
-	const { searchProduct } = useAppSelector(state => state)
+	const { searchProduct, admin } = useAppSelector(state => state)
 	const [sortedByPriceDesc, setSortedByPriceDesc] = useState(false)
 	const [searchParams, setSearchParams] = useSearchParams()
 	const { getProductSearch } = useActions()
 
 	const { productsSearch, isAppLoading, error, total } = searchProduct
+	const { products } = admin.products
 
 	const search = searchParams.get('search') || ''
 	const page = Number(searchParams.get('page') || 1)
@@ -54,13 +55,15 @@ export const ProductsContent: FC = () => {
 			<div className='flex-auto'>
 				<div className='flex justify-between gap-5 mb-15'>
 					<h1 className='text-2xl flex-auto'>Products</h1>
-					<Button
-						color={'white'}
-						bgColor={'bg-bgActionButton'}
-						title={sortedByPriceDesc ? 'Reset Sort' : 'Sort by Price ↓'}
-						style={{ width: 150 }}
-						onClick={() => setSortedByPriceDesc(prev => !prev)}
-					/>
+					{products && products.length >= 2 && (
+						<Button
+							color={'white'}
+							bgColor={'bg-bgActionButton'}
+							title={sortedByPriceDesc ? 'Reset Sort' : 'Sort by Price ↓'}
+							style={{ width: 150 }}
+							onClick={() => setSortedByPriceDesc(prev => !prev)}
+						/>
+					)}
 				</div>
 				{isAppLoading ? (
 					<LoaderApp />

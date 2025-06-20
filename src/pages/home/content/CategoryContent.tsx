@@ -37,13 +37,16 @@ export const CategoryContent: FC = () => {
 				<h1 className='text-2xl flex-auto'>
 					Category {categoryItem?.name} content
 				</h1>
-				<Button
-					color={'white'}
-					bgColor={'bg-bgActionButton'}
-					title={sortedByPriceDesc ? 'Reset Sort' : 'Sort by Price ↓'}
-					style={{ width: 150 }}
-					onClick={() => setSortedByPriceDesc(prev => !prev)}
-				/>
+				{filteredProductsCategories &&
+					filteredProductsCategories?.length >= 2 && (
+						<Button
+							color={'white'}
+							bgColor={'bg-bgActionButton'}
+							title={sortedByPriceDesc ? 'Reset Sort' : 'Sort by Price ↓'}
+							style={{ width: 150 }}
+							onClick={() => setSortedByPriceDesc(prev => !prev)}
+						/>
+					)}
 			</div>
 			{isAppLoading ? (
 				<LoaderApp />

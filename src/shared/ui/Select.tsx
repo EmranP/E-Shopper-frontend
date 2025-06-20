@@ -1,7 +1,7 @@
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, X } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useRef, useState } from 'react'
-import { Link, useMatch } from 'react-router-dom'
+import { Link, useMatch, useNavigate } from 'react-router-dom'
 import {
 	CommonSelectTypes,
 	ISelectProps,
@@ -15,6 +15,8 @@ export const Select = <T extends CommonSelectTypes>({
 	const [isOpen, setIsOpen] = useState<boolean>(false)
 	const selectRef = useRef<HTMLDivElement>(null)
 	const isActivePage = !!useMatch('/admin/*')
+	const navigate = useNavigate()
+
 	useEffect(() => {
 		const clickOutsideHandler = (event: MouseEvent) => {
 			if (
@@ -30,6 +32,11 @@ export const Select = <T extends CommonSelectTypes>({
 		return () => document.removeEventListener('mousedown', clickOutsideHandler)
 	}, [])
 
+	const removeSelectedCategory = () => {
+		setSelected(null)
+		navigate('/')
+	}
+
 	return (
 		<div className='relative ' ref={selectRef}>
 			<button
@@ -37,11 +44,16 @@ export const Select = <T extends CommonSelectTypes>({
 				className={`w-full flex items-center ${
 					selected ? 'justify-between' : 'justify-end'
 				} px-4 py-2 mb-4 text-baseTextAndButton bg-white rounded-lg shadow-md focus:outline-none`}
-				onClick={() => setIsOpen(prev => !prev)}
 			>
+				{selected && (
+					<X className='cursor-pointer' onClick={removeSelectedCategory} />
+				)}
 				{selected && selected.label}
 				<ChevronDown
-					className={`duration-200 ${isOpen ? '-rotate-180' : 'rotate-0'}`}
+					className={`duration-200 cursor-pointer ${
+						isOpen ? '-rotate-180' : 'rotate-0'
+					}`}
+					onClick={() => setIsOpen(prev => !prev)}
 				/>
 			</button>
 
