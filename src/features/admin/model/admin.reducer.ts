@@ -165,6 +165,7 @@ const adminProductsInitialState: IAdminProductsState = {
 	productItem: null,
 	isAppLoading: false,
 	error: null,
+	total: 0,
 }
 
 export const adminProductsReducer = (
@@ -179,7 +180,8 @@ export const adminProductsReducer = (
 		case ADMIN_PRODUCTS_GET_SUCCESS:
 			return {
 				...state,
-				products: action.payload,
+				products: action.payload.products,
+				total: action.payload.total,
 				isAppLoading: false,
 				error: null,
 			}

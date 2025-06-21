@@ -3,13 +3,10 @@ import {
 	PRODUCT_GET_SEARCH_SUCCESS,
 } from '../../../app/constants/actions/admin.constants'
 import { IAppState } from '../../../shared/types/initState.types'
-import {
-	IMappingResponseProductsApi,
-	IMappingResponseProductsSearchApi,
-} from './type.api'
+import { IProductsApi, IResponseProductsApi } from './type.api'
 
 export interface IProductsSearchState extends IAppState {
-	productsSearch: IMappingResponseProductsApi[] | null
+	productsSearch: IResponseProductsApi[] | null
 	page: number | null
 	limit: number | null
 	hasMore: boolean
@@ -19,7 +16,7 @@ export interface IProductsSearchState extends IAppState {
 
 type ProductGetSearchSuccess = {
 	type: typeof PRODUCT_GET_SEARCH_SUCCESS
-	payload: IMappingResponseProductsSearchApi
+	payload: IProductsApi
 }
 
 type ProductGetSearchFailure = {
