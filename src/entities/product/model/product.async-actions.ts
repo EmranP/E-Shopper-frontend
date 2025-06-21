@@ -22,11 +22,14 @@ import { productsServiceApi } from './product.service'
 
 // Products
 export const getAllProducts =
-	(): AppThunk =>
+	(limit: number | null, offset: number | null): AppThunk =>
 	async (dispatch: Dispatch<AppActions>): Promise<void> => {
 		dispatch({ type: ADMIN_REQUEST })
 		try {
-			const resultGetAllProducts = await productsServiceApi.getAllProducts()
+			const resultGetAllProducts = await productsServiceApi.getAllProducts(
+				limit,
+				offset
+			)
 
 			dispatch({
 				type: ADMIN_PRODUCTS_GET_SUCCESS,
@@ -70,8 +73,8 @@ export const getProductById =
 export const getProductSearch =
 	(
 		productSearch: string,
-		limit: number | string | null,
-		offset: number | string | null
+		limit: number | null,
+		offset: number | null
 	): AppThunk =>
 	async (dispatch: Dispatch<AppActions>): Promise<void> => {
 		if (!limit || offset === undefined) return

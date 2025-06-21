@@ -37,7 +37,10 @@ import {
 	ADMIN_USERS_REMOVE_FAILURE,
 	ADMIN_USERS_REMOVE_SUCCESS,
 } from '../../../app/constants/actions/admin.constants'
-import { IMappingResponseProductsApi } from '../../../entities/product/types/type.api'
+import {
+	IProductsApi,
+	IResponseProductsApi,
+} from '../../../entities/product/types/type.api'
 import { IResponseCategoriesApi } from '../../../entities/сategory/types/type.api'
 import { IResponseUserAuthApi } from '../../auth/types/type.api'
 import { IResponseCartsApi } from '../../cart/types/type.api'
@@ -113,20 +116,20 @@ type AdminOrdersActionTypes =
 // Success
 type AdminProductsGetSuccessAction = {
 	type: typeof ADMIN_PRODUCTS_GET_SUCCESS
-	payload: IMappingResponseProductsApi[]
+	payload: IProductsApi
 }
 type AdminProductGetByIdSuccessAction = {
 	type: typeof ADMIN_PRODUCT_GET_BY_ID_SUCCESS
-	payload: IMappingResponseProductsApi
+	payload: IResponseProductsApi
 }
 
 type AdminProductAddSuccessAction = {
 	type: typeof ADMIN_PRODUCTS_ADD_SUCCESS
-	payload: IMappingResponseProductsApi
+	payload: IResponseProductsApi
 }
 type AdminProductEditSuccessAction = {
 	type: typeof ADMIN_PRODUCTS_EDIT_SUCCESS
-	payload: IMappingResponseProductsApi
+	payload: IResponseProductsApi
 }
 type AdminProductRemoveSuccessAction = {
 	type: typeof ADMIN_PRODUCTS_REMOVE_SUCCESS
