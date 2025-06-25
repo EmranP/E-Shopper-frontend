@@ -15,7 +15,7 @@ import {
 } from '../../../app/constants/actions/cart.constatns'
 import { AppActions, AppThunk } from '../../../shared/types/store.types'
 import { errorMessageAsyncAction } from '../../../shared/utils/errorMessage.async-action'
-import { cartItemsServiceApi, cartsServiceApi } from '../service/cart.service'
+import { cartItemsServiceApi, cartsServiceApi } from '../model/cart.service'
 
 // Carts
 export const getUserCarts =
