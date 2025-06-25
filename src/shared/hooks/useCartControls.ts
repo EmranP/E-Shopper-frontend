@@ -11,7 +11,7 @@ export const useCartControl = (
 	const [isActiveMaxSum, setIsActiveMaxSum] = useState<boolean>(false)
 
 	const increaseStock = () => {
-		if (stock && quantity > stock) {
+		if (stock && quantity >= stock) {
 			setIsActiveMaxSum(true)
 			return
 		}
