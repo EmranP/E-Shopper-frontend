@@ -19,7 +19,7 @@ import { AUTH_API_URL_REFRESH } from '../../../app/constants/api/auth.api-consta
 import { BASE_API_URL } from '../../../shared/config/axiosInstance'
 import { AppActions, AppThunk } from '../../../shared/types/store.types'
 import { errorMessageAsyncAction } from '../../../shared/utils/errorMessage.async-action'
-import { cartsServiceApi } from '../../cart/service/cart.service'
+import { cartsServiceApi } from '../../cart/model/cart.service'
 import { IResponseAuthApi } from '../types/type.api'
 import { authServiceApi } from './auth.service'
 

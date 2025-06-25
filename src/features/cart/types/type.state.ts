@@ -1,5 +1,5 @@
 import { IAppState } from '../../../shared/types/initState.types'
-import { cartItemsReducer, cartReducer } from '../model/carts.reducer'
+import { cartItemsReducer, cartReducer } from '../model/cart.reducer'
 import { IResponseCartItemsApi, IResponseCartsApi } from './type.api'
 
 export interface ICartState extends IAppState {

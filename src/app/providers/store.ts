@@ -11,7 +11,7 @@ import { authReducer } from '../../features/auth/model/auth.reducer'
 import {
 	cartItemsReducer,
 	cartReducer,
-} from '../../features/cart/model/carts.reducer'
+} from '../../features/cart/model/cart.reducer'
 import { AppActions, RootState } from '../../shared/types/store.types'
 
 export const rootAppReducer = combineReducers({
