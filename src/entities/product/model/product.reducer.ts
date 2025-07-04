@@ -1,7 +1,7 @@
 import {
-	ADMIN_REQUEST,
 	PRODUCT_GET_SEARCH_FAILURE,
 	PRODUCT_GET_SEARCH_SUCCESS,
+	PRODUCT_SEARCH_REQUEST,
 } from '../../../app/constants/actions/admin.constants'
 import { AppActions } from '../../../shared/types/store.types'
 import { IProductsSearchState } from '../types/type.model'
@@ -22,7 +22,7 @@ export const searchProductReducer = (
 	action: AppActions
 ): IProductsSearchState => {
 	switch (action.type) {
-		case ADMIN_REQUEST:
+		case PRODUCT_SEARCH_REQUEST:
 			return { ...state, isAppLoading: true, error: null }
 		case PRODUCT_GET_SEARCH_SUCCESS:
 			return {

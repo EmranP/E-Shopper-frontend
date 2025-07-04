@@ -8,9 +8,9 @@ import {
 	ADMIN_CATEGORIES_GET_SUCCESS,
 	ADMIN_CATEGORIES_REMOVE_FAILURE,
 	ADMIN_CATEGORIES_REMOVE_SUCCESS,
+	ADMIN_CATEGORIES_REQUEST,
 	ADMIN_CATEGORY_GET_BY_ID_FAILURE,
 	ADMIN_CATEGORY_GET_BY_ID_SUCCESS,
-	ADMIN_REQUEST,
 	USER_NOT_WRITE_DATA,
 } from '../../../app/constants/actions/admin.constants'
 import { AppActions, AppThunk } from '../../../shared/types/store.types'
@@ -20,7 +20,7 @@ import { categoryService } from './category.service'
 export const getAllCategories =
 	(): AppThunk =>
 	async (dispatch: Dispatch<AppActions>): Promise<void> => {
-		dispatch({ type: ADMIN_REQUEST })
+		dispatch({ type: ADMIN_CATEGORIES_REQUEST })
 
 		try {
 			const resultGetAllCategories = await categoryService.getAllCategories()
@@ -47,7 +47,7 @@ export const getCategoryById =
 			return
 		}
 
-		dispatch({ type: ADMIN_REQUEST })
+		dispatch({ type: ADMIN_CATEGORIES_REQUEST })
 		try {
 			const resultGetByIdCategory = await categoryService.getCategoryById(
 				categoryId
@@ -78,7 +78,7 @@ export const addCategory =
 			return
 		}
 
-		dispatch({ type: ADMIN_REQUEST })
+		dispatch({ type: ADMIN_CATEGORIES_REQUEST })
 		try {
 			const resultAddCategory = await categoryService.addCategory(categoryData)
 
@@ -104,7 +104,7 @@ export const editCategory =
 			return
 		}
 
-		dispatch({ type: ADMIN_REQUEST })
+		dispatch({ type: ADMIN_CATEGORIES_REQUEST })
 		try {
 			const resultEditCategory = await categoryService.editCategory(
 				categoryId,
@@ -133,7 +133,7 @@ export const removeCategory =
 			return
 		}
 
-		dispatch({ type: ADMIN_REQUEST })
+		dispatch({ type: ADMIN_CATEGORIES_REQUEST })
 		try {
 			await categoryService.removeCategory(categoryId)
 

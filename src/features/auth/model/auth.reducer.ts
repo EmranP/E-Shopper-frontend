@@ -17,7 +17,7 @@ export interface IAuthState {
 	access: string | null
 	refresh: string | null
 	isAuth: boolean
-	isLoading: boolean
+	isAppLoading: boolean
 	error: string | null | boolean
 }
 
@@ -26,7 +26,7 @@ const initialState: IAuthState = {
 	access: null,
 	refresh: null,
 	isAuth: false,
-	isLoading: false,
+	isAppLoading: false,
 	error: null,
 }
 
@@ -36,14 +36,14 @@ export const authReducer = (
 ): IAuthState => {
 	switch (action.type) {
 		case AUTH_REQUEST:
-			return { ...state, isLoading: true }
+			return { ...state, isAppLoading: true, error: null }
 
 		case AUTH_LOGIN_SUCCESS:
 		case AUTH_REG_SUCCESS:
 		case AUTH_REFRESH_TOKEN_SUCCESS:
 			return {
 				...state,
-				isLoading: false,
+				isAppLoading: false,
 				isAuth: true,
 				access: action.payload.access,
 				refresh: action.payload.refresh,
@@ -56,7 +56,7 @@ export const authReducer = (
 		case AUTH_LOGOUT_FAILURE:
 			return {
 				...state,
-				isLoading: false,
+				isAppLoading: false,
 				error: action.payload,
 			}
 

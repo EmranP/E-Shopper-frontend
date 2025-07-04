@@ -11,6 +11,7 @@ import {
 	CART_ITEMS_GET_SUCCESS,
 	CART_ITEMS_REMOVE_FAILURE,
 	CART_ITEMS_REMOVE_SUCCESS,
+	CART_ITEMS_REQUEST,
 	CART_REQUEST,
 } from '../../../app/constants/actions/cart.constatns'
 import { AppActions } from '../../../shared/types/store.types'
@@ -57,7 +58,7 @@ export const cartItemsReducer = (
 	action: AppActions
 ): ICartItemsState => {
 	switch (action.type) {
-		case CART_REQUEST:
+		case CART_ITEMS_REQUEST:
 			return { ...state, isAppLoading: true, error: null }
 		case CART_ITEMS_GET_SUCCESS:
 			return {

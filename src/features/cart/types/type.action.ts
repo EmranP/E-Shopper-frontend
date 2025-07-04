@@ -1,4 +1,3 @@
-import { ADMIN_REQUEST } from '../../../app/constants/actions/admin.constants'
 import {
 	CART_ADD_FAILURE,
 	CART_ADD_SUCCESS,
@@ -12,6 +11,7 @@ import {
 	CART_ITEMS_GET_SUCCESS,
 	CART_ITEMS_REMOVE_FAILURE,
 	CART_ITEMS_REMOVE_SUCCESS,
+	CART_ITEMS_REQUEST,
 	CART_REQUEST,
 } from '../../../app/constants/actions/cart.constatns'
 import { IResponseCartItemsApi, IResponseCartsApi } from './type.api'
@@ -38,7 +38,7 @@ interface ICartActionFailure {
 
 // Cart-items
 interface ICartItemsActionRequest {
-	type: typeof ADMIN_REQUEST
+	type: typeof CART_ITEMS_REQUEST
 }
 
 interface ICartItemsGetSuccess {

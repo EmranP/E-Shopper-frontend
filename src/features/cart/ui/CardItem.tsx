@@ -17,10 +17,17 @@ export const CartItem: FC<CartItemProps> = ({
 		decreaseStock,
 		isActiveMaxSum,
 		isActiveMinSum,
-	} = useCartControl(product?.quantity as number, product?.stock as number)
+	} = useCartControl(
+		product?.quantity as number,
+		product?.stock as number,
+		product?.cartItemId,
+		product?.price
+	)
+
+	console.log(product)
 
 	return (
-		<div key={product?.id} className='flex gap-2'>
+		<div key={product?.cartItemId} className='flex gap-2'>
 			<div className='flex flex-2/3 justify-between items-center gap-4 bg-bgCards p-3 rounded-2xl mb-5'>
 				<div>
 					{product?.imageUrl ? (

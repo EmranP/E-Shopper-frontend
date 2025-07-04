@@ -2,16 +2,17 @@
 import { FC, useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Pagination } from '../../../entities/product/ui/Pagination'
-import { ProductCard } from '../../../entities/product/ui/ProductCard'
+import { ProductPanelSorted } from '../../../entities/product/ui/ProductPanelSorted'
+import { ProductsSortedContent } from '../../../entities/product/ui/ProductsSortedContent'
+import { SearchMessage } from '../../../entities/product/ui/SearchMessage'
 import { useActions } from '../../../shared/hooks/useActions'
 import { useAppSelector } from '../../../shared/hooks/useStoreApp.hooks'
-import { Button } from '../../../shared/ui/Buttons'
 import { ErrorMessage } from '../../../shared/ui/ErrorUi'
 import { LoaderApp } from '../../../shared/ui/LoaderApp'
 
 export const ProductsContent: FC = () => {
-	const { searchProduct, admin } = useAppSelector(state => state)
 	const [sortedByPriceDesc, setSortedByPriceDesc] = useState(false)
+	const { searchProduct, admin } = useAppSelector(state => state)
 	const [searchParams, setSearchParams] = useSearchParams()
 	const { getProductSearch, getAllProducts } = useActions()
 
@@ -44,9 +45,9 @@ export const ProductsContent: FC = () => {
 
 	const productList = search ? productsSearch : allProducts
 
-	const productAppLoading = search
+	const contentAppLoading = search
 		? isSearchProductAppLoading
-		: isProductAppLoading
+		: isProductAppLoading && !isSearchProductAppLoading
 
 	const totalPage = Math.max(
 		1,
@@ -69,63 +70,35 @@ export const ProductsContent: FC = () => {
 		setSearchParams(searchParams)
 	}
 
-	// console.log(isSearchProductAppLoading)
-
 	const errorMessage = productError || searchError
 	if (errorMessage) return <ErrorMessage error={errorMessage} />
 
-	if (productAppLoading) return <LoaderApp />
+	if (contentAppLoading) return <LoaderApp />
 
-	if (!productList || productList.length === 0)
+	if (!productList || productList.length === 0) {
 		return <ErrorMessage error='No products found' />
+	}
 
-	console.log(productList)
-	console.log(totalPage)
 	return (
-		<>
-			<div className='flex-auto'>
-				<div className='flex justify-between gap-5 mb-15'>
-					<h1 className='text-2xl flex-auto'>Products</h1>
-					{productList.length >= 2 && (
-						<Button
-							color={'white'}
-							bgColor={'bg-bgActionButton'}
-							title={sortedByPriceDesc ? 'Reset Sort' : 'Sort by Price ↓'}
-							style={{ width: 150 }}
-							onClick={() => setSortedByPriceDesc(prev => !prev)}
-						/>
-					)}
-				</div>
+		<div className='flex-auto'>
+			<ProductPanelSorted
+				productList={productList}
+				sortedByPriceDesc={sortedByPriceDesc}
+				setSortedByPriceDesc={setSortedByPriceDesc}
+			/>
 
-				{search && (
-					<p className='mb-6 text-sm text-gray-500'>
-						Search results for the query: <strong>{search}</strong>
-					</p>
-				)}
+			<SearchMessage search={search} />
 
-				<div className='products__row space-5 mb-10'>
-					{sortedProducts?.map(productItem => (
-						<ProductCard
-							key={productItem.id}
-							id={productItem.id}
-							title={productItem.name}
-							imageUrl={productItem.imageUrl}
-							price={productItem.price}
-							description={productItem.description}
-							stock={productItem.stock}
-						/>
-					))}
-				</div>
+			<ProductsSortedContent sortedProducts={sortedProducts} />
 
-				{totalPage > 1 && (
-					<Pagination
-						page={page}
-						totalPage={totalPage}
-						prevPageHandler={() => changeProduct(page - 1)}
-						nextPageHandler={() => changeProduct(page + 1)}
-					/>
-				)}
-			</div>
-		</>
+			{totalPage > 1 && (
+				<Pagination
+					page={page}
+					totalPage={totalPage}
+					prevPageHandler={() => changeProduct(page - 1)}
+					nextPageHandler={() => changeProduct(page + 1)}
+				/>
+			)}
+		</div>
 	)
 }
