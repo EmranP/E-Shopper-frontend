@@ -11,6 +11,7 @@ import {
 	CART_ITEMS_GET_SUCCESS,
 	CART_ITEMS_REMOVE_FAILURE,
 	CART_ITEMS_REMOVE_SUCCESS,
+	CART_ITEMS_REQUEST,
 	CART_REQUEST,
 } from '../../../app/constants/actions/cart.constatns'
 import { AppActions, AppThunk } from '../../../shared/types/store.types'
@@ -29,7 +30,6 @@ export const getUserCarts =
 		}
 
 		dispatch({ type: CART_REQUEST })
-
 		try {
 			const resultGetUserCart = await cartsServiceApi.getUserCarts()
 
@@ -53,7 +53,8 @@ export const getCartItems =
 
 			return
 		}
-		dispatch({ type: CART_REQUEST })
+
+		dispatch({ type: CART_ITEMS_REQUEST })
 		try {
 			const resultGetCartItems = await cartItemsServiceApi.getCartItems(cartId)
 
@@ -84,7 +85,8 @@ export const addCartItems =
 
 			return
 		}
-		dispatch({ type: CART_REQUEST })
+
+		dispatch({ type: CART_ITEMS_REQUEST })
 		try {
 			const resultAddCartItems = await cartItemsServiceApi.createCartItems(
 				cartId,
@@ -120,7 +122,7 @@ export const editCartItems =
 			return
 		}
 
-		dispatch({ type: CART_REQUEST })
+		dispatch({ type: CART_ITEMS_REQUEST })
 		try {
 			const resultEditCartItems = await cartItemsServiceApi.editCartItems(
 				cartItemsId,
@@ -132,6 +134,14 @@ export const editCartItems =
 				type: CART_ITEMS_EDIT_SUCCESS,
 				payload: resultEditCartItems.data,
 			})
+
+			dispatch({ type: CART_ITEMS_REQUEST })
+
+			const currentCartData = await cartItemsServiceApi.getCartItems(
+				cartItemsId
+			)
+
+			dispatch({ type: CART_ITEMS_GET_SUCCESS, payload: currentCartData.data })
 		} catch (error) {
 			const errorMessage = errorMessageAsyncAction(error)
 
@@ -154,7 +164,7 @@ export const removeCartItems =
 			return
 		}
 
-		dispatch({ type: CART_REQUEST })
+		dispatch({ type: CART_ITEMS_REQUEST })
 		try {
 			await cartItemsServiceApi.deleteCartItems(productId)
 

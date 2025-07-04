@@ -1,6 +1,7 @@
 import {
 	PRODUCT_GET_SEARCH_FAILURE,
 	PRODUCT_GET_SEARCH_SUCCESS,
+	PRODUCT_SEARCH_REQUEST,
 } from '../../../app/constants/actions/admin.constants'
 import { IAppState } from '../../../shared/types/initState.types'
 import { IProductsApi, IResponseProductsApi } from './type.api'
@@ -14,6 +15,10 @@ export interface IProductsSearchState extends IAppState {
 	total: number
 }
 
+type ProductSearchRequest = {
+	type: typeof PRODUCT_SEARCH_REQUEST
+}
+
 type ProductGetSearchSuccess = {
 	type: typeof PRODUCT_GET_SEARCH_SUCCESS
 	payload: IProductsApi
@@ -25,5 +30,6 @@ type ProductGetSearchFailure = {
 }
 
 export type ProductsSearchActionTypes =
+	| ProductSearchRequest
 	| ProductGetSearchSuccess
 	| ProductGetSearchFailure

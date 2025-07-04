@@ -1,3 +1,4 @@
+// Shared
 export const AUTH_REQUEST = 'AUTH_REQUEST'
 // Login
 export const AUTH_LOGIN_SUCCESS = 'AUTH_LOGIN_SUCCESS'

@@ -1,4 +1,4 @@
-import { IMappingResponseProductsApi } from '../../../entities/product/types/type.api'
+import { IResponseProductsApi } from '../../../entities/product/types/type.api'
 
 export interface ICartControls {
 	quantity: number
@@ -9,7 +9,7 @@ export interface ICartControls {
 	decreaseStock: () => void
 }
 
-interface ICartItemProduct extends IMappingResponseProductsApi {
+interface ICartItemProduct extends IResponseProductsApi {
 	quantity: number
 	cartItemId: number
 }
