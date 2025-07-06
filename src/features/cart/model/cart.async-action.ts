@@ -107,13 +107,9 @@ export const addCartItems =
 	}
 
 export const editCartItems =
-	(
-		cartItemsId: number | null,
-		cartItemQuantity: number | null,
-		price: number | null
-	): AppThunk =>
+	(cartItemsId: number | null, cartItemQuantity: number | null): AppThunk =>
 	async (dispatch: Dispatch<AppActions>): Promise<void> => {
-		if (!cartItemsId || !cartItemQuantity || !price) {
+		if (!cartItemsId || !cartItemQuantity) {
 			dispatch({
 				type: CART_ITEMS_EDIT_FAILURE,
 				payload: 'Error: Cart-items not set data for edit',
@@ -126,8 +122,7 @@ export const editCartItems =
 		try {
 			const resultEditCartItems = await cartItemsServiceApi.editCartItems(
 				cartItemsId,
-				cartItemQuantity,
-				price
+				cartItemQuantity
 			)
 
 			dispatch({

@@ -7,7 +7,11 @@ import {
 	PRODUCT_API_URL_SEARCH,
 } from '../../../app/constants/api/product.api-constants'
 import $api from '../../../shared/config/axiosInstance'
-import { IProductsApi, IResponseProductsApi } from '../types/type.api'
+import {
+	IProductsApi,
+	IRequestProductApi,
+	IResponseProductsApi,
+} from '../types/type.api'
 
 class ProductsServiceApi {
 	async getAllProducts(
@@ -56,7 +60,7 @@ class ProductsServiceApi {
 	}
 
 	async addProduct(
-		productData: IResponseProductsApi
+		productData: IRequestProductApi
 	): Promise<AxiosResponse<IResponseProductsApi>> {
 		const response = await $api.post<IResponseProductsApi>(
 			PRODUCT_API_URL_ADD,
@@ -72,7 +76,7 @@ class ProductsServiceApi {
 
 	async editProduct(
 		productId: number | string,
-		productData: IResponseProductsApi
+		productData: IRequestProductApi
 	): Promise<AxiosResponse<IResponseProductsApi>> {
 		const response = await $api.patch<IResponseProductsApi>(
 			`${PRODUCT_API_URL_EDIT}/${productId}`,

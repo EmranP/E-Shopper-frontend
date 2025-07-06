@@ -40,7 +40,7 @@ export const ProductCard: FC<IProductCard> = ({
 		setProcessBuy(false)
 	}
 
-	const isOutOfStock = stock === 0
+	const isOutOfStock = stock <= 0
 
 	return (
 		<motion.div
@@ -48,7 +48,7 @@ export const ProductCard: FC<IProductCard> = ({
 			initial='hidden'
 			animate='visible'
 			whileHover={{ scale: 1.03, transition: { duration: 0.3 } }}
-			className='bg-bgCards rounded-2xl hover:shadow-2xl shadow-gray-600 duration-300'
+			className='bg-bgCards rounded-2xl  duration-300'
 		>
 			<Link to={`products/${id}`}>
 				{imageUrl ? (
@@ -93,7 +93,13 @@ export const ProductCard: FC<IProductCard> = ({
 					/>
 				</div>
 				<Button
-					title={processBuy ? 'Adding cart...' : 'Add cart'}
+					title={
+						processBuy
+							? 'Adding cart...'
+							: isOutOfStock
+							? 'Stock of out'
+							: 'Add cart'
+					}
 					onClick={addCartItemsHandler}
 					disabled={isOutOfStock}
 					color='white'

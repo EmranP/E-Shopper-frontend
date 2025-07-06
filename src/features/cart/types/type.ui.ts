@@ -5,6 +5,7 @@ export interface ICartControls {
 	stock: number | null | undefined
 	isActiveMinSum: boolean
 	isActiveMaxSum: boolean
+	isAppLoading?: boolean
 	increaseStock: () => void
 	decreaseStock: () => void
 }
