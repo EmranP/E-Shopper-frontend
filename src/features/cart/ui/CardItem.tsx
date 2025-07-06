@@ -1,6 +1,7 @@
 import { Trash } from 'lucide-react'
 import { FC } from 'react'
 import { useCartControl } from '../../../shared/hooks/useCartControls'
+import { useAppSelector } from '../../../shared/hooks/useStoreApp.hooks'
 import { iconsSize } from '../../admin/ui/AdminForms'
 import { CartItemProps } from '../types/type.ui'
 import { CartControls } from './CartControls '
@@ -20,9 +21,9 @@ export const CartItem: FC<CartItemProps> = ({
 	} = useCartControl(
 		product?.quantity as number,
 		product?.stock as number,
-		product?.cartItemId,
-		product?.price
+		product?.cartItemId
 	)
+	const { isAppLoading } = useAppSelector(state => state.cartItems)
 
 	console.log(product)
 
@@ -53,6 +54,7 @@ export const CartItem: FC<CartItemProps> = ({
 					stock={product?.stock}
 					isActiveMinSum={isActiveMinSum}
 					isActiveMaxSum={isActiveMaxSum}
+					isAppLoading={isAppLoading}
 					increaseStock={increaseStock}
 					decreaseStock={decreaseStock}
 				/>

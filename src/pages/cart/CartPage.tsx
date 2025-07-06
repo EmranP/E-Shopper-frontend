@@ -15,7 +15,7 @@ export const CartPage: FC = () => {
 	const { auth } = useAppSelector(state => state)
 	const { checkAuth, getUserCarts } = useActions()
 
-	const { isLoading, user, isAuth } = auth
+	const { isAppLoading, user, isAuth } = auth
 
 	useEffect(() => {
 		const token = localStorage.getItem('token')
@@ -29,7 +29,7 @@ export const CartPage: FC = () => {
 		getUserCarts(user.id)
 	}, [user?.id])
 
-	if (isLoading) return <Loader />
+	if (isAppLoading) return <Loader />
 
 	return (
 		<Layout>

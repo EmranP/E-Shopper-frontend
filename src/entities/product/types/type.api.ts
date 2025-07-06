@@ -12,6 +12,12 @@ export interface IResponseProductsApi {
 	searchVector?: string
 }
 
+export interface IRequestProductApi
+	extends Omit<IResponseProductsApi, 'categoryId' | 'imageUrl'> {
+	category_id: number | null
+	image_url: string
+}
+
 export interface IProductsApi {
 	products: IResponseProductsApi[]
 	total: number

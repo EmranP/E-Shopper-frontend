@@ -18,7 +18,7 @@ import {
 } from '../../../app/constants/actions/admin.constants'
 import { AppActions, AppThunk } from '../../../shared/types/store.types'
 import { errorMessageAsyncAction } from '../../../shared/utils/errorMessage.async-action'
-import { IResponseProductsApi } from '../types/type.api'
+import { IRequestProductApi } from '../types/type.api'
 import { productsServiceApi } from './product.service'
 
 // Products
@@ -106,7 +106,7 @@ export const getProductSearch =
 	}
 
 export const addProduct =
-	(productData: IResponseProductsApi): AppThunk =>
+	(productData: IRequestProductApi): AppThunk =>
 	async (dispatch: Dispatch<AppActions>): Promise<void> => {
 		if (!productData) {
 			dispatch({
@@ -137,7 +137,7 @@ export const addProduct =
 	}
 
 export const editProduct =
-	(productData: IResponseProductsApi): AppThunk =>
+	(productData: IRequestProductApi): AppThunk =>
 	async (dispatch: Dispatch<AppActions>): Promise<void> => {
 		if (!productData.id) {
 			dispatch({

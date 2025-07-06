@@ -72,14 +72,12 @@ class CartItemsServiceApi {
 
 	async editCartItems(
 		cartItemsId: number | null,
-		cartItemQuantity: number | null,
-		price: number
+		cartItemQuantity: number | null
 	): Promise<AxiosResponse<IResponseCartItemsApi>> {
 		const request = await $api.patch<IResponseCartItemsApi>(
 			`${CART_ITEMS_API_URL_EDIT}/${cartItemsId}`,
 			{
 				quantity: cartItemQuantity,
-				price,
 			}
 		)
 
