@@ -1,9 +1,10 @@
 import { Trash } from 'lucide-react'
 import { FC } from 'react'
-import { useCartControl } from '../../../shared/hooks/useCartControls'
+import { useCartControl } from '../../../shared/hooks/useCartControl'
+import { useAppSelector } from '../../../shared/hooks/useStoreApp.hooks'
 import { iconsSize } from '../../admin/ui/AdminForms'
 import { CartItemProps } from '../types/type.ui'
-import { CartControls } from './CartControls '
+import { CartControls } from './CartControls'
 
 export const CartItem: FC<CartItemProps> = ({
 	product,
@@ -17,10 +18,16 @@ export const CartItem: FC<CartItemProps> = ({
 		decreaseStock,
 		isActiveMaxSum,
 		isActiveMinSum,
-	} = useCartControl(product?.quantity as number, product?.stock as number)
+	} = useCartControl(
+		product?.quantity as number,
+		product?.stock as number,
+		product?.cartItemId
+	)
+
+	const { isAppLoading } = useAppSelector(state => state.cartItems)
 
 	return (
-		<div key={product?.id} className='flex gap-2'>
+		<div key={product?.cartItemId} className='flex gap-2'>
 			<div className='flex flex-2/3 justify-between items-center gap-4 bg-bgCards p-3 rounded-2xl mb-5'>
 				<div>
 					{product?.imageUrl ? (
@@ -46,6 +53,7 @@ export const CartItem: FC<CartItemProps> = ({
 					stock={product?.stock}
 					isActiveMinSum={isActiveMinSum}
 					isActiveMaxSum={isActiveMaxSum}
+					isAppLoading={isAppLoading}
 					increaseStock={increaseStock}
 					decreaseStock={decreaseStock}
 				/>

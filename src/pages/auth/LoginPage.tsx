@@ -24,7 +24,7 @@ const LoginPage = () => {
 		resolver: yupResolver(authFormLoginSchema),
 	})
 	const { login } = useActions()
-	const { isAuth, error, isLoading } = useAppSelector(state => state.auth)
+	const { isAuth, error, isAppLoading } = useAppSelector(state => state.auth)
 
 	const { showError } = useShowError(error, 5000)
 
@@ -65,7 +65,7 @@ const LoginPage = () => {
 							label={'Password'}
 						/>
 						<AuthButton
-							title={isLoading ? 'Loading...' : 'Sign up'}
+							title={isAppLoading ? 'Loading...' : 'Sign up'}
 							bgColor='bg-baseTextAndButton'
 							type='submit'
 						/>

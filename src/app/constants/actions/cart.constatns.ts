@@ -1,6 +1,4 @@
-// Shared
 export const CART_REQUEST = 'CART_REQUEST'
-
 // Carts ==================
 export const CART_GET_SUCCESS = 'CART_GET_SUCCESS'
 export const CART_ADD_SUCCESS = `CART_ADD_SUCCESS`
@@ -10,6 +8,7 @@ export const CART_GET_FAILURE = 'CART_GET_FAILURE'
 export const CART_ADD_FAILURE = 'CART_ADD_FAILURE'
 export const CART_REMOVE_FAILURE = 'CART_REMOVE_FAILURE'
 
+export const CART_ITEMS_REQUEST = 'CART_ITEMS_REQUEST'
 // Cart-items ==============
 export const CART_ITEMS_GET_SUCCESS = 'CART_ITEMS_SUCCESS'
 export const CART_ITEMS_ADD_SUCCESS = 'CART_ITEMS_ADD_SUCCESS'

@@ -24,7 +24,7 @@ const RegistrationPage = () => {
 		resolver: yupResolver(authFormRegSchema),
 	})
 	const { registration } = useActions()
-	const { isAuth, isLoading, error } = useAppSelector(state => state.auth)
+	const { isAuth, isAppLoading, error } = useAppSelector(state => state.auth)
 	const { showError } = useShowError(error, 5000)
 
 	const onSubmitHandler: SubmitHandler<IRegistrationFormInputs> = data => {
@@ -81,7 +81,7 @@ const RegistrationPage = () => {
 							label='Repeat password'
 						/>
 						<AuthButton
-							title={isLoading ? 'Loading...' : 'Sign up'}
+							title={isAppLoading ? 'Loading...' : 'Sign up'}
 							bgColor='bg-baseTextAndButton'
 							type='submit'
 						/>

@@ -3,9 +3,9 @@ import { motion } from 'motion/react'
 import { FC, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { CartControls } from '../../../features/cart/ui/CartControls '
+import { CartControls } from '../../../features/cart/ui/CartControls'
 import { useActions } from '../../../shared/hooks/useActions'
-import { useCartControl } from '../../../shared/hooks/useCartControls'
+import { useCartControl } from '../../../shared/hooks/useCartControl'
 import { useAppSelector } from '../../../shared/hooks/useStoreApp.hooks'
 import { Button } from '../../../shared/ui/Buttons'
 import { cardVariants } from '../../../shared/utils/animate.utils'
@@ -40,7 +40,7 @@ export const ProductCard: FC<IProductCard> = ({
 		setProcessBuy(false)
 	}
 
-	const isOutOfStock = stock === 0
+	const isOutOfStock = stock <= 0
 
 	return (
 		<motion.div
@@ -48,7 +48,7 @@ export const ProductCard: FC<IProductCard> = ({
 			initial='hidden'
 			animate='visible'
 			whileHover={{ scale: 1.03, transition: { duration: 0.3 } }}
-			className='bg-bgCards rounded-2xl hover:shadow-2xl shadow-gray-600 duration-300'
+			className='bg-bgCards rounded-2xl  duration-300'
 		>
 			<Link to={`products/${id}`}>
 				{imageUrl ? (
@@ -93,7 +93,13 @@ export const ProductCard: FC<IProductCard> = ({
 					/>
 				</div>
 				<Button
-					title={processBuy ? 'Adding cart...' : 'Add cart'}
+					title={
+						processBuy
+							? 'Adding cart...'
+							: isOutOfStock
+							? 'Stock of out'
+							: 'Add cart'
+					}
 					onClick={addCartItemsHandler}
 					disabled={isOutOfStock}
 					color='white'

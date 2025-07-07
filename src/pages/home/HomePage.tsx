@@ -15,7 +15,8 @@ const HomePage: FC = () => {
 	const { auth } = useAppSelector(state => state)
 	const { checkAuth, getUserCarts } = useActions()
 
-	const { isLoading, user } = auth
+	const { isAppLoading, user } = auth
+	const isActivatedFromStorage = localStorage.getItem('isActivated')
 
 	useEffect(() => {
 		const token = localStorage.getItem('token')
@@ -25,17 +26,21 @@ const HomePage: FC = () => {
 	}, [])
 
 	useEffect(() => {
+		if (isActivatedFromStorage) return
+
 		if (user?.isActivated) {
 			toast.info(infoAuthMessage)
+
+			localStorage.setItem('isActivated', 'activated')
 		}
-	}, [user?.isActivated])
+	}, [isActivatedFromStorage, user?.isActivated])
 
 	useEffect(() => {
 		if (!user?.id) return
 		getUserCarts(user.id)
 	}, [user?.id])
 
-	if (isLoading) return <Loader />
+	if (isAppLoading) return <Loader />
 
 	return (
 		<Layout>

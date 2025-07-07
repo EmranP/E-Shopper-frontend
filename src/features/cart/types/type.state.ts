@@ -1,5 +1,5 @@
 import { IAppState } from '../../../shared/types/initState.types'
-import { cartItemsReducer, cartReducer } from '../model/carts.reducer'
+import { cartItemsReducer, cartReducer } from '../model/cart.reducer'
 import { IResponseCartItemsApi, IResponseCartsApi } from './type.api'
 
 export interface ICartState extends IAppState {
@@ -12,3 +12,8 @@ export interface ICartItemsState extends IAppState {
 
 export type RootStateCartReducer = ReturnType<typeof cartReducer>
 export type RootStateCartItemsReducer = ReturnType<typeof cartItemsReducer>
+
+export interface ICartModalHandler {
+	openModalHandler: () => void
+	closeModalHandler: () => void
+}

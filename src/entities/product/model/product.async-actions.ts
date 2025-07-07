@@ -10,23 +10,27 @@ import {
 	ADMIN_PRODUCTS_GET_SUCCESS,
 	ADMIN_PRODUCTS_REMOVE_FAILURE,
 	ADMIN_PRODUCTS_REMOVE_SUCCESS,
-	ADMIN_REQUEST,
+	ADMIN_PRODUCTS_REQUEST,
 	PRODUCT_GET_SEARCH_FAILURE,
 	PRODUCT_GET_SEARCH_SUCCESS,
+	PRODUCT_SEARCH_REQUEST,
 	USER_NOT_WRITE_DATA,
 } from '../../../app/constants/actions/admin.constants'
 import { AppActions, AppThunk } from '../../../shared/types/store.types'
 import { errorMessageAsyncAction } from '../../../shared/utils/errorMessage.async-action'
-import { IResponseProductsApi } from '../types/type.api'
+import { IRequestProductApi } from '../types/type.api'
 import { productsServiceApi } from './product.service'
 
 // Products
 export const getAllProducts =
-	(): AppThunk =>
+	(limit: number | null, offset: number | null): AppThunk =>
 	async (dispatch: Dispatch<AppActions>): Promise<void> => {
-		dispatch({ type: ADMIN_REQUEST })
+		dispatch({ type: ADMIN_PRODUCTS_REQUEST })
 		try {
-			const resultGetAllProducts = await productsServiceApi.getAllProducts()
+			const resultGetAllProducts = await productsServiceApi.getAllProducts(
+				limit,
+				offset
+			)
 
 			dispatch({
 				type: ADMIN_PRODUCTS_GET_SUCCESS,
@@ -50,7 +54,7 @@ export const getProductById =
 			return
 		}
 
-		dispatch({ type: ADMIN_REQUEST })
+		dispatch({ type: ADMIN_PRODUCTS_REQUEST })
 		try {
 			const resultProductById = await productsServiceApi.getProductById(
 				productId
@@ -70,13 +74,13 @@ export const getProductById =
 export const getProductSearch =
 	(
 		productSearch: string,
-		limit: number | string | null,
-		offset: number | string | null
+		limit: number | null,
+		offset: number | null
 	): AppThunk =>
 	async (dispatch: Dispatch<AppActions>): Promise<void> => {
 		if (!limit || offset === undefined) return
 
-		dispatch({ type: ADMIN_REQUEST })
+		dispatch({ type: PRODUCT_SEARCH_REQUEST })
 		try {
 			const resultGetSearchProducts = await productsServiceApi.getProductSearch(
 				productSearch,
@@ -102,7 +106,7 @@ export const getProductSearch =
 	}
 
 export const addProduct =
-	(productData: IResponseProductsApi): AppThunk =>
+	(productData: IRequestProductApi): AppThunk =>
 	async (dispatch: Dispatch<AppActions>): Promise<void> => {
 		if (!productData) {
 			dispatch({
@@ -112,7 +116,7 @@ export const addProduct =
 			return
 		}
 
-		dispatch({ type: ADMIN_REQUEST })
+		dispatch({ type: ADMIN_PRODUCTS_REQUEST })
 
 		try {
 			const newProduct = await productsServiceApi.addProduct(productData)
@@ -133,7 +137,7 @@ export const addProduct =
 	}
 
 export const editProduct =
-	(productData: IResponseProductsApi): AppThunk =>
+	(productData: IRequestProductApi): AppThunk =>
 	async (dispatch: Dispatch<AppActions>): Promise<void> => {
 		if (!productData.id) {
 			dispatch({
@@ -143,7 +147,7 @@ export const editProduct =
 			return
 		}
 
-		dispatch({ type: ADMIN_REQUEST })
+		dispatch({ type: ADMIN_PRODUCTS_REQUEST })
 		try {
 			const updatedProduct = await productsServiceApi.editProduct(
 				productData.id,
@@ -154,6 +158,8 @@ export const editProduct =
 				type: ADMIN_PRODUCTS_EDIT_SUCCESS,
 				payload: updatedProduct.data,
 			})
+
+			dispatch({ type: ADMIN_PRODUCTS_REQUEST })
 
 			const currentProductsData = await productsServiceApi.getAllProducts()
 
@@ -179,7 +185,7 @@ export const removeProduct =
 			return
 		}
 
-		dispatch({ type: ADMIN_REQUEST })
+		dispatch({ type: ADMIN_PRODUCTS_REQUEST })
 
 		try {
 			await productsServiceApi.removeProduct(productId)

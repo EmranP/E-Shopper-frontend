@@ -8,17 +8,18 @@ import {
 } from '../../../app/constants/api/product.api-constants'
 import $api from '../../../shared/config/axiosInstance'
 import {
-	IMappingResponseProductsApi,
-	IMappingResponseProductsSearchApi,
+	IProductsApi,
+	IRequestProductApi,
 	IResponseProductsApi,
 } from '../types/type.api'
 
 class ProductsServiceApi {
-	async getAllProducts(): Promise<
-		AxiosResponse<IMappingResponseProductsApi[]>
-	> {
-		const response = await $api.get<IMappingResponseProductsApi[]>(
-			PRODUCT_API_URL
+	async getAllProducts(
+		limit: number | null = 10,
+		offset: number | null = 0
+	): Promise<AxiosResponse<IProductsApi>> {
+		const response = await $api.get<IProductsApi>(
+			`${PRODUCT_API_URL}?limit=${limit}&offset=${offset}`
 		)
 
 		if (response.status === 404) {
@@ -30,8 +31,8 @@ class ProductsServiceApi {
 
 	async getProductById(
 		productId: string | number
-	): Promise<AxiosResponse<IMappingResponseProductsApi>> {
-		const response = await $api.get<IMappingResponseProductsApi>(
+	): Promise<AxiosResponse<IResponseProductsApi>> {
+		const response = await $api.get<IResponseProductsApi>(
 			`${PRODUCT_API_URL}/${productId}`
 		)
 
@@ -44,10 +45,10 @@ class ProductsServiceApi {
 
 	async getProductSearch(
 		productSearch: string,
-		limit: number | string | null = 10,
-		offset: number | string | null = 0
-	): Promise<AxiosResponse<IMappingResponseProductsSearchApi>> {
-		const response = await $api.get<IMappingResponseProductsSearchApi>(
+		limit: number | null = 10,
+		offset: number | null = 0
+	): Promise<AxiosResponse<IProductsApi>> {
+		const response = await $api.get<IProductsApi>(
 			`${PRODUCT_API_URL_SEARCH}${productSearch}&limit=${limit}&offset=${offset}`
 		)
 
@@ -59,9 +60,9 @@ class ProductsServiceApi {
 	}
 
 	async addProduct(
-		productData: IResponseProductsApi
-	): Promise<AxiosResponse<IMappingResponseProductsApi>> {
-		const response = await $api.post<IMappingResponseProductsApi>(
+		productData: IRequestProductApi
+	): Promise<AxiosResponse<IResponseProductsApi>> {
+		const response = await $api.post<IResponseProductsApi>(
 			PRODUCT_API_URL_ADD,
 			productData
 		)
@@ -75,9 +76,9 @@ class ProductsServiceApi {
 
 	async editProduct(
 		productId: number | string,
-		productData: IResponseProductsApi
-	): Promise<AxiosResponse<IMappingResponseProductsApi>> {
-		const response = await $api.patch<IMappingResponseProductsApi>(
+		productData: IRequestProductApi
+	): Promise<AxiosResponse<IResponseProductsApi>> {
+		const response = await $api.patch<IResponseProductsApi>(
 			`${PRODUCT_API_URL_EDIT}/${productId}`,
 			productData
 		)

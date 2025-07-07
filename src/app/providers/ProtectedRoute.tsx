@@ -7,7 +7,7 @@ import { IProtectedRoute } from '../../shared/types/ui.interface'
 import { Loader } from '../../shared/ui/Loader'
 
 export const ProtectedRoute: FC<IProtectedRoute> = ({ requiredRole }) => {
-	const { user, isLoading } = useAppSelector(state => state.auth)
+	const { user, isAppLoading } = useAppSelector(state => state.auth)
 	const { checkAuth, getUserCarts } = useActions()
 	const token = localStorage.getItem('token')
 	useEffect(() => {
@@ -22,7 +22,7 @@ export const ProtectedRoute: FC<IProtectedRoute> = ({ requiredRole }) => {
 		}
 	}, [user, user?.id])
 
-	if (isLoading) return <Loader />
+	if (isAppLoading) return <Loader />
 
 	if (!user && !token) {
 		return <Navigate to={'/auth/login'} replace />

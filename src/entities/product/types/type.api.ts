@@ -4,21 +4,21 @@ export interface IResponseProductsApi {
 	description: string
 	price: string | number
 	stock: number
-	category_id: number | null
+	categoryId: number | null
 	createdAt?: string | Date
 	updatedAt?: string | Date
-	image_url: string
+	imageUrl: string
 	userId: number | null
 	searchVector?: string
 }
 
-export interface IMappingResponseProductsApi
-	extends Omit<IResponseProductsApi, 'category_id' | 'image_url'> {
-	categoryId: number | null
-	imageUrl: string
+export interface IRequestProductApi
+	extends Omit<IResponseProductsApi, 'categoryId' | 'imageUrl'> {
+	category_id: number | null
+	image_url: string
 }
 
-export interface IMappingResponseProductsSearchApi {
-	products: IMappingResponseProductsApi[]
+export interface IProductsApi {
+	products: IResponseProductsApi[]
 	total: number
 }

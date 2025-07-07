@@ -3,10 +3,12 @@ import { FC, useEffect, useState } from 'react'
 import { useActions } from '../../../shared/hooks/useActions'
 import { useAppSelector } from '../../../shared/hooks/useStoreApp.hooks'
 import { useToggle } from '../../../shared/hooks/useToggle'
-import { LoaderApp } from '../../../shared/ui/LoaderApp'
 import { Modal } from '../../../shared/ui/Modal'
+import { cartItemsFindQuantityHandler } from '../model/cart.handler'
 import { CartItem } from './CardItem'
+import { CartEmpty } from './CartEmpty'
 
+// Todo: Add pagination carts 4 element limit
 export const CartContent: FC = () => {
 	const { cartItems, carts, admin } = useAppSelector(state => state)
 	const { getCartItems, getAllProducts, removeCartItems } = useActions()
@@ -19,7 +21,7 @@ export const CartContent: FC = () => {
 	)
 
 	const { cart } = carts
-	const { cartItems: cartItemsData, isAppLoading } = cartItems
+	const { cartItems: cartItemsData } = cartItems
 	const { products } = admin.products
 
 	useEffect(() => {
@@ -29,30 +31,12 @@ export const CartContent: FC = () => {
 		getAllProducts()
 	}, [cart])
 
-	if (isAppLoading) return <LoaderApp />
+	if (!products || !cartItemsData) return <CartEmpty />
 
-	if (!products || !cartItemsData)
-		return (
-			<h1 className='text-center text-2xl h-full py-50 text-specialColor font-semibold'>
-				Cart is empty... 😢
-			</h1>
-		)
-
-	const cartItemsWithQuantity = products
-		.map(product => {
-			const matchingCartItem = cartItemsData.find(
-				item => item.productId === product.id
-			)
-
-			if (!matchingCartItem) return null
-
-			return {
-				...product,
-				quantity: matchingCartItem.quantity,
-				cartItemId: matchingCartItem.id,
-			}
-		})
-		.filter(Boolean)
+	const cartItemsWithQuantity = cartItemsFindQuantityHandler(
+		products,
+		cartItemsData
+	)
 
 	const removeProductHandler = (cartItemsId: number, productId: number) => {
 		if (!cartItemsId || !productId) return
@@ -75,9 +59,7 @@ export const CartContent: FC = () => {
 		<>
 			<div className='flex-auto'>
 				{!cartItemsWithQuantity.length ? (
-					<h1 className='text-center text-2xl h-full py-50 text-specialColor font-semibold'>
-						Cart is empty... 😢
-					</h1>
+					<CartEmpty />
 				) : (
 					<>
 						{cartItemsWithQuantity.map(productCart => (
