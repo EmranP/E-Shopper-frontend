@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-
 import { LogOut, ShoppingCart } from 'lucide-react'
 import { FC, useEffect } from 'react'
 import { Link } from 'react-router-dom'

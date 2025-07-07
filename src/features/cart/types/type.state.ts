@@ -12,3 +12,8 @@ export interface ICartItemsState extends IAppState {
 
 export type RootStateCartReducer = ReturnType<typeof cartReducer>
 export type RootStateCartItemsReducer = ReturnType<typeof cartItemsReducer>
+
+export interface ICartModalHandler {
+	openModalHandler: () => void
+	closeModalHandler: () => void
+}
