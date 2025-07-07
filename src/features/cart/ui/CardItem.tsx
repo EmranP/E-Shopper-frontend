@@ -1,10 +1,10 @@
 import { Trash } from 'lucide-react'
 import { FC } from 'react'
-import { useCartControl } from '../../../shared/hooks/useCartControls'
+import { useCartControl } from '../../../shared/hooks/useCartControl'
 import { useAppSelector } from '../../../shared/hooks/useStoreApp.hooks'
 import { iconsSize } from '../../admin/ui/AdminForms'
 import { CartItemProps } from '../types/type.ui'
-import { CartControls } from './CartControls '
+import { CartControls } from './CartControls'
 
 export const CartItem: FC<CartItemProps> = ({
 	product,
@@ -23,9 +23,8 @@ export const CartItem: FC<CartItemProps> = ({
 		product?.stock as number,
 		product?.cartItemId
 	)
-	const { isAppLoading } = useAppSelector(state => state.cartItems)
 
-	console.log(product)
+	const { isAppLoading } = useAppSelector(state => state.cartItems)
 
 	return (
 		<div key={product?.cartItemId} className='flex gap-2'>

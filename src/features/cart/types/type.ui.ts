@@ -2,10 +2,10 @@ import { IResponseProductsApi } from '../../../entities/product/types/type.api'
 
 export interface ICartControls {
 	quantity: number
-	stock: number | null | undefined
 	isActiveMinSum: boolean
 	isActiveMaxSum: boolean
 	isAppLoading?: boolean
+	stock?: number | null
 	increaseStock: () => void
 	decreaseStock: () => void
 }

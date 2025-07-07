@@ -1,5 +1,5 @@
-import { useCallback, useState } from 'react'
-
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { IHookCartControl } from '../types/hook.types'
 import { useActions } from './useActions'
@@ -15,44 +15,42 @@ export const useCartControl = (
 	const [isActiveMaxSum, setIsActiveMaxSum] = useState<boolean>(false)
 	const { editCartItems } = useActions()
 
-	const updatedQuantityServerHandler = useCallback(
-		(newQty: number) => {
-			if (location.pathname === '/cart' && cartItemsId != null) {
-				editCartItems(cartItemsId, newQty)
-			}
-		},
-		[cartItemsId, editCartItems, location.pathname]
-	)
+	const isFirstRender = useRef(true)
 
 	const increaseStock = useCallback(() => {
 		setQuantity(prev => {
-			const next = prev + 1
-
-			if (stock != null && next > stock) {
+			if (stock != null && prev >= stock) {
 				setIsActiveMaxSum(true)
 				return prev
 			}
 
 			setIsActiveMinSum(false)
-			updatedQuantityServerHandler(next)
-			return next
+			return prev + 1
 		})
-	}, [stock, updatedQuantityServerHandler])
+	}, [stock])
 
 	const decreaseStock = useCallback(() => {
 		setQuantity(prev => {
-			const next = prev - 1
-
-			if (next < 1) {
+			if (prev <= 1) {
 				setIsActiveMinSum(true)
 				return prev
 			}
 
-			setIsActiveMinSum(false)
-			updatedQuantityServerHandler(next)
-			return next
+			setIsActiveMaxSum(false)
+			return prev - 1
 		})
-	}, [updatedQuantityServerHandler])
+	}, [])
+
+	useEffect(() => {
+		if (isFirstRender.current) {
+			isFirstRender.current = false
+			return
+		}
+
+		if (location.pathname === '/cart' && cartItemsId != null) {
+			editCartItems(cartItemsId, quantity)
+		}
+	}, [cartItemsId, location.pathname, quantity])
 
 	return {
 		quantity,

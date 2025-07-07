@@ -129,14 +129,6 @@ export const editCartItems =
 				type: CART_ITEMS_EDIT_SUCCESS,
 				payload: resultEditCartItems.data,
 			})
-
-			dispatch({ type: CART_ITEMS_REQUEST })
-
-			const currentCartData = await cartItemsServiceApi.getCartItems(
-				cartItemsId
-			)
-
-			dispatch({ type: CART_ITEMS_GET_SUCCESS, payload: currentCartData.data })
 		} catch (error) {
 			const errorMessage = errorMessageAsyncAction(error)
 
