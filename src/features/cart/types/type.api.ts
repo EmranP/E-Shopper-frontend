@@ -1,3 +1,5 @@
+import { IResponseProductsApi } from '../../../entities/product/types/type.api'
+
 // ! set this is types global level
 interface IResponseSharedApi {
 	id: number
@@ -14,4 +16,9 @@ export interface IResponseCartItemsApi extends IResponseSharedApi {
 	productId: number
 	quantity: number
 	price: string
+}
+
+export interface ProductWithQtyType extends IResponseProductsApi {
+	cartItemId: number
+	quantity: number
 }

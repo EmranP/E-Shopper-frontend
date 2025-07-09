@@ -1,4 +1,5 @@
 import { ChangeEvent, Dispatch, SetStateAction } from 'react'
+import { SetURLSearchParams } from 'react-router-dom'
 import { ICartControls } from '../../features/cart/types/type.ui'
 
 export interface IHookShowError {
@@ -24,3 +25,12 @@ export interface IHookMode {
 }
 
 export type IHookCartControl = Omit<ICartControls, 'stock'>
+
+export interface IHookPagination {
+	search: string
+	page: number
+	offset: number
+	limit: number
+	setSearchParams: SetURLSearchParams
+	searchParams: URLSearchParams
+}

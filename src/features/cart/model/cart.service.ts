@@ -37,10 +37,14 @@ class CartsServiceApi {
 // ?Error maybe is not correct url
 class CartItemsServiceApi {
 	async getCartItems(
-		cartId: number | string | null
+		cartId: number | string | null,
+		limit: number | string,
+		offset: number | string
 	): Promise<AxiosResponse<IResponseCartItemsApi[]>> {
 		const response = await $api.get<IResponseCartItemsApi[]>(
-			`${CART_ITEMS_API_URL}/${cartId}`
+			`${CART_ITEMS_API_URL}/${cartId}?limit=${String(limit)}&offset=${String(
+				offset
+			)}`
 		)
 
 		if (response.status === 404) {

@@ -1,6 +1,7 @@
 import { IResponseProductsApi } from '../../../entities/product/types/type.api'
-import { IResponseCartItemsApi } from '../types/type.api'
+import { IResponseCartItemsApi, ProductWithQtyType } from '../types/type.api'
 
+// Todo: Add join req from backend
 export const cartItemsFindQuantityHandler = (
 	products: IResponseProductsApi[],
 	cartItemsData: IResponseCartItemsApi[]
@@ -19,4 +20,4 @@ export const cartItemsFindQuantityHandler = (
 				cartItemId: matchingCartItem.id,
 			}
 		})
-		.filter(Boolean)
+		.filter((item): item is ProductWithQtyType => Boolean(item))

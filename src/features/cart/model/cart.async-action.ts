@@ -43,7 +43,7 @@ export const getUserCarts =
 
 // Carts-items
 export const getCartItems =
-	(cartId: number | string | null): AppThunk =>
+	(cartId: number | string | null, limit: number, offset: number): AppThunk =>
 	async (dispatch: Dispatch<AppActions>): Promise<void> => {
 		if (!cartId) {
 			dispatch({
@@ -56,7 +56,11 @@ export const getCartItems =
 
 		dispatch({ type: CART_ITEMS_REQUEST })
 		try {
-			const resultGetCartItems = await cartItemsServiceApi.getCartItems(cartId)
+			const resultGetCartItems = await cartItemsServiceApi.getCartItems(
+				cartId,
+				limit,
+				offset
+			)
 
 			dispatch({
 				type: CART_ITEMS_GET_SUCCESS,
