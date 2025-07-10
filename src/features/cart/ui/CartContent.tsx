@@ -6,11 +6,10 @@ import { useAppSelector } from '../../../shared/hooks/useStoreApp.hooks'
 import { useToggle } from '../../../shared/hooks/useToggle'
 import { Modal } from '../../../shared/ui/Modal'
 import { changePaginationProduct } from '../../../shared/utils/changePaginationProduct'
-import { cartItemsFindQuantityHandler } from '../model/cart.handler'
 import { CartItem } from './CardItem'
 import { CartEmpty } from './CartEmpty'
 
-// Todo: Add pagination carts 4 element limit
+// Todo: Add pagination for total page from backend
 export const CartContent: FC = () => {
 	const [cartItemIdToDelete, setCartItemIdToDelete] = useState<number | null>(
 		null
@@ -19,16 +18,15 @@ export const CartContent: FC = () => {
 		null
 	)
 	const { cart } = useAppSelector(state => state.carts)
-	const { cartItems } = useAppSelector(state => state.cartItems)
-	const { products, total } = useAppSelector(state => state.admin.products)
+	const { cartItemsCommon: cartItemsData, total } = useAppSelector(
+		state => state.cartItemsCommon
+	)
 	const { toggle, toggleHandler } = useToggle()
-	const { getCartItems, getAllProducts, removeCartItems } = useActions()
+	const { getCartItems, removeCartItems } = useActions()
 	const { page, limit, offset, setSearchParams, searchParams } = usePagination(
 		1,
-		5
+		3
 	)
-
-	const totalCartItemPage = Math.max(1, Math.ceil(total / limit))
 
 	useEffect(() => {
 		if (!searchParams.get('page')) {
@@ -40,9 +38,13 @@ export const CartContent: FC = () => {
 		if (!cart?.id) return
 
 		getCartItems(cart.id, limit, offset)
-		getAllProducts(limit, offset)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [cart, limit, offset])
+
+	const totalCartItemPage = Math.max(1, Math.ceil(total || 1 / limit))
+
+	console.log('total:', total)
+	console.log('total calc:', totalCartItemPage)
 
 	const prevPage = useCallback(() => {
 		changePaginationProduct(
@@ -62,12 +64,7 @@ export const CartContent: FC = () => {
 		)
 	}, [page, searchParams, setSearchParams, totalCartItemPage])
 
-	if (!products || !cartItems) return <CartEmpty />
-
-	const cartItemsWithQuantity = cartItemsFindQuantityHandler(
-		products,
-		cartItems
-	)
+	if (!cartItemsData) return <CartEmpty />
 
 	const removeProductHandler = (cartItemsId: number, productId: number) => {
 		if (!cartItemsId || !productId) return
@@ -86,19 +83,14 @@ export const CartContent: FC = () => {
 	const openModalHandler = () => toggleHandler()
 	const closeModalHandler = () => toggleHandler()
 
-	const hasItems = cartItemsWithQuantity.length > 0
-
-	console.log('totalPage: ', totalCartItemPage)
-	console.log('data-items: ', cartItems)
-	console.log('product: ', products)
 	return (
 		<>
 			<div className='flex-auto mb-5'>
-				{!hasItems ? (
+				{!cartItemsData.length ? (
 					<CartEmpty />
 				) : (
 					<>
-						{cartItemsWithQuantity.map(productCart => (
+						{cartItemsData.map(productCart => (
 							<CartItem
 								key={productCart?.id}
 								product={productCart}
@@ -107,16 +99,16 @@ export const CartContent: FC = () => {
 								setProductIdToDelete={setProductIdToDelete}
 							/>
 						))}
-					</>
-				)}
 
-				{totalCartItemPage > 1 && (
-					<Pagination
-						page={page}
-						totalPage={totalCartItemPage}
-						prevPageHandler={prevPage}
-						nextPageHandler={nextPage}
-					/>
+						{totalCartItemPage > 1 && (
+							<Pagination
+								page={page}
+								totalPage={totalCartItemPage}
+								prevPageHandler={prevPage}
+								nextPageHandler={nextPage}
+							/>
+						)}
+					</>
 				)}
 			</div>
 

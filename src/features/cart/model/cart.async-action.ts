@@ -7,16 +7,20 @@ import {
 	CART_ITEMS_ADD_SUCCESS,
 	CART_ITEMS_EDIT_FAILURE,
 	CART_ITEMS_EDIT_SUCCESS,
+	CART_ITEMS_GET_ALL_FAILURE,
+	CART_ITEMS_GET_ALL_SUCCESS,
 	CART_ITEMS_GET_FAILURE,
 	CART_ITEMS_GET_SUCCESS,
+	CART_ITEMS_PAGINATION_REQUEST,
 	CART_ITEMS_REMOVE_FAILURE,
 	CART_ITEMS_REMOVE_SUCCESS,
 	CART_ITEMS_REQUEST,
 	CART_REQUEST,
-} from '../../../app/constants/actions/cart.constatns'
+} from '../../../app/constants/actions/cart.constants'
 import { AppActions, AppThunk } from '../../../shared/types/store.types'
 import { errorMessageAsyncAction } from '../../../shared/utils/errorMessage.async-action'
 import { cartItemsServiceApi, cartsServiceApi } from '../model/cart.service'
+import { ICartItemsCommonActionsType } from '../types/type.action'
 
 // Carts
 export const getUserCarts =
@@ -42,9 +46,56 @@ export const getUserCarts =
 	}
 
 // Carts-items
-export const getCartItems =
-	(cartId: number | string | null, limit: number, offset: number): AppThunk =>
+export const getAllCartItems =
+	(
+		cartId: number | string | null,
+		limit: number | 'all',
+		offset: number
+	): AppThunk =>
 	async (dispatch: Dispatch<AppActions>): Promise<void> => {
+		if (!cartId) {
+			dispatch({
+				type: CART_ITEMS_GET_ALL_FAILURE,
+				payload: 'All cart-items not found',
+			})
+
+			return
+		}
+		dispatch({ type: CART_ITEMS_REQUEST })
+		try {
+			const resultGetAllCartItems = await cartItemsServiceApi.getCartItems(
+				cartId,
+				limit,
+				offset
+			)
+
+			if (limit !== 'all') {
+				dispatch({
+					type: CART_ITEMS_GET_ALL_FAILURE,
+					payload: 'Limit should be set',
+				})
+
+				return
+			}
+
+			dispatch({
+				type: CART_ITEMS_GET_ALL_SUCCESS,
+				payload: resultGetAllCartItems.data.cartItems,
+			})
+		} catch (error) {
+			const errorMessage = errorMessageAsyncAction(error)
+
+			dispatch({ type: CART_ITEMS_GET_ALL_FAILURE, payload: errorMessage })
+		}
+	}
+
+export const getCartItems =
+	(
+		cartId: number | string | null,
+		limit: number | 'all',
+		offset: number
+	): AppThunk =>
+	async (dispatch: Dispatch<ICartItemsCommonActionsType>): Promise<void> => {
 		if (!cartId) {
 			dispatch({
 				type: CART_ITEMS_GET_FAILURE,
@@ -54,13 +105,22 @@ export const getCartItems =
 			return
 		}
 
-		dispatch({ type: CART_ITEMS_REQUEST })
+		dispatch({ type: CART_ITEMS_PAGINATION_REQUEST })
 		try {
 			const resultGetCartItems = await cartItemsServiceApi.getCartItems(
 				cartId,
 				limit,
 				offset
 			)
+
+			if (limit === 'all') {
+				dispatch({
+					type: CART_ITEMS_GET_FAILURE,
+					payload: 'Limit is not be all for this req',
+				})
+
+				return
+			}
 
 			dispatch({
 				type: CART_ITEMS_GET_SUCCESS,

@@ -8,7 +8,11 @@ import {
 	CART_ITEMS_API_URL_REMOVE,
 } from '../../../app/constants/api/cart.api-constants'
 import $api from '../../../shared/config/axiosInstance'
-import { IResponseCartItemsApi, IResponseCartsApi } from '../types/type.api'
+import {
+	ICartItemsApi,
+	IResponseCartItemsApi,
+	IResponseCartsApi,
+} from '../types/type.api'
 
 // Carts
 class CartsServiceApi {
@@ -40,11 +44,9 @@ class CartItemsServiceApi {
 		cartId: number | string | null,
 		limit: number | string,
 		offset: number | string
-	): Promise<AxiosResponse<IResponseCartItemsApi[]>> {
-		const response = await $api.get<IResponseCartItemsApi[]>(
-			`${CART_ITEMS_API_URL}/${cartId}?limit=${String(limit)}&offset=${String(
-				offset
-			)}`
+	): Promise<AxiosResponse<ICartItemsApi>> {
+		const response = await $api.get<ICartItemsApi>(
+			`${CART_ITEMS_API_URL}/${cartId}?limit=${String(limit)}&offset=${offset}`
 		)
 
 		if (response.status === 404) {
