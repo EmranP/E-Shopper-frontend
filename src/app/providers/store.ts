@@ -9,6 +9,7 @@ import { searchProductReducer } from '../../entities/product/model/product.reduc
 import { rootAdminReducer } from '../../features/admin/model/admin.store'
 import { authReducer } from '../../features/auth/model/auth.reducer'
 import {
+	cartItemsCommonReducer,
 	cartItemsReducer,
 	cartReducer,
 } from '../../features/cart/model/cart.reducer'
@@ -20,6 +21,7 @@ export const rootAppReducer = combineReducers({
 	carts: cartReducer,
 	cartItems: cartItemsReducer,
 	searchProduct: searchProductReducer,
+	cartItemsCommon: cartItemsCommonReducer,
 })
 
 const thunkMiddleware: ThunkMiddleware<RootState, AppActions> = thunk

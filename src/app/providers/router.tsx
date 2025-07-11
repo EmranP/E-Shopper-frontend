@@ -2,6 +2,7 @@ import { FC, lazy } from 'react'
 import { Provider } from 'react-redux'
 import {
 	createBrowserRouter,
+	Link,
 	RouterProvider,
 	useRouteError,
 } from 'react-router-dom'
@@ -41,9 +42,15 @@ const BubbleError: FC = () => {
 		errorMessage = (errorRoutes as { message: string }).message
 	}
 	return (
-		<h1 className='text-center p-20 text-3xl font-semibold'>
-			Error: {errorMessage}
-		</h1>
+		<div className='text-center p-20 text-3xl font-semibold'>
+			<h1 className='mb-10'>Error: {errorMessage}</h1>
+			<h2>
+				Return home page:{' '}
+				<span className='text-specialColor hover:underline'>
+					<Link to={'/'}>home</Link>
+				</span>
+			</h2>
+		</div>
 	)
 }
 

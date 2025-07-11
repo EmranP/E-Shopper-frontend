@@ -12,16 +12,16 @@ export const HeaderAction: FC = () => {
 	const { auth, carts, cartItems } = useAppSelector(state => state)
 	const { isAuth, user } = auth
 	const { cart, error } = carts
-	const { cartItems: cartItemsData } = cartItems
-	const { logout, getCartItems } = useActions()
+	const { cartItems: cartItemsAllData } = cartItems
+	const { logout, getAllCartItems } = useActions()
 	const toggleLogout = useToggle(false)
 	const toggleShowModal = useToggle(false)
 
 	useEffect(() => {
 		if (!cart?.id) return
 
-		getCartItems(cart.id)
-	}, [cart, cartItemsData?.length])
+		getAllCartItems(cart.id, 'all', 0)
+	}, [cart, cartItemsAllData?.length])
 
 	const logoutHandler = () => {
 		logout()
@@ -38,10 +38,10 @@ export const HeaderAction: FC = () => {
 							{user && user?.id === cart?.userId ? (
 								<Link to={'/cart'} className='relative'>
 									<ShoppingCart size={30} />
-									{cartItemsData?.length !== 0 && (
+									{cartItemsAllData?.length !== 0 && (
 										<div className='absolute -top-2 -left-4.5 bg-specialColor rounded-full px-2'>
 											<h1 className='text-white text-[10px]'>
-												{cartItemsData?.length}
+												{cartItemsAllData?.length}
 											</h1>
 										</div>
 									)}

@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { FC, useEffect, useMemo, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
 import { Pagination } from '../../../entities/product/ui/Pagination'
 import { ProductPanelSorted } from '../../../entities/product/ui/ProductPanelSorted'
 import { ProductsSortedContent } from '../../../entities/product/ui/ProductsSortedContent'
 import { SearchMessage } from '../../../entities/product/ui/SearchMessage'
 import { useActions } from '../../../shared/hooks/useActions'
+import { usePagination } from '../../../shared/hooks/usePagination'
 import { useAppSelector } from '../../../shared/hooks/useStoreApp.hooks'
 import { ErrorMessage } from '../../../shared/ui/ErrorUi'
 import { LoaderApp } from '../../../shared/ui/LoaderApp'
@@ -13,13 +13,9 @@ import { LoaderApp } from '../../../shared/ui/LoaderApp'
 export const ProductsContent: FC = () => {
 	const [sortedByPriceDesc, setSortedByPriceDesc] = useState(false)
 	const { searchProduct, admin } = useAppSelector(state => state)
-	const [searchParams, setSearchParams] = useSearchParams()
 	const { getProductSearch, getAllProducts } = useActions()
-
-	const search = searchParams.get('search') || ''
-	const page = Number(searchParams.get('page') || 1)
-	const limit = 6
-	const offset = (page - 1) * limit
+	const { search, page, limit, offset, searchParams, setSearchParams } =
+		usePagination(1, 6)
 
 	const {
 		productsSearch,

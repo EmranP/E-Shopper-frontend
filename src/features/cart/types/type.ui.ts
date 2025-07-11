@@ -1,4 +1,4 @@
-import { IResponseProductsApi } from '../../../entities/product/types/type.api'
+import { IResponseCartItemsApi } from './type.api'
 
 export interface ICartControls {
 	quantity: number
@@ -10,13 +10,8 @@ export interface ICartControls {
 	decreaseStock: () => void
 }
 
-interface ICartItemProduct extends IResponseProductsApi {
-	quantity: number
-	cartItemId: number
-}
-
 export interface CartItemProps {
-	product: ICartItemProduct | null
+	product: IResponseCartItemsApi | null
 	showModalHandler: () => void
 	setIdToDelete: (id: number) => void
 	setProductIdToDelete: (productId: number) => void
