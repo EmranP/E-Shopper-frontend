@@ -12,6 +12,16 @@ export interface IResponseCartsApi extends IResponseSharedApi {
 export interface IResponseCartItemsApi extends IResponseSharedApi {
 	cartId: number
 	productId: number
-	quantity: number
-	price: string
+	quantity: number | undefined
+	price: string | undefined | null
+	imageUrl: string | undefined
+	stock: number | null
+	name: string | undefined
+	productCreatedAt: Date | string
+	productUpdatedAt: Date | string
+}
+
+export interface ICartItemsApi {
+	cartItems: IResponseCartItemsApi[]
+	total: number
 }

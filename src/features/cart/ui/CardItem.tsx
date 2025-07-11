@@ -3,10 +3,10 @@ import { FC } from 'react'
 import { useCartControl } from '../../../shared/hooks/useCartControl'
 import { useAppSelector } from '../../../shared/hooks/useStoreApp.hooks'
 import { iconsSize } from '../../admin/ui/AdminForms'
-import { CartItemProps } from '../types/type.ui'
+import { ICartItemProps } from '../types/type.ui'
 import { CartControls } from './CartControls'
 
-export const CartItem: FC<CartItemProps> = ({
+export const CartItem: FC<ICartItemProps> = ({
 	product,
 	showModalHandler,
 	setIdToDelete,
@@ -19,15 +19,15 @@ export const CartItem: FC<CartItemProps> = ({
 		isActiveMaxSum,
 		isActiveMinSum,
 	} = useCartControl(
-		product?.quantity as number,
-		product?.stock as number,
-		product?.cartItemId
+		Number(product?.quantity),
+		Number(product?.stock),
+		product?.id
 	)
 
-	const { isAppLoading } = useAppSelector(state => state.cartItems)
+	const { isAppLoading } = useAppSelector(state => state.cartItemsCommon)
 
 	return (
-		<div key={product?.cartItemId} className='flex gap-2'>
+		<div key={product?.id} className='flex gap-2'>
 			<div className='flex flex-2/3 justify-between items-center gap-4 bg-bgCards p-3 rounded-2xl mb-5'>
 				<div>
 					{product?.imageUrl ? (
@@ -65,7 +65,7 @@ export const CartItem: FC<CartItemProps> = ({
 					color='red'
 					onClick={() => {
 						showModalHandler()
-						setIdToDelete(Number(product?.cartItemId))
+						setIdToDelete(Number(product?.id))
 						setProductIdToDelete(Number(product?.id))
 					}}
 				/>

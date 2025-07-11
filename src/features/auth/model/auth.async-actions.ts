@@ -14,7 +14,7 @@ import {
 	CART_ADD_FAILURE,
 	CART_ADD_SUCCESS,
 	CART_GET_SUCCESS,
-} from '../../../app/constants/actions/cart.constatns'
+} from '../../../app/constants/actions/cart.constants'
 import { AUTH_API_URL_REFRESH } from '../../../app/constants/api/auth.api-constants'
 import { BASE_API_URL } from '../../../shared/config/axiosInstance'
 import { AppActions, AppThunk } from '../../../shared/types/store.types'

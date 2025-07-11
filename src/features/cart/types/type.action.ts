@@ -7,14 +7,21 @@ import {
 	CART_ITEMS_ADD_SUCCESS,
 	CART_ITEMS_EDIT_FAILURE,
 	CART_ITEMS_EDIT_SUCCESS,
+	CART_ITEMS_GET_ALL_FAILURE,
+	CART_ITEMS_GET_ALL_SUCCESS,
 	CART_ITEMS_GET_FAILURE,
 	CART_ITEMS_GET_SUCCESS,
+	CART_ITEMS_PAGINATION_REQUEST,
 	CART_ITEMS_REMOVE_FAILURE,
 	CART_ITEMS_REMOVE_SUCCESS,
 	CART_ITEMS_REQUEST,
 	CART_REQUEST,
-} from '../../../app/constants/actions/cart.constatns'
-import { IResponseCartItemsApi, IResponseCartsApi } from './type.api'
+} from '../../../app/constants/actions/cart.constants'
+import {
+	ICartItemsApi,
+	IResponseCartItemsApi,
+	IResponseCartsApi,
+} from './type.api'
 
 // Cart
 interface ICartActionRequest {
@@ -37,12 +44,16 @@ interface ICartActionFailure {
 }
 
 // Cart-items
-interface ICartItemsActionRequest {
+interface ICartItemsAllActionRequest {
 	type: typeof CART_ITEMS_REQUEST
 }
 
-interface ICartItemsGetSuccess {
-	type: typeof CART_ITEMS_GET_SUCCESS
+interface ICartItemsPaginationActionRequest {
+	type: typeof CART_ITEMS_PAGINATION_REQUEST
+}
+
+interface ICartItemsGetAllSuccess {
+	type: typeof CART_ITEMS_GET_ALL_SUCCESS
 	payload: IResponseCartItemsApi[]
 }
 
@@ -63,23 +74,44 @@ interface ICartItemsRemoveSuccess {
 
 interface ICartItemsActionFailure {
 	type:
-		| typeof CART_ITEMS_GET_FAILURE
+		| typeof CART_ITEMS_GET_ALL_FAILURE
 		| typeof CART_ITEMS_ADD_FAILURE
 		| typeof CART_ITEMS_EDIT_FAILURE
 		| typeof CART_ITEMS_REMOVE_FAILURE
 	payload: string | null
 }
 
-export type CartActions =
+export type CartActionsType =
 	// Carts
 	| ICartActionRequest
 	| ICartActionSuccessUserGet
 	| ICartActionSuccessUserAdd
 	| ICartActionFailure
 	// Cart items
-	| ICartItemsActionRequest
-	| ICartItemsGetSuccess
+	| ICartItemsAllActionRequest
+	| ICartItemsGetAllSuccess
 	| ICartItemsAddSuccess
 	| ICartItemsEditSuccess
 	| ICartItemsRemoveSuccess
 	| ICartItemsActionFailure
+
+interface ICartItemsGetSuccess {
+	type: typeof CART_ITEMS_GET_SUCCESS
+	payload: ICartItemsApi
+}
+
+interface ICartItemsActionFailureType {
+	type: typeof CART_ITEMS_GET_FAILURE
+	payload: string | null
+}
+
+interface ICartItemsRemovePaginationActionType {
+	type: typeof CART_ITEMS_REMOVE_SUCCESS
+	payload: number
+}
+
+export type ICartItemsCommonActionsType =
+	| ICartItemsPaginationActionRequest
+	| ICartItemsGetSuccess
+	| ICartItemsRemovePaginationActionType
+	| ICartItemsActionFailureType
