@@ -16,7 +16,7 @@ export const Button: FC<IButton> = ({
 	children,
 	...props
 }) => {
-	const classStyleName: string = `px-4 py-2 rounded-lg w-full text-md text-${color} ${bgColor} disabled:opacity-60 cursor-pointer ${
+	const classStyleName: string = `px-4 py-2 rounded-lg w-full text-md text-${color} ${bgColor} cursor-pointer disabled:opacity-60 disabled:cursor-default ${
 		children ? 'flex justify-center items-center gap-3' : ``
 	}`
 

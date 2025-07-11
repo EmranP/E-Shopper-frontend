@@ -3,10 +3,10 @@ import { FC } from 'react'
 import { useCartControl } from '../../../shared/hooks/useCartControl'
 import { useAppSelector } from '../../../shared/hooks/useStoreApp.hooks'
 import { iconsSize } from '../../admin/ui/AdminForms'
-import { CartItemProps } from '../types/type.ui'
+import { ICartItemProps } from '../types/type.ui'
 import { CartControls } from './CartControls'
 
-export const CartItem: FC<CartItemProps> = ({
+export const CartItem: FC<ICartItemProps> = ({
 	product,
 	showModalHandler,
 	setIdToDelete,

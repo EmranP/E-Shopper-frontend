@@ -1,9 +1,16 @@
 import { FC } from 'react'
+import { Link } from 'react-router-dom'
 
 export const CartEmpty: FC = () => {
 	return (
-		<h1 className='text-center flex-auto text-2xl h-full py-50 text-specialColor font-semibold'>
-			Cart is empty... 😢
-		</h1>
+		<div className='text-center flex-auto text-2xl h-full py-50  font-semibold'>
+			<h1 className='mb-10'>Cart is empty... 😢</h1>
+			<h2>
+				Return to{' '}
+				<span className='text-specialColor'>
+					<Link to={'/'}>home page</Link>
+				</span>
+			</h2>
+		</div>
 	)
 }
