@@ -4,6 +4,7 @@ import { ProductsSearchActionTypes } from '../../entities/product/types/type.mod
 import { AdminActionTypes } from '../../features/admin/types/types.model'
 import { AuthActionTypes } from '../../features/auth/types/type.model'
 import { CartActionsType } from '../../features/cart/types/type.action'
+import { OrderCommonActionType } from '../../features/order/types/types.action'
 
 export type RootState = ReturnType<typeof rootAppReducer>
 
@@ -12,6 +13,7 @@ export type AppActions =
 	| AdminActionTypes
 	| CartActionsType
 	| ProductsSearchActionTypes
+	| OrderCommonActionType
 
 export type AppDispatch = typeof store.dispatch
 

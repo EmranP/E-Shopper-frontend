@@ -73,10 +73,18 @@ export const OrdersAdminPageContent: FC = () => {
 								<AdminPanelContentBodyItems data={order.totalPrice} />
 								<AdminPanelContentBodyItems data={order.status} />
 								<AdminPanelContentBodyItems
-									data={new Date(order.createdAt).toLocaleDateString()}
+									data={
+										order.createdAt
+											? new Date(order.createdAt).toLocaleDateString()
+											: new Date().toLocaleTimeString()
+									}
 								/>
 								<AdminPanelContentBodyItems
-									data={new Date(order.updatedAt).toLocaleDateString()}
+									data={
+										order.updatedAt
+											? new Date(order.updatedAt).toLocaleDateString()
+											: new Date().toLocaleTimeString()
+									}
 								/>
 								<TrashUI
 									showModalHandler={showModalHandler}

@@ -16,7 +16,7 @@ export const CartInfo: FC = () => {
 		}, 0)
 	}, [cartItems])
 
-	const hasTotalPrice = (totalPrice && totalPrice > 0) || totalPrice === null
+	const hasTotalPrice = (totalPrice && totalPrice <= 0) || totalPrice === null
 
 	return (
 		<div className='flex-auto'>

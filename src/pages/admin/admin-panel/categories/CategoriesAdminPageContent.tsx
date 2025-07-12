@@ -72,15 +72,23 @@ export const CategoriesAdminPageContent: FC = () => {
 								<AdminPanelContentBodyItems data={categoryItem.id} />
 								<AdminPanelContentBodyItems data={categoryItem.name} />
 								<AdminPanelContentBodyItems
-									data={new Date(categoryItem.created_at).toLocaleDateString()}
+									data={
+										(categoryItem.createdAt &&
+											new Date(categoryItem.createdAt).toLocaleDateString()) ||
+										new Date().toLocaleDateString()
+									}
 								/>
 								<AdminPanelContentBodyItems
-									data={new Date(categoryItem.updated_at).toLocaleDateString()}
+									data={
+										(categoryItem.updatedAt &&
+											new Date(categoryItem.updatedAt).toLocaleDateString()) ||
+										new Date().toLocaleDateString()
+									}
 								/>
 								<TrashUI
 									showModalHandler={showModalHandler}
 									setIdToDelete={setCategoryIdToDelete}
-									data={categoryItem}
+									data={categoryItem || null}
 								/>
 							</AdminPanelContentBody>
 						))}

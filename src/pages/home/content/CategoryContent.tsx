@@ -18,7 +18,7 @@ export const CategoryContent: FC = () => {
 
 	useEffect(() => {
 		getCategoryById(Number(categoryProductId))
-		getAllProducts()
+		getAllProducts(6, 1)
 	}, [categoryProductId])
 
 	const filteredProductsCategories = productsCategoriesData?.filter(

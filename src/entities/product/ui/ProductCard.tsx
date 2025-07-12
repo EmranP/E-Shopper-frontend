@@ -52,13 +52,10 @@ export const ProductCard: FC<IProductCard> = ({
 		>
 			<Link to={`products/${id}`}>
 				{imageUrl ? (
-					<motion.img
+					<img
 						src={imageUrl}
 						alt={title || 'image-title'}
 						className='w-full h-[230px] rounded-t-2xl object-cover'
-						initial={{ opacity: 0 }}
-						animate={{ opacity: 1 }}
-						transition={{ delay: 0.2, duration: 0.6 }}
 					/>
 				) : (
 					<div className='p-4 text-center text-2xl bg-gray-600 bg-specialColor'>

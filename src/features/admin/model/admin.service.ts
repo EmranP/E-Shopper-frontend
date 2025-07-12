@@ -18,7 +18,6 @@ import { IResponseOrdersApi } from '../../order/types/types.api'
 export interface IRequestAdminEditUsersState {
 	role: ROLES
 }
-// !Todo: Completed all Api carts should be created when user going to sign-up
 
 class AdminServiceUsersApi {
 	async getAdminUsers(): Promise<AxiosResponse<IResponseUserAuthApi[]>> {

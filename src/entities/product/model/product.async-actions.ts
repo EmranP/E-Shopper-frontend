@@ -23,7 +23,7 @@ import { productsServiceApi } from './product.service'
 
 // Products
 export const getAllProducts =
-	(limit: number | null, offset: number | null): AppThunk =>
+	(limit?: number | null, offset?: number | null): AppThunk =>
 	async (dispatch: Dispatch<AppActions>): Promise<void> => {
 		dispatch({ type: ADMIN_PRODUCTS_REQUEST })
 		try {
@@ -106,7 +106,7 @@ export const getProductSearch =
 	}
 
 export const addProduct =
-	(productData: IRequestProductApi): AppThunk =>
+	(productData: Partial<IRequestProductApi>): AppThunk =>
 	async (dispatch: Dispatch<AppActions>): Promise<void> => {
 		if (!productData) {
 			dispatch({
@@ -137,7 +137,9 @@ export const addProduct =
 	}
 
 export const editProduct =
-	(productData: IRequestProductApi): AppThunk =>
+	(
+		productData: Omit<IRequestProductApi, 'createdAt' | 'updatedAt'>
+	): AppThunk =>
 	async (dispatch: Dispatch<AppActions>): Promise<void> => {
 		if (!productData.id) {
 			dispatch({

@@ -16,7 +16,7 @@ export const TrashUI: FC<ITrashUI> = ({
 				color='red'
 				onClick={() => {
 					showModalHandler()
-					setIdToDelete(data.id ? data?.id : null)
+					setIdToDelete(data ? data.id : null)
 				}}
 			/>
 		</div>

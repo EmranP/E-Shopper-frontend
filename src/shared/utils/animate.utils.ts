@@ -7,8 +7,8 @@ export const cardVariants = {
 		scale: 1,
 		transition: {
 			type: 'spring',
-			duration: 0.8,
-			delay: 0.1,
+			duration: 0.5,
+			delay: 0,
 			bounce: 0.3,
 		},
 	},
@@ -21,8 +21,8 @@ export const containerVariants = {
 		opacity: 1,
 		y: 0,
 		transition: {
-			duration: 0.6,
-			ease: 'easeOut',
+			duration: 0.3,
+			ease: 'easeInOut',
 			when: 'beforeChildren',
 			staggerChildren: 0.2,
 		},

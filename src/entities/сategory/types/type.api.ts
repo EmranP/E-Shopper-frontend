@@ -1,8 +1,7 @@
-export interface IResponseCategoriesApi {
-	id: number
+import { IResponseSharedApi } from '../../../shared/types/api.types'
+
+export interface IResponseCategoriesApi extends IResponseSharedApi {
 	name: string
-	created_at: string | Date
-	updated_at: string | Date
 }
 
 export interface IRequestCategoriesAddApi {

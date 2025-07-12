@@ -12,14 +12,14 @@ export const AuthFormWrapper: FC<IAuthFormWrapper> = ({
 	return (
 		<motion.div
 			initial={{ x: 100 }}
-			animate={{ x: 0, transition: { duration: 1 } }}
+			animate={{ x: 0, transition: { duration: 0.5 } }}
 			className={`bg-bgLayout flex-auto flex flex-col h-full justify-center space-y-5`}
 		>
 			{showError && (
 				<motion.h1
 					initial={{ opacity: 1 }}
 					animate={{ opacity: 0 }}
-					transition={{ duration: 1, delay: 4 }}
+					transition={{ duration: 0.5, delay: 4 }}
 					className='text-red-500 text-center text-2xl'
 				>
 					{error}

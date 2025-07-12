@@ -144,7 +144,7 @@ export const AdminFormProducts: FC = () => {
 	const categorySelectOptions = mapCategoriesToOptions(categories.categories)
 	const [selectedCategories, setSelectedCategories] =
 		useState<ISelectOption | null>(
-			categorySelectOptions && categorySelectOptions[0]
+			categorySelectOptions ? categorySelectOptions[0] : null
 		)
 
 	const toggleModeHandler = () => toggleMode()
@@ -163,12 +163,15 @@ export const AdminFormProducts: FC = () => {
 
 		if (mode === 'create') {
 			addProduct({
-				name: inputProductName.value as string,
+				name: String(inputProductName.value),
 				description: inputProductDescription,
-				price: inputProductPrice.value as number,
-				stock: inputProductStock.value as number,
+				price: Number(inputProductPrice.value),
+				stock:
+					typeof inputProductStock.value === 'number'
+						? inputProductStock.value
+						: Number(inputProductStock.value),
 				category_id: selectedCategories && (selectedCategories.value as number),
-				image_url: inputProductImageUrl.value as string,
+				image_url: String(inputProductImageUrl.value),
 				userId: user && user.id,
 			})
 		} else if (mode === 'edit' && inputProductId.value) {
@@ -238,7 +241,7 @@ export const AdminFormProducts: FC = () => {
 					/>
 					<Label htmlFor='categoryId' title='Product category' />
 					<Select
-						options={categorySelectOptions && categorySelectOptions}
+						options={categorySelectOptions ? categorySelectOptions : null}
 						selected={selectedCategories}
 						setSelected={setSelectedCategories}
 					/>

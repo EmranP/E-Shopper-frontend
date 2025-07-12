@@ -77,10 +77,18 @@ export const UsersAdminPageContent: FC = () => {
 								/>
 								<AdminPanelContentBodyItems data={user.role} />
 								<AdminPanelContentBodyItems
-									data={new Date(user.createdAt).toLocaleDateString()}
+									data={
+										(user.createdAt &&
+											new Date(user.createdAt).toLocaleDateString()) ||
+										new Date().toLocaleTimeString()
+									}
 								/>
 								<AdminPanelContentBodyItems
-									data={new Date(user.updatedAt).toLocaleDateString()}
+									data={
+										(user.updatedAt &&
+											new Date(user.updatedAt).toLocaleDateString()) ||
+										new Date().toLocaleTimeString()
+									}
 								/>
 								<TrashUI
 									showModalHandler={showModalHandler}

@@ -34,7 +34,7 @@ export const Select = <T extends CommonSelectTypes>({
 
 	const removeSelectedCategory = () => {
 		setSelected(null)
-		navigate('/')
+		if (!isActivePage) navigate('/')
 	}
 
 	return (

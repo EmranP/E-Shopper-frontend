@@ -16,19 +16,11 @@ export const Modal: FC<IModal> = ({
 			animate={{
 				opacity: 1,
 				scale: 1,
-				transition: { duration: 0.3, ease: 'easeOut' },
+				transition: { duration: 0.3, ease: 'easeInOut' },
 			}}
 			className='fixed inset-0 flex items-center justify-center bg-black/50 z-100'
 		>
-			<motion.div
-				initial={{ opacity: 0, y: 20 }}
-				animate={{
-					opacity: 1,
-					y: 0,
-					transition: { duration: 0.3, ease: 'easeOut' },
-				}}
-				className='flex flex-col justify-between bg-white w-lg h-2/4 p-6 rounded-lg shadow-lg'
-			>
+			<div className='flex flex-col justify-between bg-white w-lg h-2/4 p-6 rounded-lg shadow-lg'>
 				<div className='flex items-center justify-between'>
 					<h1 className='text-xl font-semibold'>
 						Are you sure what you want {titleSolutions}?
@@ -51,7 +43,7 @@ export const Modal: FC<IModal> = ({
 						color='white'
 					/>
 				</div>
-			</motion.div>
+			</div>
 		</motion.div>
 	)
 }
