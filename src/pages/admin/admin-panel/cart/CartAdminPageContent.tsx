@@ -50,10 +50,16 @@ export const CartAdminPageContent: FC = () => {
 								<AdminPanelContentBodyItems data={cart.id} />
 								<AdminPanelContentBodyItems data={cart.userId} />
 								<AdminPanelContentBodyItems
-									data={new Date(cart.createdAt).toLocaleDateString()}
+									data={
+										cart.createdAt &&
+										new Date(cart.createdAt).toLocaleDateString()
+									}
 								/>
 								<AdminPanelContentBodyItems
-									data={new Date(cart.updatedAt).toLocaleDateString()}
+									data={
+										cart.updatedAt &&
+										new Date(cart.updatedAt).toLocaleDateString()
+									}
 								/>
 							</AdminPanelContentBody>
 						))}

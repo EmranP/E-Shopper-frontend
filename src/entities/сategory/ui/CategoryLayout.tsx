@@ -23,7 +23,7 @@ export const CategoryLayout: FC = () => {
 			<h1 className='text-3xl mb-5'>Category {selectedCategories?.label}</h1>
 			{!selectedCategories?.label && <p className='mb-5'>Select category :)</p>}
 			<Select
-				options={categorySelectOptions && categorySelectOptions}
+				options={categorySelectOptions || null}
 				selected={selectedCategories}
 				setSelected={setSelectedCategories}
 			/>

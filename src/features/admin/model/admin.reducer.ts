@@ -39,7 +39,6 @@ import {
 	ADMIN_USERS_REMOVE_SUCCESS,
 	ADMIN_USERS_REQUEST,
 } from '../../../app/constants/actions/admin.constants'
-import { IResponseCategoriesApi } from '../../../entities/сategory/types/type.api'
 import { AppActions } from '../../../shared/types/store.types'
 import { IResponseUserAuthApi } from '../../auth/types/type.api'
 import { IResponseOrdersApi } from '../../order/types/types.api'
@@ -283,7 +282,7 @@ export const adminCategoriesReducer = (
 				error: null,
 			}
 		case ADMIN_CATEGORIES_EDIT_SUCCESS: {
-			const payload = action.payload as IResponseCategoriesApi
+			const payload = action.payload
 
 			return {
 				...state,
@@ -292,7 +291,7 @@ export const adminCategoriesReducer = (
 				categories:
 					state.categories?.map(category =>
 						category.id === payload.id ? { ...category, ...payload } : category
-					) || null,
+					) || [],
 			}
 		}
 		case ADMIN_CATEGORIES_REMOVE_SUCCESS:

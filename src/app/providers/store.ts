@@ -13,6 +13,10 @@ import {
 	cartItemsReducer,
 	cartReducer,
 } from '../../features/cart/model/cart.reducer'
+import {
+	orderItemsReducer,
+	orderReducer,
+} from '../../features/order/model/order.reducer'
 import { AppActions, RootState } from '../../shared/types/store.types'
 
 export const rootAppReducer = combineReducers({
@@ -22,6 +26,8 @@ export const rootAppReducer = combineReducers({
 	cartItems: cartItemsReducer,
 	searchProduct: searchProductReducer,
 	cartItemsCommon: cartItemsCommonReducer,
+	order: orderReducer,
+	orderItems: orderItemsReducer,
 })
 
 const thunkMiddleware: ThunkMiddleware<RootState, AppActions> = thunk

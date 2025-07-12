@@ -45,23 +45,21 @@ export const CurrentProduct: FC = () => {
 						variants={itemVariants}
 						className='w-[250px] my-auto object-cover'
 					>
-						<motion.img
+						<img
 							src={productItem?.imageUrl}
 							alt={productItem?.name}
 							className='rounded-xl'
-							initial={{ opacity: 0, scale: 0.9 }}
-							animate={{ opacity: 1, scale: 1 }}
-							transition={{ duration: 0.6 }}
+							// initial={{ opacity: 0, scale: 0.9 }}
+							// animate={{ opacity: 1, scale: 1 }}
+							// transition={{ duration: 0.6 }}
 						/>
 					</motion.div>
 					<motion.div
 						variants={containerVariants}
 						className='py-5 space-y-5 flex-auto'
 					>
-						<motion.h1 variants={itemVariants} className='text-4xl'>
-							Title Product: {productItem?.name}
-						</motion.h1>
-						<motion.h2 variants={itemVariants} className='text-xl'>
+						<h1 className='text-4xl'>Title Product: {productItem?.name}</h1>
+						<h2 className='text-xl'>
 							{productItem.price ? (
 								<>
 									<span className='pr-2 text-specialColor'>
@@ -72,13 +70,10 @@ export const CurrentProduct: FC = () => {
 							) : (
 								0
 							)}
-						</motion.h2>
-						<motion.p
-							variants={itemVariants}
-							className='max-w-[1000px] text-lg'
-						>
+						</h2>
+						<p className='max-w-[1000px] text-lg'>
 							About Product:{productItem.description}
-						</motion.p>
+						</p>
 						<motion.div variants={itemVariants}>
 							<Button
 								title='Add carts'
