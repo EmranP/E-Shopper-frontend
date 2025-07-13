@@ -3,6 +3,8 @@ import {
 	ORDER_ADD_SUCCESS,
 	ORDER_EDIT_FAILURE,
 	ORDER_EDIT_SUCCESS,
+	ORDER_GET_ADMIN_FAILURE,
+	ORDER_GET_ADMIN_SUCCESS,
 	ORDER_GET_BY_ID_FAILURE,
 	ORDER_GET_BY_ID_SUCCESS,
 	ORDER_GET_FAILURE,
@@ -13,6 +15,8 @@ import {
 	ORDER_ITEMS_BY_ID_SUCCESS,
 	ORDER_ITEMS_EDIT_FAILURE,
 	ORDER_ITEMS_EDIT_SUCCESS,
+	ORDER_ITEMS_GET_ADMIN_FAILURE,
+	ORDER_ITEMS_GET_ADMIN_SUCCESS,
 	ORDER_ITEMS_GET_FAILURE,
 	ORDER_ITEMS_GET_SUCCESS,
 	ORDER_ITEMS_REMOVE_FAILURE,
@@ -30,7 +34,7 @@ interface IOrderRequestActionType {
 }
 
 interface IOrderActionSuccessGetType {
-	type: typeof ORDER_GET_SUCCESS
+	type: typeof ORDER_GET_SUCCESS | typeof ORDER_GET_ADMIN_SUCCESS
 	payload: IResponseOrdersApi[]
 }
 
@@ -56,6 +60,7 @@ interface IOrderActionSuccessRemoveType {
 
 interface IOrderActionFailureTypes {
 	type:
+		| typeof ORDER_GET_ADMIN_FAILURE
 		| typeof ORDER_GET_FAILURE
 		| typeof ORDER_GET_BY_ID_FAILURE
 		| typeof ORDER_ADD_FAILURE
@@ -80,7 +85,7 @@ interface IOrderItemsActionRequestType {
 }
 
 interface IOrderItemsActionSuccessGetType {
-	type: typeof ORDER_ITEMS_GET_SUCCESS
+	type: typeof ORDER_ITEMS_GET_SUCCESS | typeof ORDER_ITEMS_GET_ADMIN_SUCCESS
 	payload: IResponseOrderItemsApi[]
 }
 
@@ -106,6 +111,7 @@ interface IOrderItemsActionSuccessRemoveType {
 
 interface IOrderItemsActionFailureType {
 	type:
+		| typeof ORDER_ITEMS_GET_ADMIN_FAILURE
 		| typeof ORDER_ITEMS_GET_FAILURE
 		| typeof ORDER_ITEMS_BY_ID_FAILURE
 		| typeof ORDER_ITEMS_ADD_FAILURE

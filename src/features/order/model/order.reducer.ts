@@ -3,6 +3,8 @@ import {
 	ORDER_ADD_SUCCESS,
 	ORDER_EDIT_FAILURE,
 	ORDER_EDIT_SUCCESS,
+	ORDER_GET_ADMIN_FAILURE,
+	ORDER_GET_ADMIN_SUCCESS,
 	ORDER_GET_BY_ID_FAILURE,
 	ORDER_GET_BY_ID_SUCCESS,
 	ORDER_GET_FAILURE,
@@ -13,6 +15,8 @@ import {
 	ORDER_ITEMS_BY_ID_SUCCESS,
 	ORDER_ITEMS_EDIT_FAILURE,
 	ORDER_ITEMS_EDIT_SUCCESS,
+	ORDER_ITEMS_GET_ADMIN_FAILURE,
+	ORDER_ITEMS_GET_ADMIN_SUCCESS,
 	ORDER_ITEMS_GET_FAILURE,
 	ORDER_ITEMS_GET_SUCCESS,
 	ORDER_ITEMS_REMOVE_FAILURE,
@@ -39,6 +43,7 @@ export const orderReducer = (
 	switch (action.type) {
 		case ORDER_REQUEST:
 			return { ...state, isAppLoading: true, error: null }
+		case ORDER_GET_ADMIN_SUCCESS:
 		case ORDER_GET_SUCCESS:
 			return {
 				...state,
@@ -86,6 +91,7 @@ export const orderReducer = (
 			}
 
 		// Failure
+		case ORDER_GET_ADMIN_FAILURE:
 		case ORDER_GET_FAILURE:
 		case ORDER_GET_BY_ID_FAILURE:
 		case ORDER_ADD_FAILURE:
@@ -116,6 +122,7 @@ export const orderItemsReducer = (
 				isAppLoading: true,
 				error: null,
 			}
+		case ORDER_ITEMS_GET_ADMIN_SUCCESS:
 		case ORDER_ITEMS_GET_SUCCESS:
 			return {
 				...state,
@@ -162,6 +169,7 @@ export const orderItemsReducer = (
 					) || null,
 			}
 		// Failure
+		case ORDER_ITEMS_GET_ADMIN_FAILURE:
 		case ORDER_ITEMS_GET_FAILURE:
 		case ORDER_ITEMS_BY_ID_FAILURE:
 		case ORDER_ITEMS_ADD_FAILURE:

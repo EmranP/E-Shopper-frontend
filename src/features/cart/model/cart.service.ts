@@ -8,10 +8,12 @@ import {
 } from '../../../app/constants/api/cart.api-constants'
 import $api from '../../../shared/config/axiosInstance'
 import {
+	ICartItemsApi,
 	IResponseCartItemsApi,
 	IResponseCartsApi,
 	ReturnTypeCartItemsServiceApi,
 	ReturnTypeCartServiceApi,
+	ReturnTypeCommonCartItemsService,
 } from '../types/type.api'
 
 // Carts
@@ -42,8 +44,8 @@ class CartItemsServiceApi {
 		cartId: number | string | null,
 		limit: number | string,
 		offset: number | string
-	): ReturnTypeCartItemsServiceApi {
-		const response = await $api.get<IResponseCartItemsApi>(
+	): ReturnTypeCommonCartItemsService {
+		const response = await $api.get<ICartItemsApi>(
 			`${CART_ITEMS_API_URL}/${cartId}?limit=${String(limit)}&offset=${offset}`
 		)
 
