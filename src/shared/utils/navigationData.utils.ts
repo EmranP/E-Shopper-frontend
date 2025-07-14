@@ -19,10 +19,4 @@ export const navigationLink = [
 		path: '/admin/panel',
 		isRoles: [ROLES.ADMIN],
 	},
-	{
-		id: 4,
-		title: 'users',
-		path: '/admin/user',
-		isRoles: [ROLES.ADMIN],
-	},
 ]

@@ -1,4 +1,4 @@
-import { IResponseCategoriesApi } from '../../entities/сategory/types/type.api'
+import { IResponseCategoriesApi } from '../../entities/category/types/type.api'
 
 export const mapCategoriesToOptions = (
 	categories: IResponseCategoriesApi[] | null

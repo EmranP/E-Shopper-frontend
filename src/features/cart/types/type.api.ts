@@ -29,3 +29,7 @@ export type ReturnTypeCartServiceApi = Promise<
 export type ReturnTypeCartItemsServiceApi = Promise<
 	AxiosResponse<IResponseCartItemsApi> | never
 >
+
+export type ReturnTypeCommonCartItemsService = Promise<
+	AxiosResponse<ICartItemsApi> | never
+>

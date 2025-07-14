@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 import {
 	AdminPanelContentBody,
 	AdminPanelContentBodyItems,
@@ -9,7 +9,6 @@ import {
 	AdminPanelContentTable,
 } from '../../../../features/admin/ui/AdminPanelContentHeader'
 import { adminPanelContentHeaderOrdersItemsElement } from '../../../../features/admin/util/content-header-items-el.util'
-import { IResponseOrdersApi } from '../../../../features/order/types/types.api'
 import { useActions } from '../../../../shared/hooks/useActions'
 import { useAppSelector } from '../../../../shared/hooks/useStoreApp.hooks'
 import { useToggle } from '../../../../shared/hooks/useToggle'
@@ -19,30 +18,33 @@ import { Modal } from '../../../../shared/ui/Modal'
 import { TrashUI } from '../../../../shared/ui/TrashUI'
 
 export const OrdersAdminPageContent: FC = () => {
-	const { orders, isAppLoading, error } = useAppSelector(
-		state => state.admin.orders
-	)
-	const { getAllOrdersForAdmin, removeOrdersForAdmin } = useActions()
+	const { orders, isAppLoading, error } = useAppSelector(state => state.order)
+	const { user } = useAppSelector(state => state.auth)
+	const actions = useActions()
 	const { toggle, toggleHandler } = useToggle()
 	const [ordersIdToDelete, setOrderIdDelete] = useState<number | null>(null)
 
+	const getAllOrdersForAdmin = useMemo(() => actions.getAllAdminOrder, [])
+	const removeOrders = useMemo(() => actions.removeOrder, [])
+
 	useEffect(() => {
-		getAllOrdersForAdmin()
-	}, [])
+		if (!user?.id) return
+
+		getAllOrdersForAdmin(user?.id, user?.role)
+	}, [getAllOrdersForAdmin, user?.id, user?.role])
 
 	if (isAppLoading) return <LoaderApp />
 
-	const ordersData = orders as IResponseOrdersApi[] | null
-
-	if (!ordersData?.length || error) {
+	if (!orders?.length || error) {
 		return <ErrorAdminContentPage error={'No quantity of goods'} />
 	}
 
-	const removeOrderHandler = (orderId: number) => removeOrdersForAdmin(orderId)
+	const removeOrderHandler = (userId: number | null, orderId: number | null) =>
+		removeOrders(userId, orderId)
 
 	const confirmDeleteHandler = () => {
-		if (ordersIdToDelete !== null) {
-			removeOrderHandler(ordersIdToDelete)
+		if (ordersIdToDelete !== null && user?.id) {
+			removeOrderHandler(user.id, ordersIdToDelete)
 			setOrderIdDelete(null)
 		}
 
@@ -50,6 +52,7 @@ export const OrdersAdminPageContent: FC = () => {
 	}
 
 	const showModalHandler = () => toggleHandler()
+
 	return (
 		<>
 			<div className='space-y-5'>
@@ -66,7 +69,7 @@ export const OrdersAdminPageContent: FC = () => {
 						</tr>
 					</thead>
 					<tbody>
-						{ordersData.map(order => (
+						{orders.map(order => (
 							<AdminPanelContentBody key={order.id}>
 								<AdminPanelContentBodyItems data={order.id} />
 								<AdminPanelContentBodyItems data={order.userId} />

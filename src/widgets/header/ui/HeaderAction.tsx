@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { LogOut, ShoppingCart } from 'lucide-react'
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useActions } from '../../../shared/hooks/useActions'
 import { useAppSelector } from '../../../shared/hooks/useStoreApp.hooks'
@@ -11,17 +11,20 @@ import { Modal } from '../../../shared/ui/Modal'
 export const HeaderAction: FC = () => {
 	const { auth, carts, cartItems } = useAppSelector(state => state)
 	const { isAuth, user } = auth
-	const { cart, error } = carts
+	const { cart, error: errorCarts } = carts
 	const { cartItems: cartItemsAllData } = cartItems
-	const { logout, getAllCartItems } = useActions()
+	const actions = useActions()
 	const toggleLogout = useToggle(false)
 	const toggleShowModal = useToggle(false)
+
+	const getAllCartItems = useMemo(() => actions.getAllCartItems, [])
+	const logout = useMemo(() => actions.logout, [])
 
 	useEffect(() => {
 		if (!cart?.id) return
 
 		getAllCartItems(cart.id, 'all', 0)
-	}, [cart, cartItemsAllData?.length])
+	}, [getAllCartItems, cart, cartItemsAllData?.length])
 
 	const logoutHandler = () => {
 		logout()
@@ -48,7 +51,9 @@ export const HeaderAction: FC = () => {
 								</Link>
 							) : (
 								<div>
-									<p className='text-red-500 font-semibold text-xl'>{error}</p>
+									<p className='text-red-500 font-semibold text-xl'>
+										{errorCarts}
+									</p>
 								</div>
 							)}
 							<h1 className='text-center font-semibold text-xl'>

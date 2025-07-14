@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+
 import { FC, useEffect, useMemo, useState } from 'react'
 import { Pagination } from '../../../entities/product/ui/Pagination'
 import { ProductPanelSorted } from '../../../entities/product/ui/ProductPanelSorted'
@@ -13,7 +14,7 @@ import { LoaderApp } from '../../../shared/ui/LoaderApp'
 export const ProductsContent: FC = () => {
 	const [sortedByPriceDesc, setSortedByPriceDesc] = useState(false)
 	const { searchProduct, admin } = useAppSelector(state => state)
-	const { getProductSearch, getAllProducts } = useActions()
+	const actions = useActions()
 	const { search, page, limit, offset, searchParams, setSearchParams } =
 		usePagination(1, 6)
 
@@ -31,13 +32,16 @@ export const ProductsContent: FC = () => {
 		error: productError,
 	} = admin.products
 
+	const getAllProducts = useMemo(() => actions.getAllProducts, [])
+	const getProductSearch = useMemo(() => actions.getProductSearch, [])
+
 	useEffect(() => {
 		if (!search) {
 			getAllProducts(limit, offset)
 		} else {
 			getProductSearch(search, limit, offset)
 		}
-	}, [search, page, offset])
+	}, [getAllProducts, getProductSearch, search, page, offset, limit])
 
 	const productList = search ? productsSearch : allProducts
 

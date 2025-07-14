@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 import {
 	AdminPanelContentBody,
 	AdminPanelContentBodyItems,
@@ -22,13 +22,16 @@ export const UsersAdminPageContent: FC = () => {
 	const { users, isAppLoading, error } = useAppSelector(
 		state => state.admin.user
 	)
-	const { getAllForAdminUsers, removeForAdminUsers } = useActions()
+	const actions = useActions()
 	const { toggle, toggleHandler } = useToggle()
 	const [userIdToDelete, setUserIdToDelete] = useState<number | null>(null)
 
+	const getAllForAdminUsers = useMemo(() => actions.getAllForAdminUsers, [])
+	const removeForAdminUsers = useMemo(() => actions.removeForAdminUsers, [])
+
 	useEffect(() => {
 		getAllForAdminUsers()
-	}, [])
+	}, [getAllForAdminUsers])
 
 	if (isAppLoading) return <LoaderApp />
 

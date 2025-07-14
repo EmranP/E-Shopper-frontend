@@ -3,13 +3,6 @@ import {
 	ADMIN_CARTS_GET_FAILURE,
 	ADMIN_CARTS_GET_SUCCESS,
 	ADMIN_CARTS_REQUEST,
-	ADMIN_ORDERS_EDIT_FAILURE,
-	ADMIN_ORDERS_EDIT_SUCCESS,
-	ADMIN_ORDERS_GET_FAILURE,
-	ADMIN_ORDERS_GET_SUCCESS,
-	ADMIN_ORDERS_REMOVE_FAILURE,
-	ADMIN_ORDERS_REMOVE_SUCCESS,
-	ADMIN_ORDERS_REQUEST,
 	ADMIN_USERS_EDIT_FAILURE,
 	ADMIN_USERS_EDIT_SUCCESS,
 	ADMIN_USERS_GET_FAILURE,
@@ -22,11 +15,7 @@ import {
 import { ROLES } from '../../../app/constants/roles/roles'
 import { AppActions, AppThunk } from '../../../shared/types/store.types'
 import { errorMessageAsyncAction } from '../../../shared/utils/errorMessage.async-action'
-import {
-	adminServiceCartsApi,
-	adminServiceOrdersApi,
-	adminServiceUsersApi,
-} from './admin.service'
+import { adminServiceCartsApi, adminServiceUsersApi } from './admin.service'
 
 // Users
 export const getAllForAdminUsers =
@@ -94,81 +83,6 @@ export const removeForAdminUsers =
 			const errorMessage = errorMessageAsyncAction(error)
 
 			dispatch({ type: ADMIN_USERS_REMOVE_FAILURE, payload: errorMessage })
-		}
-	}
-
-// Orders
-export const getAllOrdersForAdmin =
-	(): AppThunk =>
-	async (dispatch: Dispatch<AppActions>): Promise<void> => {
-		dispatch({ type: ADMIN_ORDERS_REQUEST })
-
-		try {
-			const resultGetAllOrders = await adminServiceOrdersApi.getAllOrders()
-
-			dispatch({
-				type: ADMIN_ORDERS_GET_SUCCESS,
-				payload: resultGetAllOrders.data,
-			})
-		} catch (error) {
-			const errorMessage = errorMessageAsyncAction(error)
-
-			dispatch({ type: ADMIN_ORDERS_GET_FAILURE, payload: errorMessage })
-		}
-	}
-
-export const editOrdersForAdmin =
-	(orderId: number | string, orderStatus: string): AppThunk =>
-	async (dispatch: Dispatch<AppActions>): Promise<void> => {
-		if (!orderId) {
-			dispatch({
-				type: ADMIN_ORDERS_EDIT_FAILURE,
-				payload: USER_NOT_WRITE_DATA,
-			})
-			return
-		}
-
-		dispatch({ type: ADMIN_ORDERS_REQUEST })
-		try {
-			const resultEditOrders = await adminServiceOrdersApi.editOrders(
-				orderId,
-				orderStatus
-			)
-			// Todo Return actual data need again fetching
-			dispatch({
-				type: ADMIN_ORDERS_EDIT_SUCCESS,
-				payload: resultEditOrders.data,
-			})
-		} catch (error) {
-			const errorMessage = errorMessageAsyncAction(error)
-
-			dispatch({ type: ADMIN_ORDERS_EDIT_FAILURE, payload: errorMessage })
-		}
-	}
-
-export const removeOrdersForAdmin =
-	(orderId: number | string): AppThunk =>
-	async (dispatch: Dispatch<AppActions>): Promise<void> => {
-		if (orderId === null || undefined) {
-			dispatch({
-				type: ADMIN_ORDERS_EDIT_FAILURE,
-				payload: USER_NOT_WRITE_DATA,
-			})
-			return
-		}
-
-		dispatch({ type: ADMIN_ORDERS_REQUEST })
-		try {
-			await adminServiceOrdersApi.deleteOrders(orderId)
-
-			dispatch({
-				type: ADMIN_ORDERS_REMOVE_SUCCESS,
-				payload: orderId as number,
-			})
-		} catch (error) {
-			const errorMessage = errorMessageAsyncAction(error)
-
-			dispatch({ type: ADMIN_ORDERS_REMOVE_FAILURE, payload: errorMessage })
 		}
 	}
 

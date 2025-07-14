@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from 'react'
 import { IResponseCartItemsApi } from './type.api'
 
 export interface ICartControls {
@@ -19,13 +18,17 @@ export interface ICartItemProps {
 }
 
 export interface ICartContentUIProps {
-	hasItem: boolean
+	hasItem: boolean | null
 	cartItemsData: IResponseCartItemsApi[]
 	totalCartItemPage: number
 	page: number
-	setCartItemIdToDelete: Dispatch<SetStateAction<number | null>>
-	setProductIdToDelete: Dispatch<SetStateAction<number | null>>
+	setCartItemIdToDelete: (ci: number) => void
+	setProductIdToDelete: (p: number) => void
 	prevPage: () => void
 	nextPage: () => void
 	openModalHandler: () => void
+}
+
+export interface ICartEmpty {
+	error?: string | null | boolean
 }

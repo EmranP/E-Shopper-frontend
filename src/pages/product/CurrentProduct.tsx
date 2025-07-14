@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { motion } from 'motion/react'
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useActions } from '../../shared/hooks/useActions'
 import { useAppSelector } from '../../shared/hooks/useStoreApp.hooks'
@@ -16,11 +16,13 @@ export const CurrentProduct: FC = () => {
 	const { productItem, isAppLoading } = useAppSelector(
 		state => state.admin.products
 	)
-	const { getProductById } = useActions()
+	const actions = useActions()
+
+	const getProductById = useMemo(() => actions.getProductById, [])
 
 	useEffect(() => {
 		getProductById(Number(productId))
-	}, [productId])
+	}, [getProductById, productId])
 
 	if (isAppLoading) return <LoaderApp />
 

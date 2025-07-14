@@ -20,6 +20,7 @@ import {
 	ReturnTypeOrderServiceApi,
 } from '../types/types.api'
 
+// !Orders
 class OrderServiceApi {
 	// Get
 	async getAllAdminOrders(): ReturnTypeAllOrderServiceApi {
@@ -80,19 +81,20 @@ class OrderServiceApi {
 	// Delete
 	async removeOrderById(
 		orderId: number | string
-	): Promise<ReturnTypeSharedDeleteServiceApi | void | never> {
+	): ReturnTypeSharedDeleteServiceApi {
 		const request = await $api.delete<IMessageApi>(
 			`${ORDER_API_URL_REMOVE}/${orderId}`
 		)
 
 		errorNotFoundedApi(request, 'Order req for remove not founded')
 
-		return request
+		console.log(request.data.message)
 	}
 }
 
 export const orderServiceApi = new OrderServiceApi()
 
+// !OrderItems
 class OrderItemsServiceApi {
 	// Get
 	async getAllAdminOrderItems(): ReturnTypeAllOrderItemsServiceApi {
@@ -156,7 +158,7 @@ class OrderItemsServiceApi {
 
 		errorNotFoundedApi(request, 'Order-items for remove not founded')
 
-		return request
+		console.log(request.data.message)
 	}
 }
 

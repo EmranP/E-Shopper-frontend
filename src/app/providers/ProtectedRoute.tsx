@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useMemo } from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
 import { useActions } from '../../shared/hooks/useActions'
 import { useAppSelector } from '../../shared/hooks/useStoreApp.hooks'
@@ -8,19 +8,23 @@ import { Loader } from '../../shared/ui/Loader'
 
 export const ProtectedRoute: FC<IProtectedRoute> = ({ requiredRole }) => {
 	const { user, isAppLoading } = useAppSelector(state => state.auth)
-	const { checkAuth, getUserCarts } = useActions()
+	const actions = useActions()
 	const token = localStorage.getItem('token')
+
+	const checkAuth = useMemo(() => actions.checkAuth, [])
+	const getUserCarts = useMemo(() => actions.getUserCarts, [])
+
 	useEffect(() => {
 		if (token) {
 			checkAuth()
 		}
-	}, [])
+	}, [checkAuth, token])
 
 	useEffect(() => {
 		if (user?.id) {
 			getUserCarts(user.id)
 		}
-	}, [user, user?.id])
+	}, [getUserCarts, user, user?.id])
 
 	if (isAppLoading) return <Loader />
 
