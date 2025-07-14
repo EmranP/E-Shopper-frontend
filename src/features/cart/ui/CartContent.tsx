@@ -1,30 +1,33 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { useActions } from '../../../shared/hooks/useActions'
 import { usePagination } from '../../../shared/hooks/usePagination'
 import { useAppSelector } from '../../../shared/hooks/useStoreApp.hooks'
 import { useToggle } from '../../../shared/hooks/useToggle'
+import { LoaderApp } from '../../../shared/ui/LoaderApp'
 import { Modal } from '../../../shared/ui/Modal'
 import { changePaginationProduct } from '../../../shared/utils/changePaginationProduct'
 import { CartContentUI } from './CartContentUI'
-import { CartEmpty } from './CartEmpty'
 
 export const CartContent: FC = () => {
-	const [cartItemIdToDelete, setCartItemIdToDelete] = useState<number | null>(
-		null
-	)
-	const [productIdToDelete, setProductIdToDelete] = useState<number | null>(
-		null
-	)
 	const { cart } = useAppSelector(state => state.carts)
-	const { cartItemsCommon: cartItemsData, total } = useAppSelector(
-		state => state.cartItemsCommon
-	)
+	const {
+		cartItemsCommon: cartItemsData,
+		total,
+		isAppLoading,
+	} = useAppSelector(state => state.cartItemsCommon)
+
 	const { toggle, toggleHandler } = useToggle()
-	const actions = useActions()
 	const { page, limit, offset, setSearchParams, searchParams } = usePagination(
 		1,
 		3
 	)
+	const actions = useActions()
+
+	const [toDelete, setToDelete] = useState<{
+		ci: number | null
+		p: number | null
+	} | null>(null)
 
 	const getCartItems = useMemo(() => actions.getCartItems, [])
 	const removeCartItems = useMemo(() => actions.removeCartItems, [])
@@ -53,27 +56,18 @@ export const CartContent: FC = () => {
 		[page, searchParams, setSearchParams, totalCartItemPage]
 	)
 
-	if (!cartItemsData) return <CartEmpty />
-
-	const removeProductHandler = (cartItemsId: number, productId: number) => {
-		if (!cartItemsId || !productId) return
-		removeCartItems(cartItemsId, productId)
-	}
-
-	const confirmDeleteHandler = () => {
-		if (cartItemIdToDelete !== null && productIdToDelete !== null) {
-			removeProductHandler(cartItemIdToDelete, productIdToDelete)
-			setCartItemIdToDelete(null)
+	const confirmDeleteHandler = useCallback(() => {
+		if (toDelete) {
+			removeCartItems(toDelete.ci, toDelete.p)
+			if (cartItemsData && cartItemsData.length <= 1) navPagination(-1)
+			setToDelete(null)
 		}
-
-		if (cartItemsData.length <= 1) {
-			navPagination(-1)
-		}
-
 		toggleHandler()
-	}
+	}, [toDelete, toggleHandler, removeCartItems, cartItemsData, navPagination])
 
-	const hasItem = cartItemsData.length > 0
+	const hasItem = cartItemsData && cartItemsData.length > 0
+
+	if (isAppLoading) return <LoaderApp />
 
 	return (
 		<div className='flex-auto mb-5'>
@@ -82,8 +76,10 @@ export const CartContent: FC = () => {
 				cartItemsData={cartItemsData}
 				totalCartItemPage={totalCartItemPage}
 				page={page}
-				setCartItemIdToDelete={setCartItemIdToDelete}
-				setProductIdToDelete={setProductIdToDelete}
+				setCartItemIdToDelete={ci =>
+					setToDelete(t => ({ ci, p: t?.p ?? null }))
+				}
+				setProductIdToDelete={p => setToDelete(t => ({ ci: t?.ci ?? null, p }))}
 				prevPage={() => navPagination(-1)}
 				nextPage={() => navPagination(1)}
 				openModalHandler={() => toggleHandler()}

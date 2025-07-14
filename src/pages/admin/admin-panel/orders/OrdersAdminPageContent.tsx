@@ -54,51 +54,49 @@ export const OrdersAdminPageContent: FC = () => {
 	const showModalHandler = () => toggleHandler()
 
 	return (
-		<>
-			<div className='space-y-5'>
-				<AdminPanelContentTable title='Orders' style='pr-10'>
-					<thead>
-						<tr className='bg-bgCards'>
-							{adminPanelContentHeaderOrdersItemsElement.map(item => (
-								<AdminPanelContentHeaderTable
-									key={item.id}
-									title={item.title}
-									style={item.styleName}
-								/>
-							))}
-						</tr>
-					</thead>
-					<tbody>
-						{orders.map(order => (
-							<AdminPanelContentBody key={order.id}>
-								<AdminPanelContentBodyItems data={order.id} />
-								<AdminPanelContentBodyItems data={order.userId} />
-								<AdminPanelContentBodyItems data={order.totalPrice} />
-								<AdminPanelContentBodyItems data={order.status} />
-								<AdminPanelContentBodyItems
-									data={
-										order.createdAt
-											? new Date(order.createdAt).toLocaleDateString()
-											: new Date().toLocaleTimeString()
-									}
-								/>
-								<AdminPanelContentBodyItems
-									data={
-										order.updatedAt
-											? new Date(order.updatedAt).toLocaleDateString()
-											: new Date().toLocaleTimeString()
-									}
-								/>
-								<TrashUI
-									showModalHandler={showModalHandler}
-									setIdToDelete={setOrderIdDelete}
-									data={order}
-								/>
-							</AdminPanelContentBody>
+		<div className='space-y-5'>
+			<AdminPanelContentTable title='Orders' style='pr-10'>
+				<thead>
+					<tr className='bg-bgCards'>
+						{adminPanelContentHeaderOrdersItemsElement.map(item => (
+							<AdminPanelContentHeaderTable
+								key={item.id}
+								title={item.title}
+								style={item.styleName}
+							/>
 						))}
-					</tbody>
-				</AdminPanelContentTable>
-			</div>
+					</tr>
+				</thead>
+				<tbody>
+					{orders.map(order => (
+						<AdminPanelContentBody key={order.id}>
+							<AdminPanelContentBodyItems data={order.id} />
+							<AdminPanelContentBodyItems data={order.userId} />
+							<AdminPanelContentBodyItems data={order.totalPrice} />
+							<AdminPanelContentBodyItems data={order.status} />
+							<AdminPanelContentBodyItems
+								data={
+									order.createdAt
+										? new Date(order.createdAt).toLocaleDateString()
+										: new Date().toLocaleTimeString()
+								}
+							/>
+							<AdminPanelContentBodyItems
+								data={
+									order.updatedAt
+										? new Date(order.updatedAt).toLocaleDateString()
+										: new Date().toLocaleTimeString()
+								}
+							/>
+							<TrashUI
+								showModalHandler={showModalHandler}
+								setIdToDelete={setOrderIdDelete}
+								data={order}
+							/>
+						</AdminPanelContentBody>
+					))}
+				</tbody>
+			</AdminPanelContentTable>
 			{toggle && (
 				<Modal
 					titleSolutions='delete this is order'
@@ -107,6 +105,6 @@ export const OrdersAdminPageContent: FC = () => {
 					onClickClose={showModalHandler}
 				/>
 			)}
-		</>
+		</div>
 	)
 }

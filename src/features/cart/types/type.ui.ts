@@ -19,7 +19,7 @@ export interface ICartItemProps {
 
 export interface ICartContentUIProps {
 	hasItem: boolean | null
-	cartItemsData: IResponseCartItemsApi[]
+	cartItemsData: IResponseCartItemsApi[] | null
 	totalCartItemPage: number
 	page: number
 	setCartItemIdToDelete: (ci: number) => void

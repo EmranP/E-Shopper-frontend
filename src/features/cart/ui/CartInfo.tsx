@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { FC, useCallback, useMemo } from 'react'
+import { FC, useCallback, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useActions } from '../../../shared/hooks/useActions'
 import { useAppSelector } from '../../../shared/hooks/useStoreApp.hooks'
@@ -12,12 +12,20 @@ export const CartInfo: FC = () => {
 	const { isAppLoading } = useAppSelector(state => state.order)
 	const { user } = useAppSelector(state => state.auth)
 	const { cart } = useAppSelector(state => state.carts)
-	const actions = useActions()
+
 	const { toggle, toggleHandler } = useToggle(false)
 	const navigate = useNavigate()
+	const actions = useActions()
 
 	// Actions Creator
 	const addOrder = useMemo(() => actions.addOrder, [])
+
+	useEffect(() => {
+		if (localStorage.getItem('order')) {
+			localStorage.removeItem('order')
+			window.location.reload()
+		}
+	}, [])
 
 	const totalPrice = useMemo(() => {
 		if (!Array.isArray(cartItems) || !cartItems.length) return null
@@ -38,7 +46,13 @@ export const CartInfo: FC = () => {
 			addOrder(user.id, cart.id, totalPrice)
 
 			toggleHandler()
-			// navigate('/orders', { replace: true })
+
+			if (localStorage.getItem('order')) {
+				navigate('/orders', { replace: true })
+			} else {
+				localStorage.setItem('order', 'orderSet')
+				navigate('/orders', { replace: true })
+			}
 		} catch (error) {
 			console.error('Не удалось создать заказ:', error)
 		}
