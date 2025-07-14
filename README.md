@@ -50,3 +50,9 @@ e-shopper-frontend/
 ├── shared/          # Общие модули, компоненты и утилиты
 ├── widgets/         # Независимые UI-компоненты с логикой
 ```
+
+## Sign in to Admin 
+```
+email: admin@admin.com
+password: 12345
+```
