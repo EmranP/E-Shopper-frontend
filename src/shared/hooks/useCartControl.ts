@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { IHookCartControl } from '../types/hook.types'
 import { useActions } from './useActions'
@@ -13,7 +13,9 @@ export const useCartControl = (
 	const [quantity, setQuantity] = useState(quantityValue || 1)
 	const [isActiveMinSum, setIsActiveMinSum] = useState<boolean>(false)
 	const [isActiveMaxSum, setIsActiveMaxSum] = useState<boolean>(false)
-	const { editCartItems } = useActions()
+	const actions = useActions()
+
+	const editCartItems = useMemo(() => actions.editCartItems, [])
 
 	const isFirstRender = useRef(true)
 
@@ -50,7 +52,7 @@ export const useCartControl = (
 		if (location.pathname === '/cart' && cartItemsId != null) {
 			editCartItems(cartItemsId, quantity)
 		}
-	}, [cartItemsId, location.pathname, quantity])
+	}, [editCartItems, cartItemsId, location.pathname, quantity])
 
 	return {
 		quantity,

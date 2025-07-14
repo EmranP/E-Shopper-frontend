@@ -15,13 +15,6 @@ import {
 	ADMIN_CATEGORIES_REQUEST,
 	ADMIN_CATEGORY_GET_BY_ID_FAILURE,
 	ADMIN_CATEGORY_GET_BY_ID_SUCCESS,
-	ADMIN_ORDERS_EDIT_FAILURE,
-	ADMIN_ORDERS_EDIT_SUCCESS,
-	ADMIN_ORDERS_GET_FAILURE,
-	ADMIN_ORDERS_GET_SUCCESS,
-	ADMIN_ORDERS_REMOVE_FAILURE,
-	ADMIN_ORDERS_REMOVE_SUCCESS,
-	ADMIN_ORDERS_REQUEST,
 	ADMIN_PRODUCT_GET_BY_ID_FAILURE,
 	ADMIN_PRODUCT_GET_BY_ID_SUCCESS,
 	ADMIN_PRODUCTS_ADD_FAILURE,
@@ -41,14 +34,13 @@ import {
 	ADMIN_USERS_REMOVE_SUCCESS,
 	ADMIN_USERS_REQUEST,
 } from '../../../app/constants/actions/admin.constants'
+import { IResponseCategoriesApi } from '../../../entities/category/types/type.api'
 import {
 	IProductsApi,
 	IResponseProductsApi,
 } from '../../../entities/product/types/type.api'
-import { IResponseCategoriesApi } from '../../../entities/сategory/types/type.api'
 import { IResponseUserAuthApi } from '../../auth/types/type.api'
 import { IResponseCartsApi } from '../../cart/types/type.api'
-import { IResponseOrdersApi } from '../../order/types/types.api'
 
 // Users ====================
 type AdminUsersRequestAction = {
@@ -82,40 +74,6 @@ type AdminUsersActionTypes =
 	| AdminUsersEditSuccessAction
 	| AdminUsersRemoveSuccessAction
 	| AdminUsersFailureAction
-
-// Orders ================
-type AdminOrdersRequestAction = {
-	type: typeof ADMIN_ORDERS_REQUEST
-}
-// Success
-type AdminOrdersGetSuccessAction = {
-	type: typeof ADMIN_ORDERS_GET_SUCCESS
-	payload: IResponseOrdersApi[]
-}
-type AdminOrdersEditSuccessAction = {
-	type: typeof ADMIN_ORDERS_EDIT_SUCCESS
-	payload: IResponseOrdersApi
-}
-type AdminOrdersRemoveSuccessAction = {
-	type: typeof ADMIN_ORDERS_REMOVE_SUCCESS
-	payload: number
-}
-
-// Failure
-type AdminOrdersFailureAction = {
-	type:
-		| typeof ADMIN_ORDERS_EDIT_FAILURE
-		| typeof ADMIN_ORDERS_GET_FAILURE
-		| typeof ADMIN_ORDERS_REMOVE_FAILURE
-	payload: string | boolean
-}
-
-type AdminOrdersActionTypes =
-	| AdminOrdersRequestAction
-	| AdminOrdersGetSuccessAction
-	| AdminOrdersEditSuccessAction
-	| AdminOrdersRemoveSuccessAction
-	| AdminOrdersFailureAction
 
 // Products ====================
 type AdminProductRequestAction = {
@@ -246,7 +204,6 @@ type AdminCartsActionTypes =
 // Root ActionTypes =========================
 export type AdminActionTypes =
 	| AdminUsersActionTypes
-	| AdminOrdersActionTypes
 	| AdminProductsActionTypes
 	| AdminCategoriesActionTypes
 	| AdminCartsActionTypes

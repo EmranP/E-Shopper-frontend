@@ -1,13 +1,34 @@
-import { FC, useMemo } from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import { FC, useCallback, useEffect, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useActions } from '../../../shared/hooks/useActions'
 import { useAppSelector } from '../../../shared/hooks/useStoreApp.hooks'
+import { useToggle } from '../../../shared/hooks/useToggle'
 import { Button } from '../../../shared/ui/Buttons'
+import { Modal } from '../../../shared/ui/Modal'
 
-// Todo: Need create order
 export const CartInfo: FC = () => {
 	const { cartItems } = useAppSelector(state => state.cartItems)
+	const { isAppLoading } = useAppSelector(state => state.order)
+	const { user } = useAppSelector(state => state.auth)
+	const { cart } = useAppSelector(state => state.carts)
+
+	const { toggle, toggleHandler } = useToggle(false)
+	const navigate = useNavigate()
+	const actions = useActions()
+
+	// Actions Creator
+	const addOrder = useMemo(() => actions.addOrder, [])
+
+	useEffect(() => {
+		if (localStorage.getItem('order')) {
+			localStorage.removeItem('order')
+			window.location.reload()
+		}
+	}, [])
 
 	const totalPrice = useMemo(() => {
-		if (!Array.isArray(cartItems) || cartItems.length === 0) return null
+		if (!Array.isArray(cartItems) || !cartItems.length) return null
 
 		return cartItems.reduce((sum, item) => {
 			const quantity = item.quantity ?? 0
@@ -16,7 +37,29 @@ export const CartInfo: FC = () => {
 		}, 0)
 	}, [cartItems])
 
-	const hasTotalPrice = (totalPrice && totalPrice > 0) || totalPrice === null
+	const disableOrder = totalPrice === null || totalPrice <= 0 || isAppLoading
+
+	const confirmDeleteHandler = useCallback(() => {
+		if (!user?.id || !cart?.id || totalPrice === null) return
+
+		try {
+			addOrder(user.id, cart.id, totalPrice)
+
+			toggleHandler()
+
+			if (localStorage.getItem('order')) {
+				navigate('/orders', { replace: true })
+			} else {
+				localStorage.setItem('order', 'orderSet')
+				navigate('/orders', { replace: true })
+			}
+		} catch (error) {
+			console.error('Не удалось создать заказ:', error)
+		}
+	}, [addOrder, cart?.id, navigate, toggleHandler, totalPrice, user?.id])
+
+	const openModalHandler = () => toggleHandler()
+	const closeModalHandler = () => toggleHandler()
 
 	return (
 		<div className='flex-auto'>
@@ -28,11 +71,20 @@ export const CartInfo: FC = () => {
 				</div>
 				<Button
 					color={'white'}
-					disabled={hasTotalPrice}
+					disabled={disableOrder}
 					bgColor={'bg-bgActionButton'}
-					title={'Place an order'}
+					title={isAppLoading ? 'Placing order…' : 'Place an order'}
+					onClick={openModalHandler}
 				/>
 			</div>
+			{toggle && (
+				<Modal
+					titleSolutions='to place this order'
+					onClickSave={confirmDeleteHandler}
+					onClickClose={closeModalHandler}
+					onClickCancel={closeModalHandler}
+				/>
+			)}
 		</div>
 	)
 }

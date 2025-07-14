@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 import {
 	AdminPanelContentBody,
 	AdminPanelContentBodyItems,
@@ -21,16 +21,20 @@ export const ProductsAdminPageContent: FC = () => {
 	const { products, isAppLoading, error } = useAppSelector(
 		state => state.admin.products
 	)
-	const { getAllProducts, getAllCategories, removeProduct } = useActions()
+	const actions = useActions()
 	const { toggle, toggleHandler } = useToggle()
 	const [productIdToDelete, setProductIdToDelete] = useState<number | null>(
 		null
 	)
 
+	const getAllProducts = useMemo(() => actions.getAllProducts, [])
+	const getAllCategories = useMemo(() => actions.getAllCategories, [])
+	const removeProduct = useMemo(() => actions.removeProduct, [])
+
 	useEffect(() => {
 		getAllProducts()
 		getAllCategories()
-	}, [])
+	}, [getAllProducts, getAllCategories])
 
 	if (isAppLoading) return <LoaderApp />
 

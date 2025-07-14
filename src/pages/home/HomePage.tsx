@@ -1,4 +1,5 @@
-import { FC, useEffect } from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import { FC, useEffect, useMemo } from 'react'
 import { Outlet } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { infoAuthMessage } from '../../app/constants/utils/showToast.constant'
@@ -13,17 +14,20 @@ import { Layout } from '../../widgets/layout/Layout'
 
 const HomePage: FC = () => {
 	const { auth } = useAppSelector(state => state)
-	const { checkAuth, getUserCarts } = useActions()
+	const actions = useActions()
 
 	const { isAppLoading, user } = auth
 	const isActivatedFromStorage = localStorage.getItem('isActivated')
+
+	const checkAuth = useMemo(() => actions.checkAuth, [])
+	const getUserCarts = useMemo(() => actions.getUserCarts, [])
 
 	useEffect(() => {
 		const token = localStorage.getItem('token')
 		if (token) {
 			checkAuth()
 		}
-	}, [])
+	}, [checkAuth])
 
 	useEffect(() => {
 		if (isActivatedFromStorage) return
@@ -38,7 +42,7 @@ const HomePage: FC = () => {
 	useEffect(() => {
 		if (!user?.id) return
 		getUserCarts(user.id)
-	}, [user?.id])
+	}, [getUserCarts, user?.id])
 
 	if (isAppLoading) return <Loader />
 

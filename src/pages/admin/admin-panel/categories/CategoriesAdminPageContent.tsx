@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 import {
 	AdminPanelContentBody,
 	AdminPanelContentBodyItems,
@@ -21,15 +21,18 @@ export const CategoriesAdminPageContent: FC = () => {
 	const { categories, isAppLoading, error } = useAppSelector(
 		state => state.admin.categories
 	)
-	const { getAllCategories, removeCategory } = useActions()
+	const actions = useActions()
 	const { toggle, toggleHandler } = useToggle()
 	const [categoryIdToDelete, setCategoryIdToDelete] = useState<number | null>(
 		null
 	)
 
+	const getAllCategories = useMemo(() => actions.getAllCategories, [])
+	const removeCategory = useMemo(() => actions.removeCategory, [])
+
 	useEffect(() => {
 		getAllCategories()
-	}, [])
+	}, [getAllCategories])
 
 	if (isAppLoading) return <LoaderApp />
 
@@ -72,15 +75,23 @@ export const CategoriesAdminPageContent: FC = () => {
 								<AdminPanelContentBodyItems data={categoryItem.id} />
 								<AdminPanelContentBodyItems data={categoryItem.name} />
 								<AdminPanelContentBodyItems
-									data={new Date(categoryItem.created_at).toLocaleDateString()}
+									data={
+										(categoryItem.createdAt &&
+											new Date(categoryItem.createdAt).toLocaleDateString()) ||
+										new Date().toLocaleDateString()
+									}
 								/>
 								<AdminPanelContentBodyItems
-									data={new Date(categoryItem.updated_at).toLocaleDateString()}
+									data={
+										(categoryItem.updatedAt &&
+											new Date(categoryItem.updatedAt).toLocaleDateString()) ||
+										new Date().toLocaleDateString()
+									}
 								/>
 								<TrashUI
 									showModalHandler={showModalHandler}
 									setIdToDelete={setCategoryIdToDelete}
-									data={categoryItem}
+									data={categoryItem || null}
 								/>
 							</AdminPanelContentBody>
 						))}

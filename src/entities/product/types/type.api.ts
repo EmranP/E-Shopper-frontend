@@ -1,14 +1,13 @@
-export interface IResponseProductsApi {
-	id?: number
+import { IResponseSharedApi } from '../../../shared/types/api.types'
+
+export interface IResponseProductsApi extends IResponseSharedApi {
 	name: string
 	description: string
 	price: string | number
 	stock: number
 	categoryId: number | null
-	createdAt?: string | Date
-	updatedAt?: string | Date
 	imageUrl: string
-	userId: number | null
+	userId: number | null | undefined
 	searchVector?: string
 }
 

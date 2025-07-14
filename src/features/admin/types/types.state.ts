@@ -1,5 +1,5 @@
+import { IResponseCategoriesApi } from '../../../entities/category/types/type.api'
 import { IResponseProductsApi } from '../../../entities/product/types/type.api'
-import { IResponseCategoriesApi } from '../../../entities/сategory/types/type.api'
 import { IAppState } from '../../../shared/types/initState.types'
 import { IResponseUserAuthApi } from '../../auth/types/type.api'
 import { IResponseCartsApi } from '../../cart/types/type.api'

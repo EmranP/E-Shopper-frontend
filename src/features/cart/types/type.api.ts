@@ -1,9 +1,5 @@
-// ! set this is types global level
-interface IResponseSharedApi {
-	id: number
-	createdAt: string | Date
-	updatedAt: string | Date
-}
+import { AxiosResponse } from 'axios'
+import { IResponseSharedApi } from '../../../shared/types/api.types'
 
 export interface IResponseCartsApi extends IResponseSharedApi {
 	userId: number
@@ -25,3 +21,15 @@ export interface ICartItemsApi {
 	cartItems: IResponseCartItemsApi[]
 	total: number
 }
+
+export type ReturnTypeCartServiceApi = Promise<
+	AxiosResponse<IResponseCartsApi> | never
+>
+
+export type ReturnTypeCartItemsServiceApi = Promise<
+	AxiosResponse<IResponseCartItemsApi> | never
+>
+
+export type ReturnTypeCommonCartItemsService = Promise<
+	AxiosResponse<ICartItemsApi> | never
+>

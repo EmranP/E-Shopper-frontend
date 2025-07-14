@@ -1,6 +1,6 @@
 import { ChevronDown, X } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { Link, useMatch, useNavigate } from 'react-router-dom'
 import {
 	CommonSelectTypes,
@@ -16,6 +16,7 @@ export const Select = <T extends CommonSelectTypes>({
 	const selectRef = useRef<HTMLDivElement>(null)
 	const isActivePage = !!useMatch('/admin/*')
 	const navigate = useNavigate()
+	const customId = useId()
 
 	useEffect(() => {
 		const clickOutsideHandler = (event: MouseEvent) => {
@@ -34,7 +35,7 @@ export const Select = <T extends CommonSelectTypes>({
 
 	const removeSelectedCategory = () => {
 		setSelected(null)
-		navigate('/')
+		if (!isActivePage) navigate('/')
 	}
 
 	return (
@@ -57,7 +58,7 @@ export const Select = <T extends CommonSelectTypes>({
 				/>
 			</button>
 
-			<AnimatePresence>
+			<AnimatePresence key={customId}>
 				{isOpen && (
 					<motion.ul
 						initial={{ opacity: 0, scale: 0.9, y: -10 }}
@@ -85,6 +86,7 @@ export const Select = <T extends CommonSelectTypes>({
 									</Link>
 								) : (
 									<li
+										key={option.value}
 										className='px-4 py-2 cursor-pointer hover:bg-blue-100 transition'
 										onClick={() => {
 											setSelected(option)

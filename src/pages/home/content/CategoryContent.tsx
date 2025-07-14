@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { ProductCard } from '../../../entities/product/ui/ProductCard'
 import { useActions } from '../../../shared/hooks/useActions'
@@ -10,16 +10,19 @@ import { LoaderApp } from '../../../shared/ui/LoaderApp'
 export const CategoryContent: FC = () => {
 	const { categoryProductId } = useParams()
 	const { categories, products } = useAppSelector(state => state.admin)
-	const { getCategoryById, getAllProducts } = useActions()
+	const actions = useActions()
 	const [sortedByPriceDesc, setSortedByPriceDesc] = useState(false)
 
 	const { categoryItem } = categories
 	const { products: productsCategoriesData, isAppLoading } = products
 
+	const getCategoryById = useMemo(() => actions.getCategoryById, [])
+	const getAllProducts = useMemo(() => actions.getAllProducts, [])
+
 	useEffect(() => {
 		getCategoryById(Number(categoryProductId))
-		getAllProducts()
-	}, [categoryProductId])
+		getAllProducts(6, 1)
+	}, [getCategoryById, getAllProducts, categoryProductId])
 
 	const filteredProductsCategories = productsCategoriesData?.filter(
 		productCategory => productCategory.categoryId === Number(categoryProductId)

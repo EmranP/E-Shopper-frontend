@@ -6,6 +6,8 @@ export interface IHookShowError {
 	showError: boolean
 }
 
+export type TypeHookSessionFlag = [boolean, () => void]
+
 export interface IHookToggle {
 	toggle: boolean
 	toggleHandler: () => void

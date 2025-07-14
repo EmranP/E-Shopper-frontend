@@ -78,7 +78,7 @@ interface ICartItemsActionFailure {
 		| typeof CART_ITEMS_ADD_FAILURE
 		| typeof CART_ITEMS_EDIT_FAILURE
 		| typeof CART_ITEMS_REMOVE_FAILURE
-	payload: string | null
+	payload: string
 }
 
 export type CartActionsType =

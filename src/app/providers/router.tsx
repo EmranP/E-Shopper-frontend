@@ -1,4 +1,4 @@
-import { FC, lazy } from 'react'
+import { FC } from 'react'
 import { Provider } from 'react-redux'
 import {
 	createBrowserRouter,
@@ -11,23 +11,15 @@ import { CategoriesAdminPageContent } from '../../pages/admin/admin-panel/catego
 import { OrdersAdminPageContent } from '../../pages/admin/admin-panel/orders/OrdersAdminPageContent'
 import { ProductsAdminPageContent } from '../../pages/admin/admin-panel/products/ProductsAdminPageContent'
 import { UsersAdminPageContent } from '../../pages/admin/admin-panel/users/UsersAdminPageContent'
-import { CartPage } from '../../pages/cart/CartPage'
 import { CategoryContent } from '../../pages/home/content/CategoryContent'
 import { MainContent } from '../../pages/home/content/MainContent'
 import { ProductsContent } from '../../pages/home/content/ProductsContent'
 import { CurrentProduct } from '../../pages/product/CurrentProduct'
 import { WrapperSuspense } from '../../shared/ui/WrapperSuspense'
+import { pages } from '../constants/providers/pages'
 import { ROLES } from '../constants/roles/roles'
 import { ProtectedRoute } from './ProtectedRoute'
 import { store } from './store'
-
-const HomePage = lazy(() => import('../../pages/home/HomePage'))
-const NotFoundPage = lazy(() => import('../../pages/404/NotFoundPage'))
-const LoginPage = lazy(() => import('../../pages/auth/LoginPage'))
-const RegistrationPage = lazy(() => import('../../pages/auth/RegistrationPage'))
-const AdminPanelPage = lazy(
-	() => import('../../pages/admin/admin-panel/AdminPanelPage')
-)
 
 const BubbleError: FC = () => {
 	const errorRoutes = useRouteError() as unknown
@@ -59,7 +51,7 @@ const router = createBrowserRouter([
 		path: '/',
 		element: (
 			<WrapperSuspense>
-				<HomePage />
+				<pages.HomePage />
 			</WrapperSuspense>
 		),
 		errorElement: <BubbleError />,
@@ -96,7 +88,7 @@ const router = createBrowserRouter([
 		path: '/auth/login',
 		element: (
 			<WrapperSuspense>
-				<LoginPage />
+				<pages.LoginPage />
 			</WrapperSuspense>
 		),
 	},
@@ -104,7 +96,7 @@ const router = createBrowserRouter([
 		path: '/auth/registration',
 		element: (
 			<WrapperSuspense>
-				<RegistrationPage />
+				<pages.RegistrationPage />
 			</WrapperSuspense>
 		),
 	},
@@ -115,7 +107,7 @@ const router = createBrowserRouter([
 		children: [
 			{
 				path: 'panel',
-				element: <AdminPanelPage />,
+				element: <pages.AdminPanelPage />,
 				errorElement: <BubbleError />,
 				children: [
 					{
@@ -151,7 +143,16 @@ const router = createBrowserRouter([
 		path: '/cart',
 		element: (
 			<WrapperSuspense>
-				<CartPage />
+				<pages.CartPage />
+			</WrapperSuspense>
+		),
+		errorElement: <BubbleError />,
+	},
+	{
+		path: '/orders',
+		element: (
+			<WrapperSuspense>
+				<pages.OrderPage />
 			</WrapperSuspense>
 		),
 		errorElement: <BubbleError />,
@@ -160,7 +161,7 @@ const router = createBrowserRouter([
 		path: '*',
 		element: (
 			<WrapperSuspense>
-				<NotFoundPage />
+				<pages.NotFoundPage />
 			</WrapperSuspense>
 		),
 	},

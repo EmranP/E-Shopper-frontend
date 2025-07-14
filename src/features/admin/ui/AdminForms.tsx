@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Pencil } from 'lucide-react'
-import { FC, useState } from 'react'
+import { FC, useMemo, useState } from 'react'
 import { useActions } from '../../../shared/hooks/useActions'
 import { useInput } from '../../../shared/hooks/useInput'
 import { useMode } from '../../../shared/hooks/useMode'
@@ -24,12 +24,6 @@ import {
 	AdminFormFieldEditElement,
 } from './AdminFormActionPanel'
 
-//! Notes for redux: gets values data from redux state
-//!!! Notes: For Post api products field user_id needs use user.id from redux store
-//!!  Notes: Method Create carts when user success register
-
-// * Todo: Orders
-
 export const iconsSize: number = 20
 
 export const AdminFormUsers: FC = () => {
@@ -37,8 +31,10 @@ export const AdminFormUsers: FC = () => {
 		adminFormConfigUser[0]
 	)
 	const { value, onChange } = useInput(0)
-	const { editForAdminUsers } = useActions()
+	const actions = useActions()
 	const { isAppLoading, error } = useAppSelector(state => state.admin.user)
+
+	const editForAdminUsers = useMemo(() => actions.editForAdminUsers, [])
 
 	const onSubmitUsersHandler = () => {
 		if (!value || !selectedUser) return
@@ -80,17 +76,26 @@ export const AdminFormUsers: FC = () => {
 }
 
 export const AdminFormOrders: FC = () => {
+	const { isAppLoading, error } = useAppSelector(state => state.order)
+	const { user } = useAppSelector(state => state.auth)
 	const [selectedOrders, setSelectedOrders] = useState<ISelectOption | null>(
 		adminFormConfigOrders[0]
 	)
 	const { value, onChange } = useInput(0)
-	const { editOrdersForAdmin } = useActions()
-	const { isAppLoading, error } = useAppSelector(state => state.admin.orders)
+	const actions = useActions()
+
+	const editOrdersForAdmin = useMemo(() => actions.editOrder, [])
 
 	const onSubmitOrderHandler = () => {
-		if (!value || !selectedOrders) return
+		if (!user?.id || !value || !selectedOrders) return
 
-		editOrdersForAdmin(value, selectedOrders.value as string)
+		editOrdersForAdmin(
+			user.id,
+			typeof value !== 'number' ? Number(value) : value,
+			typeof selectedOrders.value !== 'string'
+				? String(selectedOrders.value)
+				: selectedOrders.value
+		)
 	}
 
 	return (
@@ -134,8 +139,13 @@ export const AdminFormProducts: FC = () => {
 	const inputProductStock = useInput(0)
 	const [inputProductDescription, setInputProductDescription] = useState('')
 	const { mode, changeMode, toggleMode, resetMode } = useMode()
-	const { addProduct, editProduct } = useActions()
 	const { admin, auth } = useAppSelector(state => state)
+	const actions = useActions()
+
+	// Actions
+	const addProduct = useMemo(() => actions.addProduct, [])
+	const editProduct = useMemo(() => actions.editProduct, [])
+
 	// Destruction
 	const { products, categories } = admin
 	const { user } = auth
@@ -144,7 +154,7 @@ export const AdminFormProducts: FC = () => {
 	const categorySelectOptions = mapCategoriesToOptions(categories.categories)
 	const [selectedCategories, setSelectedCategories] =
 		useState<ISelectOption | null>(
-			categorySelectOptions && categorySelectOptions[0]
+			categorySelectOptions ? categorySelectOptions[0] : null
 		)
 
 	const toggleModeHandler = () => toggleMode()
@@ -163,12 +173,15 @@ export const AdminFormProducts: FC = () => {
 
 		if (mode === 'create') {
 			addProduct({
-				name: inputProductName.value as string,
+				name: String(inputProductName.value),
 				description: inputProductDescription,
-				price: inputProductPrice.value as number,
-				stock: inputProductStock.value as number,
+				price: Number(inputProductPrice.value),
+				stock:
+					typeof inputProductStock.value === 'number'
+						? inputProductStock.value
+						: Number(inputProductStock.value),
 				category_id: selectedCategories && (selectedCategories.value as number),
-				image_url: inputProductImageUrl.value as string,
+				image_url: String(inputProductImageUrl.value),
 				userId: user && user.id,
 			})
 		} else if (mode === 'edit' && inputProductId.value) {
@@ -238,7 +251,7 @@ export const AdminFormProducts: FC = () => {
 					/>
 					<Label htmlFor='categoryId' title='Product category' />
 					<Select
-						options={categorySelectOptions && categorySelectOptions}
+						options={categorySelectOptions ? categorySelectOptions : null}
 						selected={selectedCategories}
 						setSelected={setSelectedCategories}
 					/>
@@ -270,10 +283,14 @@ export const AdminFormCategories: FC = () => {
 	const { mode, changeMode, toggleMode, resetMode } = useMode()
 	const inputCategoryId = useInput(0)
 	const inputCategoryName = useInput('')
-	const { addCategory, editCategory } = useActions()
+	const actions = useActions()
 	const { isAppLoading, error } = useAppSelector(
 		state => state.admin.categories
 	)
+
+	// Actions
+	const addCategory = useMemo(() => actions.addCategory, [])
+	const editCategory = useMemo(() => actions.editCategory, [])
 
 	const toggleModeHandler = () => toggleMode()
 	const resetModes = () => resetMode()

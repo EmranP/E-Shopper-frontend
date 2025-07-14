@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 import {
 	AdminPanelContentBody,
 	AdminPanelContentBodyItems,
@@ -22,13 +22,16 @@ export const UsersAdminPageContent: FC = () => {
 	const { users, isAppLoading, error } = useAppSelector(
 		state => state.admin.user
 	)
-	const { getAllForAdminUsers, removeForAdminUsers } = useActions()
+	const actions = useActions()
 	const { toggle, toggleHandler } = useToggle()
 	const [userIdToDelete, setUserIdToDelete] = useState<number | null>(null)
 
+	const getAllForAdminUsers = useMemo(() => actions.getAllForAdminUsers, [])
+	const removeForAdminUsers = useMemo(() => actions.removeForAdminUsers, [])
+
 	useEffect(() => {
 		getAllForAdminUsers()
-	}, [])
+	}, [getAllForAdminUsers])
 
 	if (isAppLoading) return <LoaderApp />
 
@@ -77,10 +80,18 @@ export const UsersAdminPageContent: FC = () => {
 								/>
 								<AdminPanelContentBodyItems data={user.role} />
 								<AdminPanelContentBodyItems
-									data={new Date(user.createdAt).toLocaleDateString()}
+									data={
+										(user.createdAt &&
+											new Date(user.createdAt).toLocaleDateString()) ||
+										new Date().toLocaleTimeString()
+									}
 								/>
 								<AdminPanelContentBodyItems
-									data={new Date(user.updatedAt).toLocaleDateString()}
+									data={
+										(user.updatedAt &&
+											new Date(user.updatedAt).toLocaleDateString()) ||
+										new Date().toLocaleTimeString()
+									}
 								/>
 								<TrashUI
 									showModalHandler={showModalHandler}

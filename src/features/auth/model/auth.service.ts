@@ -1,4 +1,3 @@
-import { AxiosResponse } from 'axios'
 import {
 	AUTH_API_URL_LOGIN,
 	AUTH_API_URL_LOGOUT,
@@ -9,13 +8,14 @@ import {
 	IRequestAuthLogin,
 	IRequestAuthReg,
 	IResponseAuthApi,
+	ReturnTypeAuthServiceApi,
 } from '../types/type.api'
 
 class AuthServiceApi {
 	async fetchLogin({
 		email,
 		password,
-	}: IRequestAuthLogin): Promise<AxiosResponse<IResponseAuthApi>> {
+	}: IRequestAuthLogin): ReturnTypeAuthServiceApi {
 		const response = await $api.post<IResponseAuthApi>(AUTH_API_URL_LOGIN, {
 			email,
 			password,
@@ -31,7 +31,7 @@ class AuthServiceApi {
 		login,
 		email,
 		password,
-	}: IRequestAuthReg): Promise<AxiosResponse<IResponseAuthApi>> {
+	}: IRequestAuthReg): ReturnTypeAuthServiceApi {
 		const response = await $api.post<IResponseAuthApi>(
 			AUTH_API_URL_REGISTRATION,
 			{ login, email, password }
@@ -43,7 +43,7 @@ class AuthServiceApi {
 		return response
 	}
 
-	async fetchLogout(): Promise<void> {
+	async fetchLogout(): Promise<void | never> {
 		const response = await $api.post(AUTH_API_URL_LOGOUT)
 		if (response.status === 404) {
 			throw new Error('Ошибка: URL для выхода не найден')

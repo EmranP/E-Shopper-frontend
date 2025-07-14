@@ -20,8 +20,8 @@ export interface IInput extends InputHTMLAttributes<HTMLInputElement> {
 
 // Admin Form
 export interface ISelectOption {
-	label: string
-	value: string | number
+	label: string | undefined
+	value: string | number | undefined
 }
 
 export interface ISelectOptionUser extends ISelectOption {
@@ -86,5 +86,5 @@ export interface IAdminPanelHeader {
 }
 
 export interface IAdminPanelBody {
-	data: ReactNode | string | number | null
+	data: ReactNode | string | number | null | undefined
 }

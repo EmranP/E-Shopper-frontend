@@ -1,4 +1,3 @@
-import { AxiosResponse } from 'axios'
 import {
 	CART_API_URL,
 	CART_API_URL_ADD,
@@ -12,12 +11,15 @@ import {
 	ICartItemsApi,
 	IResponseCartItemsApi,
 	IResponseCartsApi,
+	ReturnTypeCartItemsServiceApi,
+	ReturnTypeCartServiceApi,
+	ReturnTypeCommonCartItemsService,
 } from '../types/type.api'
 
 // Carts
 class CartsServiceApi {
-	async getUserCarts(): Promise<AxiosResponse<IResponseCartsApi>> {
-		const response = await $api.get<IResponseCartsApi>(`${CART_API_URL}`)
+	async getUserCarts(): ReturnTypeCartServiceApi {
+		const response = await $api.get<IResponseCartsApi>(CART_API_URL)
 
 		if (response.status === 404) {
 			throw new Error('User carts not founded')
@@ -26,7 +28,7 @@ class CartsServiceApi {
 		return response
 	}
 
-	async createdUserCarts(): Promise<AxiosResponse<IResponseCartsApi>> {
+	async createdUserCarts(): ReturnTypeCartServiceApi {
 		const response = await $api.post<IResponseCartsApi>(CART_API_URL_ADD)
 
 		if (response.status === 404) {
@@ -37,14 +39,12 @@ class CartsServiceApi {
 	}
 }
 // Cart-items
-
-// ?Error maybe is not correct url
 class CartItemsServiceApi {
 	async getCartItems(
 		cartId: number | string | null,
 		limit: number | string,
 		offset: number | string
-	): Promise<AxiosResponse<ICartItemsApi>> {
+	): ReturnTypeCommonCartItemsService {
 		const response = await $api.get<ICartItemsApi>(
 			`${CART_ITEMS_API_URL}/${cartId}?limit=${String(limit)}&offset=${offset}`
 		)
@@ -61,13 +61,16 @@ class CartItemsServiceApi {
 		productId: number | null,
 		price: number | null,
 		cartItemQuantity: number | null
-	): Promise<AxiosResponse<IResponseCartItemsApi>> {
-		const request = await $api.post(CART_ITEMS_API_URL_ADD, {
-			cart_id: cartId,
-			product_id: productId,
-			quantity: cartItemQuantity,
-			price,
-		})
+	): ReturnTypeCartItemsServiceApi {
+		const request = await $api.post<IResponseCartItemsApi>(
+			CART_ITEMS_API_URL_ADD,
+			{
+				cart_id: cartId,
+				product_id: productId,
+				quantity: cartItemQuantity,
+				price,
+			}
+		)
 
 		if (request.status === 401) {
 			throw new Error('Error add new cart-items')
@@ -79,7 +82,7 @@ class CartItemsServiceApi {
 	async editCartItems(
 		cartItemsId: number | null,
 		cartItemQuantity: number | null
-	): Promise<AxiosResponse<IResponseCartItemsApi>> {
+	): ReturnTypeCartItemsServiceApi {
 		const request = await $api.patch<IResponseCartItemsApi>(
 			`${CART_ITEMS_API_URL_EDIT}/${cartItemsId}`,
 			{
@@ -94,7 +97,9 @@ class CartItemsServiceApi {
 		return request
 	}
 
-	async deleteCartItems(cartItemsId: number | string | null): Promise<void> {
+	async deleteCartItems(
+		cartItemsId: number | string | null
+	): Promise<void | never> {
 		const request = await $api.delete<void>(
 			`${CART_ITEMS_API_URL_REMOVE}/${cartItemsId}`
 		)

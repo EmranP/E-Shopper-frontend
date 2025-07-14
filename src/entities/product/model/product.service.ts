@@ -60,7 +60,7 @@ class ProductsServiceApi {
 	}
 
 	async addProduct(
-		productData: IRequestProductApi
+		productData: Partial<IRequestProductApi>
 	): Promise<AxiosResponse<IResponseProductsApi>> {
 		const response = await $api.post<IResponseProductsApi>(
 			PRODUCT_API_URL_ADD,
@@ -76,7 +76,7 @@ class ProductsServiceApi {
 
 	async editProduct(
 		productId: number | string,
-		productData: IRequestProductApi
+		productData: Partial<IRequestProductApi>
 	): Promise<AxiosResponse<IResponseProductsApi>> {
 		const response = await $api.patch<IResponseProductsApi>(
 			`${PRODUCT_API_URL_EDIT}/${productId}`,

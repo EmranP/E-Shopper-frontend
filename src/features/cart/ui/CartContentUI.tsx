@@ -7,17 +7,18 @@ import { CartEmpty } from './CartEmpty'
 export const CartContentUI: FC<ICartContentUIProps> = ({
 	hasItem,
 	cartItemsData,
+	totalCartItemPage,
+	page,
+
 	openModalHandler,
 	setCartItemIdToDelete,
 	setProductIdToDelete,
-	totalCartItemPage,
-	page,
 	prevPage,
 	nextPage,
 }) => {
 	return (
 		<>
-			{!hasItem ? (
+			{!hasItem || !cartItemsData ? (
 				<CartEmpty />
 			) : (
 				<>

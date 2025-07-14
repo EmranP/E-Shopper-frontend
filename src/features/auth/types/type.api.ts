@@ -1,14 +1,13 @@
 // type.api.ts
+import { AxiosResponse } from 'axios'
 import { ROLES } from '../../../app/constants/roles/roles'
+import { IResponseSharedApi } from '../../../shared/types/api.types'
 
-export interface IResponseUserAuthApi {
-	id: number
+export interface IResponseUserAuthApi extends IResponseSharedApi {
 	login: string
 	email: string
 	isActivated: boolean
 	role: ROLES
-	createdAt: Date | string
-	updatedAt: Date | string
 }
 
 export interface IResponseAuthApi {
@@ -25,3 +24,7 @@ export interface IRequestAuthLogin {
 export interface IRequestAuthReg extends IRequestAuthLogin {
 	login: string
 }
+
+export type ReturnTypeAuthServiceApi = Promise<
+	AxiosResponse<IResponseAuthApi> | never
+>
