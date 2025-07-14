@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useMemo } from 'react'
 import {
 	AdminPanelContentBody,
 	AdminPanelContentBodyItems,
@@ -18,11 +18,16 @@ export const CartAdminPageContent: FC = () => {
 	const { carts, isAppLoading, error } = useAppSelector(
 		state => state.admin.carts
 	)
-	const { getAllUserCartsForAdmin } = useActions()
+	const actions = useActions()
+
+	const getAllUserCartsForAdmin = useMemo(
+		() => actions.getAllUserCartsForAdmin,
+		[]
+	)
 
 	useEffect(() => {
 		getAllUserCartsForAdmin()
-	}, [])
+	}, [getAllUserCartsForAdmin])
 
 	if (isAppLoading) return <LoaderApp />
 

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 import { ISelectOption } from '../../../features/admin/types/ui.interface'
 import { useActions } from '../../../shared/hooks/useActions'
 import { useAppSelector } from '../../../shared/hooks/useStoreApp.hooks'
@@ -12,11 +12,13 @@ export const CategoryLayout: FC = () => {
 	const [selectedCategories, setSelectedCategories] =
 		useState<ISelectOption | null>(null)
 
-	const { getAllCategories } = useActions()
+	const actions = useActions()
+
+	const getAllCategories = useMemo(() => actions.getAllCategories, [])
 
 	useEffect(() => {
 		getAllCategories()
-	}, [])
+	}, [getAllCategories])
 
 	return (
 		<div className='bg-bgCategory w-[300px] h-[450px] p-5 rounded text-base'>

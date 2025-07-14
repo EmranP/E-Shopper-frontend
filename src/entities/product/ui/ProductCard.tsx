@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { motion } from 'motion/react'
-import { FC, useState } from 'react'
+import { FC, useCallback, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { CartControls } from '../../../features/cart/ui/CartControls'
@@ -27,18 +27,20 @@ export const ProductCard: FC<IProductCard> = ({
 		increaseStock,
 		decreaseStock,
 	} = useCartControl(1, stock)
-	const { addCartItems } = useActions()
+	const actions = useActions()
 	const { cart } = useAppSelector(state => state.carts)
 	const [processBuy, setProcessBuy] = useState(false)
 
-	const addCartItemsHandler = () => {
+	const addCartItems = useMemo(() => actions.addCartItems, [])
+
+	const addCartItemsHandler = useCallback(async () => {
 		if (!cart?.id || !id || !price) return
 		setProcessBuy(true)
 
-		addCartItems(cart.id, id, price as number, quantity)
+		await addCartItems(cart.id, id, price as number, quantity)
 		toast.success('Product has been success added')
 		setProcessBuy(false)
-	}
+	}, [addCartItems, cart?.id, id, price, quantity])
 
 	const isOutOfStock = stock <= 0
 

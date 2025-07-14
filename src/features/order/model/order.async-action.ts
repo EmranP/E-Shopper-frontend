@@ -1,5 +1,6 @@
 import { redirect } from 'react-router-dom'
 import { Dispatch } from 'redux'
+import { CART_ITEMS_GET_ALL_SUCCESS } from '../../../app/constants/actions/cart.constants'
 import {
 	ORDER_ADD_FAILURE,
 	ORDER_ADD_SUCCESS,
@@ -22,6 +23,7 @@ import {
 } from '../../../app/constants/utils/errorMessage.constant'
 import { AppActions, AppThunk } from '../../../shared/types/store.types'
 import { errorMessageAsyncAction } from '../../../shared/utils/errorMessage.async-action'
+import { cartItemsServiceApi } from '../../cart/model/cart.service'
 import { orderServiceApi } from './order.service'
 
 // Order Get admin
@@ -157,6 +159,17 @@ export const addOrder =
 			const resultAddOrder = await orderServiceApi.addOrder(cartId, totalPrice)
 
 			dispatch({ type: ORDER_ADD_SUCCESS, payload: resultAddOrder.data })
+
+			const actualDataCartItems = await cartItemsServiceApi.getCartItems(
+				cartId,
+				'all',
+				0
+			)
+
+			dispatch({
+				type: CART_ITEMS_GET_ALL_SUCCESS,
+				payload: actualDataCartItems.data.cartItems,
+			})
 		} catch (error) {
 			const errorMessage = errorMessageAsyncAction(error)
 

@@ -13,13 +13,6 @@ import {
 	ADMIN_CATEGORIES_REQUEST,
 	ADMIN_CATEGORY_GET_BY_ID_FAILURE,
 	ADMIN_CATEGORY_GET_BY_ID_SUCCESS,
-	ADMIN_ORDERS_EDIT_FAILURE,
-	ADMIN_ORDERS_EDIT_SUCCESS,
-	ADMIN_ORDERS_GET_FAILURE,
-	ADMIN_ORDERS_GET_SUCCESS,
-	ADMIN_ORDERS_REMOVE_FAILURE,
-	ADMIN_ORDERS_REMOVE_SUCCESS,
-	ADMIN_ORDERS_REQUEST,
 	ADMIN_PRODUCT_GET_BY_ID_FAILURE,
 	ADMIN_PRODUCT_GET_BY_ID_SUCCESS,
 	ADMIN_PRODUCTS_ADD_FAILURE,
@@ -41,11 +34,9 @@ import {
 } from '../../../app/constants/actions/admin.constants'
 import { AppActions } from '../../../shared/types/store.types'
 import { IResponseUserAuthApi } from '../../auth/types/type.api'
-import { IResponseOrdersApi } from '../../order/types/types.api'
 import {
 	IAdminCartsState,
 	IAdminCategoriesState,
-	IAdminOrdersState,
 	IAdminProductsState,
 	IAdminUsersState,
 } from '../types/types.state'
@@ -99,64 +90,6 @@ export const adminUsersReducer = (
 		case ADMIN_USERS_EDIT_FAILURE:
 		case ADMIN_USERS_REMOVE_FAILURE:
 			return { ...state, isAppLoading: false, error: action.payload }
-		default:
-			return state
-	}
-}
-
-// Orders
-const adminOrdersInitialState: IAdminOrdersState = {
-	orders: null,
-	isAppLoading: false,
-	error: null,
-}
-
-export const adminOrdersReducer = (
-	state = adminOrdersInitialState,
-	action: AppActions
-): IAdminOrdersState => {
-	switch (action.type) {
-		// Shared
-		case ADMIN_ORDERS_REQUEST:
-			return { ...state, isAppLoading: true, error: null }
-		// Success
-		case ADMIN_ORDERS_GET_SUCCESS:
-			return {
-				...state,
-				orders: action.payload,
-				isAppLoading: false,
-				error: null,
-			}
-		case ADMIN_ORDERS_EDIT_SUCCESS: {
-			const payload = action.payload as IResponseOrdersApi
-
-			return {
-				...state,
-				isAppLoading: false,
-				error: null,
-				orders: state.orders
-					? state.orders?.map(order =>
-							order.id === payload.id
-								? { ...order, status: payload.status }
-								: order
-					  )
-					: state.orders,
-			}
-		}
-		case ADMIN_ORDERS_REMOVE_SUCCESS:
-			return {
-				...state,
-				isAppLoading: false,
-				error: null,
-				orders:
-					state.orders?.filter(order => order.id !== action.payload) || null,
-			}
-		// Failure
-		case ADMIN_ORDERS_GET_FAILURE:
-		case ADMIN_ORDERS_EDIT_FAILURE:
-		case ADMIN_ORDERS_REMOVE_FAILURE:
-			return { ...state, isAppLoading: false, error: action.payload }
-
 		default:
 			return state
 	}

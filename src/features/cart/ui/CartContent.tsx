@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from 'react'
+import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { useActions } from '../../../shared/hooks/useActions'
 import { usePagination } from '../../../shared/hooks/usePagination'
 import { useAppSelector } from '../../../shared/hooks/useStoreApp.hooks'
@@ -20,31 +20,14 @@ export const CartContent: FC = () => {
 		state => state.cartItemsCommon
 	)
 	const { toggle, toggleHandler } = useToggle()
-	const { getCartItems, removeCartItems } = useActions()
+	const actions = useActions()
 	const { page, limit, offset, setSearchParams, searchParams } = usePagination(
 		1,
 		3
 	)
 
-	const totalCartItemPage = Math.max(1, Math.ceil(total / limit))
-
-	const prevPage = useCallback(() => {
-		changePaginationProduct(
-			page - 1,
-			totalCartItemPage,
-			searchParams,
-			setSearchParams
-		)
-	}, [page, searchParams, setSearchParams, totalCartItemPage])
-
-	const nextPage = useCallback(() => {
-		changePaginationProduct(
-			page + 1,
-			totalCartItemPage,
-			searchParams,
-			setSearchParams
-		)
-	}, [page, searchParams, setSearchParams, totalCartItemPage])
+	const getCartItems = useMemo(() => actions.getCartItems, [])
+	const removeCartItems = useMemo(() => actions.removeCartItems, [])
 
 	useEffect(() => {
 		if (!searchParams.get('page')) {
@@ -56,8 +39,19 @@ export const CartContent: FC = () => {
 		if (!cart?.id) return
 
 		getCartItems(cart.id, limit, offset)
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [cart, limit, offset])
+	}, [cart, getCartItems, limit, offset, searchParams])
+
+	const totalCartItemPage = Math.max(1, Math.ceil(total / limit))
+	const navPagination = useCallback(
+		(dir: -1 | 1) =>
+			changePaginationProduct(
+				page + dir,
+				totalCartItemPage,
+				searchParams,
+				setSearchParams
+			),
+		[page, searchParams, setSearchParams, totalCartItemPage]
+	)
 
 	if (!cartItemsData) return <CartEmpty />
 
@@ -73,14 +67,11 @@ export const CartContent: FC = () => {
 		}
 
 		if (cartItemsData.length <= 1) {
-			prevPage()
+			navPagination(-1)
 		}
 
 		toggleHandler()
 	}
-
-	const openModalHandler = () => toggleHandler()
-	const closeModalHandler = () => toggleHandler()
 
 	const hasItem = cartItemsData.length > 0
 
@@ -93,17 +84,17 @@ export const CartContent: FC = () => {
 				page={page}
 				setCartItemIdToDelete={setCartItemIdToDelete}
 				setProductIdToDelete={setProductIdToDelete}
-				prevPage={prevPage}
-				nextPage={nextPage}
-				openModalHandler={openModalHandler}
+				prevPage={() => navPagination(-1)}
+				nextPage={() => navPagination(1)}
+				openModalHandler={() => toggleHandler()}
 			/>
 
 			{toggle && (
 				<Modal
 					titleSolutions='delete this cart items'
 					onClickSave={confirmDeleteHandler}
-					onClickClose={closeModalHandler}
-					onClickCancel={closeModalHandler}
+					onClickClose={() => toggleHandler()}
+					onClickCancel={() => toggleHandler()}
 				/>
 			)}
 		</div>

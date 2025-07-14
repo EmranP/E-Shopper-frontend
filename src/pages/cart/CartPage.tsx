@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useMemo } from 'react'
 import { CartContent } from '../../features/cart/ui/CartContent'
 import { CartInfo } from '../../features/cart/ui/CartInfo'
 import { CartWrapper } from '../../features/cart/ui/CartWrapper'
@@ -11,23 +11,28 @@ import { Header } from '../../widgets/header/ui/Header'
 import { LayoutContent } from '../../widgets/layout/Content'
 import { Layout } from '../../widgets/layout/Layout'
 
-export const CartPage: FC = () => {
+const CartPage: FC = () => {
 	const { auth } = useAppSelector(state => state)
-	const { checkAuth, getUserCarts } = useActions()
+	const actions = useActions()
 
 	const { isAppLoading, user, isAuth } = auth
 
+	const checkAuth = useMemo(() => actions.checkAuth, [])
+	const getUserCarts = useMemo(() => actions.getUserCarts, [])
+
 	useEffect(() => {
 		const token = localStorage.getItem('token')
+
 		if (token) {
 			checkAuth()
 		}
-	}, [])
+	}, [checkAuth])
 
 	useEffect(() => {
 		if (!user?.id) return
+
 		getUserCarts(user.id)
-	}, [user?.id])
+	}, [getUserCarts, user?.id])
 
 	if (isAppLoading) return <Loader />
 
@@ -50,3 +55,5 @@ export const CartPage: FC = () => {
 		</Layout>
 	)
 }
+
+export default CartPage
